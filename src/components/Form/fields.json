@@ -1,0 +1,75 @@
+[
+  [
+    {
+      "label": "First Name",
+      "placeholder": "First Name placeholder"
+    },
+    {
+      "label": "Last Name"
+    }
+  ],
+  [
+    {
+      "label": "Email",
+      "type": "email"
+    },
+    {
+      "label": "Phone Number",
+      "type": "tel",
+      "isRequired": false
+    }
+  ],
+  {
+    "label": "Address"
+  },
+  [
+    {
+      "label": "Zip"
+    },
+    {
+      "label": "City"
+    }
+  ],
+  {
+    "label": "Country",
+    "type": "select",
+    "iconLeft": "globe-americas",
+    "placeholder": "Select your option",
+    "options": [
+      "Afghanistan",
+      "Åland Islands",
+      "Albania",
+      "Algeria",
+      "...",
+      "Western Sahara",
+      "Yemen",
+      "Zambia",
+      "Zimbabwe"
+    ]
+  },
+  [
+    {
+      "label": "Password",
+      "type": "password"
+    },
+    {
+      "label": "Confirm Password",
+      "type": "password"
+    }
+  ],
+  {
+    "label": "Message",
+    "type": "textarea",
+    "isRequired": false
+  },
+  {
+    "label": "Checkbox",
+    "type": "checkbox",
+    "items": ["one", "two", "three"]
+  },
+  {
+    "label": "Radio",
+    "type": "radio",
+    "items": ["RadioOne", "RadioTwo", "RadioThree"]
+  }
+]

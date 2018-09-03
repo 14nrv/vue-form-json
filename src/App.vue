@@ -1,26 +1,28 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<template lang="pug">
+  #app.section
+    app-form(:formFields="jsonFields",
+             :formName="'userProfil'")
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Form from '@/components/Form'
+import jsonFields from '@/components/Form/fields'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    appForm: Form
+  },
+  data: () => ({
+    jsonFields
+  }),
+  mounted () {
+    this.$root.$on('formSubmitted', values => alert(JSON.stringify(values)))
   }
 }
 </script>
+
 <style lang="stylus">
-#app
-  font-family 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
-  margin-top 60px
+  @require '../node_modules/bulma/css/bulma.min.css'
+  @require '../node_modules/@fortawesome/fontawesome-free/css/all.min.css'
 </style>

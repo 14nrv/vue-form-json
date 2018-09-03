@@ -1,4 +1,66 @@
-# vue-json-form
+# vue-json-form-validate
+
+Generate a vue form with validation, with bulma style, from json.\
+All fields are required and input text by default.\
+Once submitted an event 'formSubmitted' is emitted on $root with the formName and all values.\
+Enjoy
+
+```html
+<template lang="pug">
+  #app.section
+    app-form(:formFields="jsonFields",
+             :formName="'myAwesomeFormGenerated'")
+</template>
+
+<script>
+import Form from '@/components/Form'
+import jsonFields from '@/components/Form/fields'
+
+export default {
+  name: 'app',
+  components: {
+    appForm: Form
+  },
+  data: () => ({
+    jsonFields
+  }),
+  mounted () {
+    this.$root.$on('formSubmitted', values => alert(JSON.stringify(values)))
+  }
+}
+</script>
+
+<style lang="stylus">
+  @require '../node_modules/bulma/css/bulma.min.css'
+  @require '../node_modules/@fortawesome/fontawesome-free/css/all.min.css'
+</style>
+```
+
+## Props available
+```js
+props: {
+  formFields: {
+    type: Array,
+    required: true
+  },
+  formName: {
+    type: String,
+    required: true
+  },
+  mandatoryAsteriskLegend: {
+    type: String,
+    default: '* field required'
+  },
+  btnSubmitText: {
+    type: String,
+    default: 'Submit'
+  },
+  btnResetText: {
+    type: String,
+    default: 'Reset'
+  }
+}
+```
 
 ## Project setup
 ```
@@ -7,20 +69,20 @@ yarn install
 
 ### Compiles and hot-reloads for development
 ```
-yarn run serve
+yarn serve
 ```
 
 ### Compiles and minifies for production
 ```
-yarn run build
+yarn build
 ```
 
 ### Lints and fixes files
 ```
-yarn run lint
+yarn lint
 ```
 
 ### Run your unit tests
 ```
-yarn run test:unit
+yarn test:unit
 ```
