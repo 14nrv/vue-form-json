@@ -1,3 +1,6 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+
 # vue-json-form
 
 ## Generate a vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-json-form/blob/master/src/components/Form/fields.json)
