@@ -1,5 +1,5 @@
 {
-  "name": "vue-json-form-validate",
+  "name": "vue-json-form",
   "version": "0.1.0",
   "description": "Generate a vue form with validation, with bulma style, from json",
   "author": "14nrv",

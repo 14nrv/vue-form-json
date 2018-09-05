@@ -1,6 +1,9 @@
-# vue-json-form-validate
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-## Generate a vue form with validation, with bulma style, from [json](https://github.com/14nrv/vue-json-form-validate/blob/master/src/components/Form/fields.json)
+# vue-json-form
+
+## Generate a vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-json-form/blob/master/src/components/Form/fields.json)
 All fields are required and input text by default.\
 Once submitted an event 'formSubmitted' is emitted on $root with the formName and all values.\
 Enjoy
