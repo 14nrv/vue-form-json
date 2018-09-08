@@ -22,5 +22,6 @@ module.exports = {
   testMatch: [
     '**/*.spec.(js|jsx|ts|tsx)'
   ],
-  testURL: 'http://localhost/'
+  testURL: 'http://localhost/',
+  reporters: process.env.CI ? ['default', 'jest-junit'] : undefined
 }
