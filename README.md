@@ -1,14 +1,14 @@
-[![Build Status](https://img.shields.io/circleci/project/github/14nrv/vue-json-form.svg "Build Status")](https://circleci.com/gh/14nrv/vue-json-form/tree/dev)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/b03c9983ff3c07c874a4/test_coverage)](https://codeclimate.com/github/14nrv/vue-json-form/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/b03c9983ff3c07c874a4/maintainability)](https://codeclimate.com/github/14nrv/vue-json-form/maintainability)
+[![Build Status](https://img.shields.io/circleci/project/github/14nrv/vue-form-json.svg "Build Status")](https://circleci.com/gh/14nrv/vue-form-json/tree/dev)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/b03c9983ff3c07c874a4/test_coverage)](https://codeclimate.com/github/14nrv/vue-form-json/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/b03c9983ff3c07c874a4/maintainability)](https://codeclimate.com/github/14nrv/vue-form-json/maintainability)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-# vue-json-form
+# vue-form-json
 
-[![Edit vue-json-form](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/62qrxvk26k)
+[![Edit vue-form-json](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/62qrxvk26k)
 
-## Generate a vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-json-form/blob/master/src/components/Form/fields.json)
+## Generate a vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
 All fields are required and input text by default.\
 Once submitted an event 'formSubmitted' is emitted on $root with the formName and all values.\
 Enjoy
