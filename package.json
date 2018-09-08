@@ -9,8 +9,16 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "NODE_ENV=test vue-cli-service test:unit --coverage",
-    "test:tdd": "NODE_ENV=test vue-cli-service test:unit --coverage --watchAll"
+    "test": "NODE_ENV=test vue-cli-service test:unit --coverage",
+    "test:tdd": "NODE_ENV=test vue-cli-service test:unit --coverage --watchAll",
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && yarn test"
+    }
+  },
+  "lint-staged": {
+    "*.{js,vue}": "vue-cli-service lint"
   },
   "main": "src/components/Form",
   "files": [
@@ -38,6 +46,8 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
     "eslint-plugin-jest": "^21.22.0",
+    "husky": "^1.0.0-rc.13",
+    "lint-staged": "^7.2.2",
     "mwangaben-vthelpers": "^1.2.3",
     "pug-plain-loader": "^1.0.0",
     "stylus-loader": "^3.0.2",
