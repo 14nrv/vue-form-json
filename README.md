@@ -1,6 +1,6 @@
 [![Build Status](https://img.shields.io/circleci/project/github/14nrv/vue-form-json.svg "Build Status")](https://circleci.com/gh/14nrv/vue-form-json/tree/dev)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/b03c9983ff3c07c874a4/test_coverage)](https://codeclimate.com/github/14nrv/vue-form-json/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/b03c9983ff3c07c874a4/maintainability)](https://codeclimate.com/github/14nrv/vue-form-json/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/af5a15db118dac6343ab/test_coverage)](https://codeclimate.com/github/14nrv/vue-form-json/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/af5a15db118dac6343ab/maintainability)](https://codeclimate.com/github/14nrv/vue-form-json/maintainability)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
