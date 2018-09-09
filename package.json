@@ -1,16 +1,19 @@
 {
   "name": "vue-form-json",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Generate a vue form with validation and bulma style, from json",
   "author": "14nrv",
   "license": "MIT",
-  "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
+    "prepare": "vue-cli-service build --target lib --name vue-form-json ./src/components/Form/Form.vue",
     "lint": "vue-cli-service lint",
     "test": "NODE_ENV=test vue-cli-service test:unit --coverage",
-    "test:tdd": "NODE_ENV=test vue-cli-service test:unit --coverage --watchAll"
+    "test:tdd": "NODE_ENV=test vue-cli-service test:unit --coverage --watchAll",
+    "release:major": "npm version major && git push --follow-tags && npm publish",
+    "release:minor": "npm version minor && git push --follow-tags && npm publish",
+    "release:patch": "npm version patch && git push --follow-tags && npm publish"
   },
   "husky": {
     "hooks": {
@@ -18,14 +21,37 @@
     }
   },
   "lint-staged": {
-    "*.{js,vue}": "vue-cli-service lint"
+    "linters": {
+      "*.{js,vue}": "vue-cli-service lint"
+    },
+    "ignore": [
+      "dist/*.js"
+    ]
   },
-  "main": "src/components/Form",
+  "main": "./dist/vue-form-json.common.js",
   "files": [
     "src/*",
-    "dist/*",
-    "public/*"
+    "dist/*"
   ],
+  "keywords": [
+    "vue",
+    "vuejs",
+    "form",
+    "generator",
+    "schema",
+    "json",
+    "bulma",
+    "validation",
+    "vee-validate"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/14nrv/vue-form-json.git"
+  },
+  "bugs": {
+    "url": "https://github.com/14nrv/vue-form-json/issues"
+  },
+  "homepage": "https://github.com/14nrv/vue-form-json#readme",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",
     "bulma": "^0.7.1",
