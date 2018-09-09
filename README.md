@@ -6,45 +6,60 @@
 
 # vue-form-json
 
-[![Edit vue-form-json](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/62qrxvk26k)
+[![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/7yv4w0z600?module=%2Fsrc%2FApp.vue)
 
 ## Generate a vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
 All fields are required and input text by default.\
 Once submitted an event 'formSubmitted' is emitted on $root with the formName and all values.\
 Enjoy
 
+## Install
+```
+yarn add vue-form-json vee-validate bulma @fortawesome/fontawesome-free
+```
+
+## Usage
+```js
+// main.js
+import VeeValidate from 'vee-validate'
+// ...
+Vue.use(VeeValidate)
+// ...
+```
+
 ```html
 <template lang="pug">
   #app.section
-    app-form(:formFields="jsonFields",
-             :formName="'myAwesomeFormGenerated'")
+    form-json(:formFields="jsonFields",
+              :formName="'userProfil'")
 </template>
 
 <script>
-import Form from '@/components/Form'
-import jsonFields from '@/components/Form/fields'
+  import formJson from 'vue-form-json'
+  import jsonFields from './../assets/fields'
 
-export default {
-  name: 'app',
-  components: {
-    appForm: Form
-  },
-  data: () => ({
-    jsonFields
-  }),
-  mounted () {
-    this.$root.$on('formSubmitted', values => alert(JSON.stringify(values)))
+  export default {
+    name: 'app',
+    components: {
+      formJson
+    },
+    data: () => ({
+      jsonFields
+    }),
+    mounted () {
+      this.$root.$on('formSubmitted', values => alert(JSON.stringify(values)))
+    }
   }
-}
 </script>
 
 <style lang="stylus">
   @require '../node_modules/bulma/css/bulma.min.css'
   @require '../node_modules/@fortawesome/fontawesome-free/css/all.min.css'
+  @require '../node_modules/vue-form-json/dist/vue-form-json.css'
 </style>
 ```
 
-## Props available
+## Props available on formJson component
 ```js
 props: {
   formFields: {
@@ -68,29 +83,4 @@ props: {
     default: 'Reset'
   }
 }
-```
-
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Run your unit tests
-```
-yarn test:unit
 ```
