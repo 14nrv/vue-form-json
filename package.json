@@ -1,23 +1,57 @@
 {
-  "name": "vue-json-form",
-  "version": "0.1.0",
-  "description": "Generate a vue form with validation, with bulma style, from json",
+  "name": "vue-form-json",
+  "version": "0.1.1",
+  "description": "Generate a vue form with validation and bulma style, from json",
   "author": "14nrv",
   "license": "MIT",
-  "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
+    "prepare": "vue-cli-service build --target lib --name vue-form-json ./src/components/Form/Form.vue",
     "lint": "vue-cli-service lint",
-    "test:unit": "NODE_ENV=test vue-cli-service test:unit --coverage",
-    "test:tdd": "NODE_ENV=test vue-cli-service test:unit --coverage --watchAll"
+    "test": "NODE_ENV=test vue-cli-service test:unit --coverage",
+    "test:tdd": "NODE_ENV=test vue-cli-service test:unit --coverage --watchAll",
+    "release:major": "npm version major && git push --follow-tags && npm publish",
+    "release:minor": "npm version minor && git push --follow-tags && npm publish",
+    "release:patch": "npm version patch && git push --follow-tags && npm publish"
   },
-  "main": "src/components/Form",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && yarn test"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "*.{js,vue}": "vue-cli-service lint"
+    },
+    "ignore": [
+      "dist/*.js"
+    ]
+  },
+  "main": "./dist/vue-form-json.common.js",
   "files": [
     "src/*",
-    "dist/*",
-    "public/*"
+    "dist/*"
   ],
+  "keywords": [
+    "vue",
+    "vuejs",
+    "form",
+    "generator",
+    "schema",
+    "json",
+    "bulma",
+    "validation",
+    "vee-validate"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/14nrv/vue-form-json.git"
+  },
+  "bugs": {
+    "url": "https://github.com/14nrv/vue-form-json/issues"
+  },
+  "homepage": "https://github.com/14nrv/vue-form-json#readme",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",
     "bulma": "^0.7.1",
@@ -37,10 +71,23 @@
     "@vue/test-utils": "1.0.0-beta.11",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
+    "eslint-junit": "^1.0.1",
     "eslint-plugin-jest": "^21.22.0",
+    "husky": "^1.0.0-rc.13",
+    "jest-junit": "^5.1.0",
+    "lint-staged": "^7.2.2",
     "mwangaben-vthelpers": "^1.2.3",
     "pug-plain-loader": "^1.0.0",
     "stylus-loader": "^3.0.2",
     "vue-template-compiler": "^2.5.17"
+  },
+  "jest-junit": {
+    "output": "coverage/junit/js-test-results.xml"
+  },
+  "eslint-junit": {
+    "output": "coverage/junit/js-eslint-results.xml"
+  },
+  "engines": {
+    "node": ">=8.3.0"
   }
 }
