@@ -1,7 +1,7 @@
 <template lang="pug">
   input.input(:id="item.label | slugify",
               :name="item.label | slugify",
-              :type="item.type",
+              :type="item.type || 'text'",
               :placeholder="item.placeholder",
               :class="{ 'is-danger': !!error }",
               :required="item.isRequired != null ? item.isRequired : true",

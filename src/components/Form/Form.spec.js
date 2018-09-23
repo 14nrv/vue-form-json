@@ -38,6 +38,17 @@ describe('Form', () => {
     expect(wrapper.props().formName).toBeTruthy()
   })
 
+  it('set input type text and required by default', () => {
+    const LABEL_INPUT = 'testInput'
+    const LABEL_INPUT_SLUGIFY = slug(LABEL_INPUT)
+    wrapper.setProps({ formFields: [{ label: LABEL_INPUT }] })
+
+    b.domHas(`input[name=${LABEL_INPUT_SLUGIFY}]`)
+    b.domHas('input[type=text]')
+    b.domHas(`input#${LABEL_INPUT_SLUGIFY}[required=required]`)
+    b.see(LABEL_INPUT, `label[for=${LABEL_INPUT_SLUGIFY}].label p`)
+  })
+
   it('show fields', () => {
     b.domHas('.field-body .field .input')
     b.domHas('form > div > .field .input')
