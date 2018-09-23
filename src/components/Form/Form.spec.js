@@ -1,6 +1,9 @@
 import Helpers from 'mwangaben-vthelpers'
 import VeeValidate from 'vee-validate'
 import { mount, createLocalVue } from '@vue/test-utils'
+import flatten from 'ramda/src/flatten'
+import pickAll from 'ramda/src/pickAll'
+import map from 'ramda/src/map'
 import { slug } from '@/helpers'
 import Form from '@/components/Form'
 import fields from './fields'
@@ -14,6 +17,18 @@ let wrapper, b
 const $inputSubmit = 'input[type=submit]'
 const $reset = 'input[type=reset]'
 
+const FORM_NAME = 'testFormName'
+const DEFAULT_VALUE = 'test'
+const EMAIL_VALUE = `${DEFAULT_VALUE}@aol.fr`
+const COUNTRY_VALUE = 'Zimbabwe'
+const CHECKBOX_VALUE = 'one'
+const RADIO_VALUE = 'RadioOne'
+
+const allFields = flatten(fields)
+const allNormalInputLabel = allFields
+  .filter(x => !x.type || x.type === 'password' || x.type === 'tel')
+  .map(x => x.label)
+
 describe('Form', () => {
   beforeEach(() => {
     wrapper = mount(Form, {
@@ -23,11 +38,38 @@ describe('Form', () => {
       }),
       propsData: {
         formFields: fields,
-        formName: 'testformName'
+        formName: FORM_NAME
       }
     })
     b = new Helpers(wrapper, expect)
   })
+
+  const fillForm = () => {
+    allNormalInputLabel.forEach(x =>
+      b.type(DEFAULT_VALUE, `input[name=${slug(x)}]`)
+    )
+
+    b.type(EMAIL_VALUE, 'input[name=email]')
+    b.type(DEFAULT_VALUE, 'textarea[name=message]')
+    b.type(COUNTRY_VALUE, 'select[name=country]', 'change')
+    b.type(CHECKBOX_VALUE, 'input[name=checkbox]', 'change')
+    b.type(RADIO_VALUE, 'input[name=radio]', 'change')
+  }
+
+  const getFormValues = () => {
+    let allValueFromNormalInput = pickAll(allNormalInputLabel, {})
+    const setDefaultValue = obj => DEFAULT_VALUE
+    allValueFromNormalInput = map(setDefaultValue, allValueFromNormalInput)
+
+    return {
+      ...allValueFromNormalInput,
+      Message: DEFAULT_VALUE,
+      Checkbox: [CHECKBOX_VALUE],
+      Country: COUNTRY_VALUE,
+      Email: EMAIL_VALUE,
+      Radio: RADIO_VALUE
+    }
+  }
 
   it('is a Vue instance', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
@@ -36,6 +78,17 @@ describe('Form', () => {
   it('have some props', () => {
     expect(wrapper.props().formFields).toBeTruthy()
     expect(wrapper.props().formName).toBeTruthy()
+  })
+
+  it('set input type text and required by default', () => {
+    const LABEL_INPUT = 'testInput'
+    const LABEL_INPUT_SLUGIFY = slug(LABEL_INPUT)
+    wrapper.setProps({ formFields: [{ label: LABEL_INPUT }] })
+
+    b.domHas(`input[name=${LABEL_INPUT_SLUGIFY}]`)
+    b.domHas('input[type=text]')
+    b.domHas(`input#${LABEL_INPUT_SLUGIFY}[required=required]`)
+    b.see(LABEL_INPUT, `label[for=${LABEL_INPUT_SLUGIFY}].label p`)
   })
 
   it('show fields', () => {
@@ -53,26 +106,20 @@ describe('Form', () => {
     const inputSubmit = b.find($inputSubmit)
     expect(inputSubmit.attributes().disabled).toBe('disabled')
 
-    b.type('test@aol.fr', 'input[name=email]')
-    b.type('test', 'input[name=first-name]')
-    b.type('test', 'input[name=last-name]')
-    b.type('test', 'input[name=phone-number]')
-    b.type('test', 'input[name=address]')
-    b.type('test', 'input[name=zip]')
-    b.type('test', 'input[name=city]')
-    b.type('test', 'textarea[name=message]')
-    b.type('123456', 'input[name=password]')
-    b.type('123456', 'input[name=confirm-password]')
-
-    b.type('Zimbabwe', 'select[name=country]', 'change')
-    b.type('one', 'input[name=checkbox]', 'change')
-    b.type('RadioTwo', 'input[name=radio]', 'change')
+    fillForm()
 
     expect(wrapper.vm.isFormValid).toBeTruthy()
-
-    await wrapper.vm.beforeSubmit()
     expect(inputSubmit.attributes().disabled).toBe(undefined)
-    b.emitted('formSubmitted')
+  })
+
+  it('send an event formSubmitted with all values when submit', async () => {
+    fillForm()
+    await wrapper.vm.beforeSubmit()
+
+    b.emittedContains('formSubmitted', {
+      formName: FORM_NAME,
+      values: getFormValues()
+    })
   })
 
   it('have a btn to reset values', () => {

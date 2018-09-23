@@ -24,11 +24,9 @@ export default {
   filters: {
     slugify: value => slug(value)
   },
-  data () {
-    return {
-      value: []
-    }
-  },
+  data: () => ({
+    value: []
+  }),
   props: {
     item: {
       type: Object,
@@ -39,7 +37,8 @@ export default {
     }
   },
   methods: {
-    updateValue () {
+    updateValue (ev) {
+      this.value = [...this.value, ev.target.value]
       this.$emit('input', this.value)
     }
   }

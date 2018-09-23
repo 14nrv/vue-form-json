@@ -24,11 +24,9 @@ export default {
   filters: {
     slugify: value => slug(value)
   },
-  data () {
-    return {
-      value: []
-    }
-  },
+  data: () => ({
+    value: []
+  }),
   props: {
     item: {
       type: Object,

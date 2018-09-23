@@ -5,31 +5,31 @@
                  :item="item",
                  :error="fieldError",
                  :data-vv-name="item.label",
-                 v-validate="{ required: item.isRequired != null ? item.isRequired : true, min: item.min || 3 }")
+                 v-validate="{ required: isRequired, min: item.min || 3 }")
     app-select(v-if="item.type == 'select'",
                v-model.lazy="value",
                :item="item",
                :error="fieldError",
                :data-vv-name="item.label",
-               v-validate="{ required: item.isRequired != null ? item.isRequired : true }")
+               v-validate="{ required: isRequired }")
     app-checkbox(v-if="item.type == 'checkbox'",
                  v-model="value",
                  :item="item",
                  :error="fieldError",
                  :data-vv-name="item.label",
-                 v-validate="{ required: item.isRequired != null ? item.isRequired : true }")
+                 v-validate="{ required: isRequired }")
     app-radio(v-if="item.type == 'radio'",
                  v-model="value",
                  :item="item",
                  :error="fieldError",
                  :data-vv-name="item.label",
-                 v-validate="{ required: item.isRequired != null ? item.isRequired : true }")
+                 v-validate="{ required: isRequired }")
     app-input(v-if="item.type != 'textarea' && item.type != 'select' && item.type != 'checkbox' && item.type != 'radio'",
               v-model="value",
               :item="item",
               :error="fieldError",
               :data-vv-name="item.label",
-              v-validate="{ required: item.isRequired != null ? item.isRequired : true, email: item.type == 'email', min: item.min || 3 }")
+              v-validate="{ required: isRequired, email: item.type == 'email', min: item.min || 3 }")
 
     span.icon.is-small.is-left(v-if="item.iconLeft")
       i.fas(:class="`fa-${item.iconLeft}`")
@@ -70,6 +70,11 @@ export default {
       return this.errors.items.find(
         ({ field, scope }) => field === this.item.label && this.formName === scope
       )
+    },
+    isRequired () {
+      return this.item.isRequired != null
+        ? this.item.isRequired
+        : true
     }
   },
   props: {
