@@ -1,15 +1,17 @@
 import Helpers from 'mwangaben-vthelpers'
 import VeeValidate from 'vee-validate'
 import { mount, createLocalVue } from '@vue/test-utils'
+import { slug } from '@/helpers'
 import Form from '@/components/Form'
-import fields from './fields'
 
 const v = new VeeValidate.Validator()
 const localVue = createLocalVue()
 localVue.use(VeeValidate)
 
 let wrapper, b
-const formName = 'testFormName'
+const FORM_NAME = 'testFormName'
+const MIN_LENGTH = 10
+const LABEL_INPUT = 'test input'
 
 describe('Form Error', () => {
   beforeEach(() => {
@@ -19,25 +21,27 @@ describe('Form Error', () => {
         $validator: v
       }),
       propsData: {
-        formFields: fields,
-        formName
+        formFields: [{ label: LABEL_INPUT, min: MIN_LENGTH }],
+        formName: FORM_NAME
       }
     })
     b = new Helpers(wrapper, expect)
   })
 
-  it('can show error', async () => {
-    const $inputFirstName = 'input[name=first-name]'
-    const $error = `${$inputFirstName} ~ .help.is-danger`
+  it('show error if input value has not min length', async () => {
+    const LABEL_INPUT_SLUGIFY = slug(LABEL_INPUT)
+    const $inputTest = `input[name=${LABEL_INPUT_SLUGIFY}]`
+    const $error = `${$inputTest} ~ .help.is-danger`
 
-    b.type('ab', $inputFirstName)
+    b.domHasNot($error)
+    b.type('123456789', $inputTest)
 
     await wrapper.vm.$nextTick()
 
-    b.domHas(`${$inputFirstName}.is-danger`)
-    b.domHas(`${$inputFirstName} ~ .icon.is-right`)
+    b.domHas(`${$inputTest}.is-danger`)
+    b.domHas(`${$inputTest} ~ .icon.is-right`)
 
     b.domHas($error)
-    b.see('The First Name field must be at least 3 characters.', $error)
+    b.see(`The ${LABEL_INPUT} field must be at least ${MIN_LENGTH} characters.`, $error)
   })
 })
