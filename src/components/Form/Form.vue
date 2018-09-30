@@ -79,18 +79,24 @@ export default {
       const allControlRequire = this.allControls.filter(({ item }) => item.isRequired === undefined)
       const isAllControlRequireWithValue = allControlRequire.every(({ value }) => !!value)
       const isFormValuesEmpty = Object.values(this.formValues).every(x => x === undefined)
-      return isAllControlRequireWithValue && !isFormValuesEmpty
+      const hasError = !!this.$validator.errors.items.length
+      return isAllControlRequireWithValue && !isFormValuesEmpty && !hasError
     }
   },
   methods: {
     async beforeSubmit (ev) {
-      const result = await this.$validator.validateAll(this.formName)
-      result && this.isFormValid && this.$root.$emit('formSubmitted', {
+      let isValidated = false
+      await this.$validator.validateAll(this.formName)
+        .then(result => { isValidated = result })
+
+      isValidated && this.isFormValid && this.emitValues({
         formName: this.formName,
         values: this.formValues
       })
-
-      result && this.resetForm(ev)
+      isValidated && this.resetForm(ev)
+    },
+    emitValues (data) {
+      this.$root.$emit('formSubmitted', data)
     },
     resetFormValues () {
       this.allControls.map(x => { x.value = '' })
