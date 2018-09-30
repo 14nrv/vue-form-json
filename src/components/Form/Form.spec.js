@@ -52,7 +52,7 @@ describe('Form', () => {
     b.type(EMAIL_VALUE, 'input[name=email]')
     b.type(DEFAULT_VALUE, 'textarea[name=message]')
     b.type(COUNTRY_VALUE, 'select[name=country]', 'change')
-    b.type(CHECKBOX_VALUE, 'input[name=checkbox]', 'change')
+    b.click('.checkbox')
     b.type(RADIO_VALUE, 'input[name=radio]', 'change')
   }
 

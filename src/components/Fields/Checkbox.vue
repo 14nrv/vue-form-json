@@ -27,7 +27,6 @@ export default {
   }),
   methods: {
     updateValue (ev) {
-      this.value = [...this.value, ev.target.value]
       this.$emit('input', this.value)
     }
   }
