@@ -103,6 +103,10 @@ describe('Form', () => {
     b.domHas($inputSubmit)
   })
 
+  it('have a help field', () => {
+    b.domHas('.helpLabel')
+  })
+
   describe('submit', () => {
     it('have submit btn disabled', () => {
       const inputSubmit = b.find($inputSubmit)
