@@ -62,6 +62,10 @@ export default {
     btnResetText: {
       type: String,
       default: 'Reset'
+    },
+    resetFormAfterSubmit: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -93,7 +97,7 @@ export default {
         formName: this.formName,
         values: this.formValues
       })
-      isValidated && this.resetForm(ev)
+      isValidated && this.resetFormAfterSubmit && this.resetForm(ev)
     },
     emitValues (data) {
       this.$root.$emit('formSubmitted', data)

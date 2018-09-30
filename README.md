@@ -83,6 +83,10 @@ props: {
   btnResetText: {
     type: String,
     default: 'Reset'
+  },
+  resetFormAfterSubmit: {
+    type: Boolean,
+    default: false
   }
 }
 ```
