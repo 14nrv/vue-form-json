@@ -5,6 +5,10 @@
               :placeholder="item.placeholder",
               :class="{ 'is-danger': !!error }",
               :required="item.isRequired != null ? item.isRequired : true",
+              :minlength="item.minLength",
+              :maxlength="item.maxLength",
+              :min="item.min",
+              :max="item.max",
               @input="updateValue",
               @change="updateValue",
               @blur="$emit('blur')")

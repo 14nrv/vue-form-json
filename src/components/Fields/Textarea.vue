@@ -4,6 +4,8 @@
                     :class="{ 'is-danger': !!error }",
                     :data-vv-name="item.label",
                     :required="item.isRequired != null ? item.isRequired : true",
+                    :minlength="item.minLength",
+                    :maxlength="item.maxLength",
                     @input="updateValue",
                     @change="updateValue",
                     @blur="$emit('blur')")
