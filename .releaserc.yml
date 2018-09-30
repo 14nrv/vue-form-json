@@ -20,7 +20,7 @@ publish:
     path: "@semantic-release/github"
     assets:
         - path: "dist"
-        - label: "vue-json-form distribution"
+          label: "vue-json-form distribution"
 
 success:
   - "@semantic-release/github"
