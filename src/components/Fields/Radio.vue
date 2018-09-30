@@ -17,30 +17,14 @@
 </template>
 
 <script>
-import { slug } from '@/helpers'
+import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Radio',
-  filters: {
-    slugify: value => slug(value)
-  },
+  mixins: [ fieldsMixin ],
   data: () => ({
     value: []
-  }),
-  props: {
-    item: {
-      type: Object,
-      required: true
-    },
-    error: {
-      required: true
-    }
-  },
-  methods: {
-    updateValue () {
-      this.$emit('input', this.value)
-    }
-  }
+  })
 }
 </script>
 

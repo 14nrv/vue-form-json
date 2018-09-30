@@ -11,26 +11,10 @@
 </template>
 
 <script>
-import { slug } from '@/helpers'
+import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Input',
-  filters: {
-    slugify: value => slug(value)
-  },
-  props: {
-    item: {
-      type: Object,
-      required: true
-    },
-    error: {
-      required: true
-    }
-  },
-  methods: {
-    updateValue (e) {
-      this.$emit('input', e.target.value)
-    }
-  }
+  mixins: [ fieldsMixin ]
 }
 </script>

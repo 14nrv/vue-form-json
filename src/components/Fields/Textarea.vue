@@ -10,31 +10,10 @@
 </template>
 
 <script>
-import { slug } from '@/helpers'
+import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Textarea',
-  filters: {
-    slugify: value => slug(value)
-  },
-  data () {
-    return {
-      formName: this.$parent.formName
-    }
-  },
-  props: {
-    item: {
-      type: Object,
-      required: true
-    },
-    error: {
-      required: false
-    }
-  },
-  methods: {
-    updateValue (e) {
-      this.$emit('input', e.target.value)
-    }
-  }
+  mixins: [ fieldsMixin ]
 }
 </script>
