@@ -62,6 +62,10 @@ export default {
     btnResetText: {
       type: String,
       default: 'Reset'
+    },
+    resetFormAfterSubmit: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -79,18 +83,24 @@ export default {
       const allControlRequire = this.allControls.filter(({ item }) => item.isRequired === undefined)
       const isAllControlRequireWithValue = allControlRequire.every(({ value }) => !!value)
       const isFormValuesEmpty = Object.values(this.formValues).every(x => x === undefined)
-      return isAllControlRequireWithValue && !isFormValuesEmpty
+      const hasError = !!this.$validator.errors.items.length
+      return isAllControlRequireWithValue && !isFormValuesEmpty && !hasError
     }
   },
   methods: {
     async beforeSubmit (ev) {
-      const result = await this.$validator.validateAll(this.formName)
-      result && this.isFormValid && this.$root.$emit('formSubmitted', {
+      let isValidated = false
+      await this.$validator.validateAll(this.formName)
+        .then(result => { isValidated = result })
+
+      isValidated && this.isFormValid && this.emitValues({
         formName: this.formName,
         values: this.formValues
       })
-
-      result && this.resetForm(ev)
+      isValidated && this.resetFormAfterSubmit && this.resetForm(ev)
+    },
+    emitValues (data) {
+      this.$root.$emit('formSubmitted', data)
     },
     resetFormValues () {
       this.allControls.map(x => { x.value = '' })
@@ -118,6 +128,7 @@ export default {
 <style lang="stylus">
   $defaultMargin = .75rem
   $formWidth = 28rem
+  $tablet_bp = 769px
 
   form
     max-width $formWidth
@@ -127,8 +138,9 @@ export default {
     margin-bottom $defaultMargin
 
   .field-body
-    .help.is-danger
-      max-width ($formWidth / 2 - $defaultMargin)
+    .field
+      @media (min-width: $tablet_bp)
+        width ($formWidth / 2 - $defaultMargin)
 
   .form-footer
     .button:not(:last-child)

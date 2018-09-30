@@ -17,28 +17,16 @@
 </template>
 
 <script>
-import { slug } from '@/helpers'
+import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Checkbox',
-  filters: {
-    slugify: value => slug(value)
-  },
+  mixins: [ fieldsMixin ],
   data: () => ({
     value: []
   }),
-  props: {
-    item: {
-      type: Object,
-      required: true
-    },
-    error: {
-      required: true
-    }
-  },
   methods: {
     updateValue (ev) {
-      this.value = [...this.value, ev.target.value]
       this.$emit('input', this.value)
     }
   }

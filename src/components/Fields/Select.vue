@@ -12,33 +12,15 @@
 </template>
 
 <script>
-import { slug } from '@/helpers'
+import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Select',
-  filters: {
-    slugify: value => slug(value)
-  },
-  props: {
-    item: {
-      type: Object,
-      required: true
-    },
-    error: {
-      required: true
-    }
-  },
-  methods: {
-    updateValue (e) {
-      this.$emit('input', e.target.value)
-    }
-  }
+  mixins: [ fieldsMixin ]
 }
 </script>
 
 <style lang="stylus">
-  dangerColor = #ff3860
-
   .is-fullwidth
     width 100%
 </style>

@@ -23,6 +23,8 @@ const EMAIL_VALUE = `${DEFAULT_VALUE}@aol.fr`
 const COUNTRY_VALUE = 'Zimbabwe'
 const CHECKBOX_VALUE = 'one'
 const RADIO_VALUE = 'RadioOne'
+const NUMBER_VALUE = '18'
+const PASSWORD_VALUE = 'password'
 
 const allFields = flatten(fields)
 const allNormalInputLabel = allFields
@@ -50,9 +52,11 @@ describe('Form', () => {
     )
 
     b.type(EMAIL_VALUE, 'input[name=email]')
+    b.type(PASSWORD_VALUE, 'input[name=password]')
+    b.type(NUMBER_VALUE, 'input[name=age]')
     b.type(DEFAULT_VALUE, 'textarea[name=message]')
     b.type(COUNTRY_VALUE, 'select[name=country]', 'change')
-    b.type(CHECKBOX_VALUE, 'input[name=checkbox]', 'change')
+    b.click('.checkbox')
     b.type(RADIO_VALUE, 'input[name=radio]', 'change')
   }
 
@@ -63,11 +67,13 @@ describe('Form', () => {
 
     return {
       ...allValueFromNormalInput,
+      Password: PASSWORD_VALUE,
       Message: DEFAULT_VALUE,
       Checkbox: [CHECKBOX_VALUE],
       Country: COUNTRY_VALUE,
       Email: EMAIL_VALUE,
-      Radio: RADIO_VALUE
+      Radio: RADIO_VALUE,
+      Age: NUMBER_VALUE
     }
   }
 
@@ -97,42 +103,72 @@ describe('Form', () => {
     b.domHas($inputSubmit)
   })
 
-  it('have submit btn disabled', () => {
-    const inputSubmit = b.find($inputSubmit)
-    expect(inputSubmit.attributes().disabled).toBe('disabled')
+  it('have a help field', () => {
+    b.domHas('.helpLabel')
   })
 
-  it('enable submit input if all fields are valid', async () => {
-    const inputSubmit = b.find($inputSubmit)
-    expect(inputSubmit.attributes().disabled).toBe('disabled')
+  describe('submit', () => {
+    it('have submit btn disabled', () => {
+      const inputSubmit = b.find($inputSubmit)
+      expect(inputSubmit.attributes().disabled).toBe('disabled')
+    })
 
-    fillForm()
+    it('enable submit input if all fields are valid', async () => {
+      const inputSubmit = b.find($inputSubmit)
+      expect(inputSubmit.attributes().disabled).toBe('disabled')
 
-    expect(wrapper.vm.isFormValid).toBeTruthy()
-    expect(inputSubmit.attributes().disabled).toBe(undefined)
-  })
+      fillForm()
 
-  it('send an event formSubmitted with all values when submit', async () => {
-    fillForm()
-    await wrapper.vm.beforeSubmit()
+      expect(wrapper.vm.isFormValid).toBeTruthy()
+      expect(inputSubmit.attributes().disabled).toBe(undefined)
+    })
 
-    b.emittedContains('formSubmitted', {
-      formName: FORM_NAME,
-      values: getFormValues()
+    it('send an event formSubmitted with all values when submit', async () => {
+      fillForm()
+      await wrapper.vm.beforeSubmit()
+
+      b.emittedContains('formSubmitted', {
+        formName: FORM_NAME,
+        values: getFormValues()
+      })
     })
   })
 
-  it('have a btn to reset values', () => {
-    b.domHas($reset)
-    b.click($reset)
-  })
+  describe('reset', () => {
+    it('reset values after submit', async () => {
+      wrapper.setProps({ resetFormAfterSubmit: true })
 
-  it('can reset value', () => {
-    const resetFormStub = jest.fn()
-    wrapper.setMethods({ resetForm: resetFormStub })
+      const resetFormStub = jest.fn()
+      wrapper.setMethods({ resetForm: resetFormStub })
 
-    b.click($reset)
+      fillForm()
+      await wrapper.vm.beforeSubmit()
 
-    expect(resetFormStub).toHaveBeenCalled()
+      expect(resetFormStub).toHaveBeenCalled()
+    })
+
+    it(`doesn't reset values after submit`, async () => {
+      const resetFormStub = jest.fn()
+      wrapper.setMethods({ resetForm: resetFormStub })
+
+      fillForm()
+      await wrapper.vm.beforeSubmit()
+
+      expect(resetFormStub).not.toHaveBeenCalled()
+    })
+
+    it('have a btn to reset values', () => {
+      b.domHas($reset)
+      b.click($reset)
+    })
+
+    it('can reset value', () => {
+      const resetFormStub = jest.fn()
+      wrapper.setMethods({ resetForm: resetFormStub })
+
+      b.click($reset)
+
+      expect(resetFormStub).toHaveBeenCalled()
+    })
   })
 })

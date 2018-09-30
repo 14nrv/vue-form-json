@@ -1,0 +1,27 @@
+language: node_js
+cache: yarn
+notifications:
+  email: false
+node_js:
+  - '8'
+
+stages:
+  - test
+  - deploy
+
+jobs:
+  include:
+    - stage: test
+      before_script:
+        - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        - chmod +x ./cc-test-reporter
+        - ./cc-test-reporter before-build
+      script:
+        - yarn lint -f ./node_modules/eslint-junit/index.js
+        - yarn test
+      after_script:
+        - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+    - stage: deploy
+      script:
+        - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then yarn semantic-release; fi

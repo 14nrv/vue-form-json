@@ -5,32 +5,20 @@
               :placeholder="item.placeholder",
               :class="{ 'is-danger': !!error }",
               :required="item.isRequired != null ? item.isRequired : true",
+              :minlength="item.minLength",
+              :maxlength="item.maxLength",
+              :min="item.min",
+              :max="item.max",
               @input="updateValue",
               @change="updateValue",
               @blur="$emit('blur')")
 </template>
 
 <script>
-import { slug } from '@/helpers'
+import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Input',
-  filters: {
-    slugify: value => slug(value)
-  },
-  props: {
-    item: {
-      type: Object,
-      required: true
-    },
-    error: {
-      required: true
-    }
-  },
-  methods: {
-    updateValue (e) {
-      this.$emit('input', e.target.value)
-    }
-  }
+  mixins: [ fieldsMixin ]
 }
 </script>

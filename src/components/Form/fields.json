@@ -49,12 +49,17 @@
   },
   [
     {
-      "label": "Password",
-      "type": "password"
+      "label": "Age",
+      "type": "number",
+      "min": 18,
+      "max": 99,
+      "help": "( >= 18 <= 99 )"
     },
     {
-      "label": "Confirm Password",
-      "type": "password"
+      "label": "Password",
+      "type": "password",
+      "minLength": 5,
+      "maxLength": 10
     }
   ],
   {

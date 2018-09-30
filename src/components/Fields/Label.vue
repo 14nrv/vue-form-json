@@ -1,6 +1,7 @@
 <template lang="pug">
   label.label(:for="item.label | slugify", v-if="!item.dontShowLabel")
     p {{ item.label }}
+      span.helpLabel.has-text-grey-light.is-size-7.is-italic(v-if="item.help") {{ item.help }}
       span(v-if="item.isRequired != null ? item.isRequired : true")
         sup.has-text-grey-light.is-size-7  *
 
@@ -10,6 +11,7 @@
 import { slug } from '@/helpers'
 
 export default {
+  name: 'Label',
   filters: {
     slugify: value => slug(value)
   },
@@ -21,3 +23,9 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+  .helpLabel
+    margin-left .5rem
+    font-weight normal
+</style>

@@ -5,7 +5,7 @@
                  :item="item",
                  :error="fieldError",
                  :data-vv-name="item.label",
-                 v-validate="{ required: isRequired, min: item.min || 3 }")
+                 v-validate="{ required: isRequired, min: item.minLength || 1, max: item.maxLength || false }")
     app-select(v-if="item.type == 'select'",
                v-model.lazy="value",
                :item="item",
@@ -24,12 +24,18 @@
                  :error="fieldError",
                  :data-vv-name="item.label",
                  v-validate="{ required: isRequired }")
-    app-input(v-if="item.type != 'textarea' && item.type != 'select' && item.type != 'checkbox' && item.type != 'radio'",
+    app-input(v-if="item.type == 'number'",
               v-model="value",
               :item="item",
               :error="fieldError",
               :data-vv-name="item.label",
-              v-validate="{ required: isRequired, email: item.type == 'email', min: item.min || 3 }")
+              v-validate="{required: isRequired, numeric: true, min_value: item.min, max_value: item.max}")
+    app-input(v-if="isNormalInput",
+              v-model="value",
+              :item="item",
+              :error="fieldError",
+              :data-vv-name="item.label",
+              v-validate="{required: isRequired, email: item.type == 'email', min: item.minLength || 1, max: item.maxLength || false}")
 
     span.icon.is-small.is-left(v-if="item.iconLeft")
       i.fas(:class="`fa-${item.iconLeft}`")
@@ -44,6 +50,8 @@ import Select from '@/components/Fields/Select'
 import Textarea from '@/components/Fields/Textarea'
 import Checkbox from '@/components/Fields/Checkbox'
 import Radio from '@/components/Fields/Radio'
+
+const NOT_NORMAL_INPUT = ['textarea', 'select', 'checkbox', 'radio', 'number']
 
 export default {
   name: 'Control',
@@ -75,6 +83,9 @@ export default {
       return this.item.isRequired != null
         ? this.item.isRequired
         : true
+    },
+    isNormalInput () {
+      return !NOT_NORMAL_INPUT.includes(this.item.type)
     }
   },
   props: {

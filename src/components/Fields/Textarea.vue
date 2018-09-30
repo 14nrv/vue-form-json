@@ -4,37 +4,18 @@
                     :class="{ 'is-danger': !!error }",
                     :data-vv-name="item.label",
                     :required="item.isRequired != null ? item.isRequired : true",
+                    :minlength="item.minLength",
+                    :maxlength="item.maxLength",
                     @input="updateValue",
                     @change="updateValue",
                     @blur="$emit('blur')")
 </template>
 
 <script>
-import { slug } from '@/helpers'
+import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Textarea',
-  filters: {
-    slugify: value => slug(value)
-  },
-  data () {
-    return {
-      formName: this.$parent.formName
-    }
-  },
-  props: {
-    item: {
-      type: Object,
-      required: true
-    },
-    error: {
-      required: false
-    }
-  },
-  methods: {
-    updateValue (e) {
-      this.$emit('input', e.target.value)
-    }
-  }
+  mixins: [ fieldsMixin ]
 }
 </script>
