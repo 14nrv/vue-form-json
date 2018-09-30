@@ -11,7 +11,6 @@
     "lint": "vue-cli-service lint",
     "test": "NODE_ENV=test vue-cli-service test:unit --coverage",
     "test:tdd": "NODE_ENV=test vue-cli-service test:unit --coverage --watchAll",
-    "travis-deploy-once": "travis-deploy-once",
     "semantic-release": "semantic-release"
   },
   "husky": {
@@ -91,7 +90,6 @@
     "pug-plain-loader": "^1.0.0",
     "semantic-release": "^15.9.16",
     "stylus-loader": "^3.0.2",
-    "travis-deploy-once": "^5.0.9",
     "vue-template-compiler": "^2.5.17"
   },
   "jest-junit": {

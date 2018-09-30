@@ -7,8 +7,7 @@ node_js:
 
 stages:
   - test
-  - name: deploy
-    if: branch = master
+  - deploy
 
 jobs:
   include:
@@ -24,4 +23,5 @@ jobs:
         - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
     - stage: deploy
-      script: yarn travis-deploy-once "yarn semantic-release"
+      script:
+        - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then yarn semantic-release; fi
