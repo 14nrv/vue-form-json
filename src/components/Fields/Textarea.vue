@@ -8,7 +8,7 @@
                     :maxlength="item.maxLength",
                     @input="updateValue",
                     @change="updateValue",
-                    @blur="$emit('blur')")
+                    @blur="updateValue")
 </template>
 
 <script>

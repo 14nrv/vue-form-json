@@ -8,11 +8,10 @@
             :value="x",
             v-model="value",
             :type="item.type",
-            :placeholder="item.placeholder",
             :class="{ 'is-danger': !!error }",
             @input="updateValue",
             @change="updateValue",
-            @blur="$emit('blur')")
+            @blur="updateValue")
       span.checkboxLabel {{ x }}
 </template>
 
@@ -26,7 +25,7 @@ export default {
     value: []
   }),
   methods: {
-    updateValue (ev) {
+    updateValue () {
       this.$emit('input', this.value)
     }
   }

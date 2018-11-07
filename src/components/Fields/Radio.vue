@@ -8,11 +8,10 @@
             :value="x",
             v-model="value",
             :type="item.type",
-            :placeholder="item.placeholder",
             :class="{ 'is-danger': !!error }",
             @input="updateValue",
             @change="updateValue",
-            @blur="$emit('blur')")
+            @blur="updateValue")
       span.checkboxLabel {{ x }}
 </template>
 
@@ -23,8 +22,13 @@ export default {
   name: 'Radio',
   mixins: [ fieldsMixin ],
   data: () => ({
-    value: []
-  })
+    value: undefined
+  }),
+  methods: {
+    updateValue () {
+      this.$emit('input', this.value)
+    }
+  }
 }
 </script>
 

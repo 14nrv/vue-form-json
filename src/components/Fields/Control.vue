@@ -76,7 +76,7 @@ export default {
   computed: {
     fieldError () {
       return this.errors.items.find(
-        ({ field, scope }) => field === this.item.label && this.formName === scope
+        ({ field }) => field === this.item.label
       )
     },
     isRequired () {

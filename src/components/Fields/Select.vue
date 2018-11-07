@@ -4,8 +4,8 @@
           :name="item.label | slugify",
           :required="item.isRequired != null ? item.isRequired : true",
           @change="updateValue",
-          @blur="$emit('blur')")
-      option(v-if="item.placeholder", disabled, selected) {{ item.placeholder }}
+          @blur="updateValue")
+      option(v-if="item.placeholder", disabled, selected, value="") {{ item.placeholder }}
       option(v-for="(option, index) in item.options",
              :value="option",
              :key="index") {{ option }}
