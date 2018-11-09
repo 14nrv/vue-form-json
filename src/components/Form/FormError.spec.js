@@ -38,7 +38,11 @@ describe('Form Error', () => {
         formName: FORM_NAME
       }
     })
-    b = new Helpers(wrapper, expect)
+    b = new Helpers(wrapper)
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
   })
 
   it('show error if input value has not min length', async () => {
@@ -65,29 +69,24 @@ describe('Form Error', () => {
   })
 
   describe('number input', () => {
-    it('set min value control on input number', async () => {
-      const min = INPUT_NUMBER_PROPS.min
-      const inputValue = (min - 1).toString()
+    const { min, max } = INPUT_NUMBER_PROPS
 
-      b.type(inputValue, INPUT_NUMBER)
-      b.inputValueIs(inputValue, INPUT_NUMBER)
-      await wrapper.vm.$nextTick()
+    const testInputValue = val => {
+      const isMinValue = val === min
 
-      b.domHas(`${INPUT_NUMBER}.is-danger`)
-      b.see(`The Number field must be ${min} or more.`)
-      wrapper.destroy()
-    })
+      it(`set ${isMinValue ? 'min' : 'max'} value control on input number`, async () => {
+        const inputValue = (isMinValue ? val - 1 : val + 1).toString()
 
-    it('set max value control on input number', async () => {
-      const max = INPUT_NUMBER_PROPS.max
-      const inputValue = (max + 1).toString()
+        b.type(inputValue, INPUT_NUMBER)
+        b.inputValueIs(inputValue, INPUT_NUMBER)
+        await wrapper.vm.$nextTick()
 
-      b.type(inputValue, INPUT_NUMBER)
-      b.inputValueIs(inputValue, INPUT_NUMBER)
-      await wrapper.vm.$nextTick()
+        b.domHas(`${INPUT_NUMBER}.is-danger`)
+        b.see(`The Number field must be ${val} or ${isMinValue ? 'more' : 'less'}.`)
+      })
+    }
 
-      b.domHas(`${INPUT_NUMBER}.is-danger`)
-      b.see(`The Number field must be ${max} or less.`)
-    })
+    testInputValue(min)
+    testInputValue(max)
   })
 })

@@ -17,5 +17,8 @@ export default {
     updateValue (e) {
       this.$emit('input', e.target.value)
     }
+  },
+  created () {
+    this.item.value && (this.$parent.value = this.item.value)
   }
 }

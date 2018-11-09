@@ -34,8 +34,7 @@
   },
   "main": "./dist/vue-form-json.common.js",
   "files": [
-    "src/*",
-    "dist/*"
+    "dist/*.js"
   ],
   "keywords": [
     "vue",
@@ -63,7 +62,7 @@
     "ramda": "^0.25.0",
     "slugify": "^1.3.1",
     "stylus": "^0.54.5",
-    "vee-validate": "^2.1.0-beta.9",
+    "vee-validate": "^2.1.2",
     "vue": "^2.5.17"
   },
   "devDependencies": {
@@ -86,7 +85,7 @@
     "husky": "^1.0.0-rc.13",
     "jest-junit": "^5.1.0",
     "lint-staged": "^7.2.2",
-    "mwangaben-vthelpers": "^1.2.3",
+    "mwangaben-vthelpers": "^1.2.6-1",
     "pug-plain-loader": "^1.0.0",
     "semantic-release": "^15.9.16",
     "stylus-loader": "^3.0.2",

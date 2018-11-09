@@ -2,18 +2,18 @@
   div
     label.radio(v-for="(x, index) in item.items",
                 :key="index",
-                :for="x | slugify")
-      input(:id="x | slugify",
+                :for="x.text || x | slugify")
+      input(:id="x.text || x | slugify",
             :name="item.label | slugify",
-            :value="x",
+            :value="x.value || x.text || x",
             v-model="value",
             :type="item.type",
-            :placeholder="item.placeholder",
+            :required="item.isRequired !== false",
             :class="{ 'is-danger': !!error }",
             @input="updateValue",
             @change="updateValue",
-            @blur="$emit('blur')")
-      span.checkboxLabel {{ x }}
+            @blur="updateValue")
+      span.checkboxLabel {{ x.text || x }}
 </template>
 
 <script>
@@ -24,7 +24,20 @@ export default {
   mixins: [ fieldsMixin ],
   data: () => ({
     value: []
-  })
+  }),
+  methods: {
+    updateValue () {
+      this.$emit('input', this.value)
+    }
+  },
+  mounted () {
+    try {
+      const { value, text } = this.item.items.find(({ checked }) => checked)
+
+      this.value = value || text
+      this.$parent.value = value || text
+    } catch (error) {}
+  }
 }
 </script>
 

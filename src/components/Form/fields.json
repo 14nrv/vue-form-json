@@ -2,10 +2,13 @@
   [
     {
       "label": "First Name",
-      "placeholder": "First Name placeholder"
+      "value": "fir",
+      "minLength": 4
     },
     {
-      "label": "Last Name"
+      "label": "Last Name",
+      "placeholder": "Last Name placeholder",
+      "minLength": 3
     }
   ],
   [
@@ -20,14 +23,20 @@
     }
   ],
   {
-    "label": "Address"
+    "label": "Address",
+    "placeholder": "Address"
   },
   [
     {
-      "label": "Zip"
+      "label": "Zip",
+      "type": "number",
+      "placeholder": "Zip",
+      "showLabel": false
     },
     {
-      "label": "City"
+      "label": "City",
+      "placeholder": "City",
+      "showLabel": false
     }
   ],
   {
@@ -42,8 +51,8 @@
       "Algeria",
       "...",
       "Western Sahara",
-      "Yemen",
-      "Zambia",
+      {"text": "Yemen", "value": "YE"},
+      {"text": "Zambia", "value": "ZB", "selected": true},
       "Zimbabwe"
     ]
   },
@@ -70,11 +79,19 @@
   {
     "label": "Checkbox",
     "type": "checkbox",
-    "items": ["one", "two", "three"]
+    "items": [
+      {"text": "one", "value": 1, "checked": true},
+      {"text": "two", "checked": true},
+      "three"
+    ]
   },
   {
     "label": "Radio",
     "type": "radio",
-    "items": ["RadioOne", "RadioTwo", "RadioThree"]
+    "items": [
+      {"text": "RadioOne", "value": "Radio-One", "checked": true},
+      "RadioTwo",
+      "RadioThree"
+    ]
   }
 ]

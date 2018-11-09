@@ -1,45 +1,23 @@
 <template lang="pug">
-  .control.has-icons-right(:class="{'has-icons-left' : item.iconLeft}")
-    app-textarea(v-if="item.type == 'textarea'",
-                 v-model="value",
-                 :item="item",
-                 :error="fieldError",
-                 :data-vv-name="item.label",
-                 v-validate="{ required: isRequired, min: item.minLength || 1, max: item.maxLength || false }")
-    app-select(v-if="item.type == 'select'",
-               v-model.lazy="value",
-               :item="item",
-               :error="fieldError",
-               :data-vv-name="item.label",
-               v-validate="{ required: isRequired }")
-    app-checkbox(v-if="item.type == 'checkbox'",
-                 v-model="value",
-                 :item="item",
-                 :error="fieldError",
-                 :data-vv-name="item.label",
-                 v-validate="{ required: isRequired }")
-    app-radio(v-if="item.type == 'radio'",
-                 v-model="value",
-                 :item="item",
-                 :error="fieldError",
-                 :data-vv-name="item.label",
-                 v-validate="{ required: isRequired }")
-    app-input(v-if="item.type == 'number'",
-              v-model="value",
+  .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': fieldError}")
+    component(v-if="item.value",
+              v-model.lazy.trim="value",
+              :is="`app-${getComponent}`"
               :item="item",
               :error="fieldError",
               :data-vv-name="item.label",
-              v-validate="{required: isRequired, numeric: true, min_value: item.min, max_value: item.max}")
-    app-input(v-if="isNormalInput",
-              v-model="value",
+              v-validate.immediate="getValidation")
+    component(v-else,
+              v-model.lazy.trim="value",
+              :is="`app-${getComponent}`"
               :item="item",
               :error="fieldError",
               :data-vv-name="item.label",
-              v-validate="{required: isRequired, email: item.type == 'email', min: item.minLength || 1, max: item.maxLength || false}")
+              v-validate="getValidation")
 
     span.icon.is-small.is-left(v-if="item.iconLeft")
       i.fas(:class="`fa-${item.iconLeft}`")
-    span.icon.is-small.is-right(v-if="fieldError && item.type != 'select'")
+    span.icon.is-small.is-right(v-if="fieldError && item.type !== 'select'")
       i.fas.fa-exclamation-triangle
     p.help.is-danger(v-if="fieldError") {{ fieldError.msg }}
 </template>
@@ -62,39 +40,58 @@ export default {
     appCheckbox: Checkbox,
     appRadio: Radio
   },
-  data () {
-    return {
-      parent: this.$parent,
-      value: undefined
-    }
-  },
+  data: () => ({
+    value: undefined
+  }),
   watch: {
     value (val) {
-      this.parent.formValues[this.item.label] = val
+      this.$parent.formValues[this.item.label] = val
     }
   },
   computed: {
     fieldError () {
       return this.errors.items.find(
-        ({ field, scope }) => field === this.item.label && this.formName === scope
+        ({ field }) => field === this.item.label
       )
     },
     isRequired () {
-      return this.item.isRequired != null
-        ? this.item.isRequired
-        : true
+      return this.item.isRequired !== false
     },
     isNormalInput () {
       return !NOT_NORMAL_INPUT.includes(this.item.type)
+    },
+    getComponent () {
+      return (this.isNormalInput || this.item.type === 'number')
+        ? 'input'
+        : this.item.type
+    },
+    getValidation () {
+      const { type, minLength, maxLength, min, max } = this.item
+      const { defaultMinLength, defaultMaxLength, defaultMin, defaultMax } = this.$parent
+      let validation = { required: this.isRequired }
+
+      if (this.isNormalInput || type === 'textarea') {
+        validation = {
+          ...validation,
+          min: minLength || defaultMinLength,
+          max: maxLength || defaultMaxLength
+        }
+      }
+
+      this.isNormalInput && (validation = { ...validation, email: type === 'email' })
+
+      type === 'number' && (validation = {
+        ...validation,
+        min_value: min || defaultMin,
+        max_value: max || defaultMax
+      })
+
+      return validation
     }
   },
   props: {
     item: {
       type: Object,
-      required: true
-    },
-    formName: {
-      type: String,
       required: true
     }
   }

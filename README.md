@@ -1,5 +1,5 @@
 [![NPM Version](https://img.shields.io/npm/v/vue-form-json.svg)](https://www.npmjs.com/package/vue-form-json)
-[![Build Status](https://img.shields.io/circleci/project/github/14nrv/vue-form-json.svg "Build Status")](https://circleci.com/gh/14nrv/vue-form-json/tree/dev)
+[![Build Status](https://travis-ci.org/14nrv/vue-form-json.svg?branch=dev)](https://travis-ci.org/14nrv/vue-form-json)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/af5a15db118dac6343ab/test_coverage)](https://codeclimate.com/github/14nrv/vue-form-json/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/af5a15db118dac6343ab/maintainability)](https://codeclimate.com/github/14nrv/vue-form-json/maintainability)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -8,10 +8,11 @@
 
 # vue-form-json
 
-[![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/7yv4w0z600?module=%2Fsrc%2FApp.vue)
+[![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/9o5430mj7r?autoresize=1&hidenavigation=1&module=%2Fsrc%2FApp.vue&view=preview)
 
-## Generate a vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
-All fields are required and input text by default.\
+## Generate a responsive vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
+All fields are required and input text by default.
+They can have pre filled values.\
 Once submitted an event 'formSubmitted' is emitted on $root with the formName and all values.\
 Enjoy
 
@@ -86,6 +87,22 @@ props: {
   },
   resetFormAfterSubmit: {
     type: Boolean,
+    default: false
+  },
+  defaultMinLength: {
+    type: [Boolean, Number],
+    default: 1
+  },
+  defaultMaxLength: {
+    type: [Boolean, Number],
+    default: false
+  },
+  defaultMin: {
+    type: [Boolean, Number],
+    default: 0
+  },
+  defaultMax: {
+    type: [Boolean, Number],
     default: false
   }
 }
