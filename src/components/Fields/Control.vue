@@ -1,14 +1,14 @@
 <template lang="pug">
   .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': fieldError}")
     component(v-if="item.value",
-              v-model.lazy="value",
+              v-model.lazy.trim="value",
               :is="`app-${getComponent}`"
               :item="item",
               :error="fieldError",
               :data-vv-name="item.label",
               v-validate.immediate="getValidation")
     component(v-else,
-              v-model.lazy="value",
+              v-model.lazy.trim="value",
               :is="`app-${getComponent}`"
               :item="item",
               :error="fieldError",
