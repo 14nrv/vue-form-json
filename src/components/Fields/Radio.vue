@@ -22,7 +22,7 @@ export default {
   name: 'Radio',
   mixins: [ fieldsMixin ],
   data: () => ({
-    value: undefined
+    value: []
   }),
   methods: {
     updateValue () {
