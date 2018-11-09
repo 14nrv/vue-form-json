@@ -34,8 +34,7 @@
   },
   "main": "./dist/vue-form-json.common.js",
   "files": [
-    "src/*",
-    "dist/*"
+    "dist/*.js"
   ],
   "keywords": [
     "vue",
