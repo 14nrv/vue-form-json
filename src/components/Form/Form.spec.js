@@ -26,14 +26,15 @@ const RADIO_VALUE = 'Radio-One'
 const NUMBER_VALUE = '18'
 const ZIP_VALUE = '12345'
 const PASSWORD_VALUE = 'password'
-const COUNTRY_VALUE = fields
-  .find(field => field.label === 'Country').options
-  .filter(({ selected }) => selected)
-  .map(({ value, text }) => value || text)[0]
-const CHECKBOX_VALUE = fields
-  .find(field => field.label === 'Checkbox').items
-  .filter(({ checked }) => checked)
-  .map(({ value, text }) => value || text)
+
+const getInitialValue = (label, node, attribute) =>
+  fields
+    .find(field => field.label === label)[node]
+    .filter(x => x[attribute])
+    .map(({ value, text }) => value || text)
+
+const COUNTRY_VALUE = getInitialValue('Country', 'options', 'selected')[0]
+const CHECKBOX_VALUE = getInitialValue('Checkbox', 'items', 'checked')
 
 const allFields = flatten(fields)
 const allNormalInputLabel = allFields
