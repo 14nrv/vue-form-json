@@ -2,17 +2,17 @@
   div
     label.checkbox(v-for="(x, index) in item.items",
                   :key="index",
-                  :for="x | slugify")
-      input(:id="x | slugify",
+                  :for="x.text || x | slugify")
+      input(:id="x.text || x | slugify",
             :name="item.label | slugify",
-            :value="x",
+            :value="x.value || x.text || x",
             v-model="value",
             :type="item.type",
             :class="{ 'is-danger': !!error }",
             @input="updateValue",
             @change="updateValue",
             @blur="updateValue")
-      span.checkboxLabel {{ x }}
+      span.checkboxLabel {{ x.text || x }}
 </template>
 
 <script>
@@ -28,6 +28,15 @@ export default {
     updateValue () {
       this.$emit('input', this.value)
     }
+  },
+  mounted () {
+    const itemsChecked = this.item.items
+      .filter(({ checked }) => checked)
+      .map(({ value, text }) => value || text)
+
+    this.value = itemsChecked
+
+    itemsChecked.length && (this.$parent.value = itemsChecked)
   }
 }
 </script>

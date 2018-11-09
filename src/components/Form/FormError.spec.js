@@ -38,7 +38,11 @@ describe('Form Error', () => {
         formName: FORM_NAME
       }
     })
-    b = new Helpers(wrapper, expect)
+    b = new Helpers(wrapper)
+  })
+
+  afterEach(() => {
+    wrapper.destroy()
   })
 
   it('show error if input value has not min length', async () => {
@@ -75,7 +79,6 @@ describe('Form Error', () => {
 
       b.domHas(`${INPUT_NUMBER}.is-danger`)
       b.see(`The Number field must be ${min} or more.`)
-      wrapper.destroy()
     })
 
     it('set max value control on input number', async () => {

@@ -11,7 +11,8 @@
 [![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/9o5430mj7r?autoresize=1&hidenavigation=1&module=%2Fsrc%2FApp.vue&view=preview)
 
 ## Generate a responsive vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
-All fields are required and input text by default.\
+All fields are required and input text by default.
+They can have pre filled values.\
 Once submitted an event 'formSubmitted' is emitted on $root with the formName and all values.\
 Enjoy
 
@@ -86,6 +87,22 @@ props: {
   },
   resetFormAfterSubmit: {
     type: Boolean,
+    default: false
+  },
+  defaultMinLength: {
+    type: [Boolean, Number],
+    default: 1
+  },
+  defaultMaxLength: {
+    type: [Boolean, Number],
+    default: false
+  },
+  defaultMin: {
+    type: [Boolean, Number],
+    default: 0
+  },
+  defaultMax: {
+    type: [Boolean, Number],
     default: false
   }
 }

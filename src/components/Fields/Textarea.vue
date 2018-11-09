@@ -2,10 +2,11 @@
   textarea.textarea(:id="item.label | slugify",
                     :name="item.label | slugify",
                     :class="{ 'is-danger': !!error }",
+                    v-model="item.value",
                     :data-vv-name="item.label",
-                    :required="item.isRequired != null ? item.isRequired : true",
-                    :minlength="item.minLength",
-                    :maxlength="item.maxLength",
+                    :required="item.isRequired !== false",
+                    :minlength="item.minLength || defaultMinLength",
+                    :maxlength="item.maxLength || defaultMaxLength",
                     @input="updateValue",
                     @change="updateValue",
                     @blur="updateValue")
@@ -16,6 +17,14 @@ import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Textarea',
-  mixins: [ fieldsMixin ]
+  mixins: [ fieldsMixin ],
+  computed: {
+    defaultMinLength () {
+      return this.$parent.$parent.defaultMinLength
+    },
+    defaultMaxLength () {
+      return this.$parent.$parent.defaultMaxLength
+    }
+  }
 }
 </script>

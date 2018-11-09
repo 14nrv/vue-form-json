@@ -1,8 +1,8 @@
 <template lang="pug">
-  label.label(:for="item.label | slugify", v-if="!item.dontShowLabel")
+  label.label(:for="item.label | slugify", v-if="item.showLabel !== false")
     p {{ item.label }}
       span.helpLabel.has-text-grey-light.is-size-7.is-italic(v-if="item.help") {{ item.help }}
-      span(v-if="item.isRequired != null ? item.isRequired : true")
+      span(v-if="item.isRequired !== false")
         sup.has-text-grey-light.is-size-7  *
 
 </template>

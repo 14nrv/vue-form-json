@@ -2,13 +2,14 @@
   .select.is-block(:class="{ 'is-danger': !!error }")
     select.is-fullwidth(:id="item.label | slugify",
           :name="item.label | slugify",
-          :required="item.isRequired != null ? item.isRequired : true",
+          :required="item.isRequired !== false",
           @change="updateValue",
           @blur="updateValue")
       option(v-if="item.placeholder", disabled, selected, value="") {{ item.placeholder }}
       option(v-for="(option, index) in item.options",
-             :value="option",
-             :key="index") {{ option }}
+             :value="option.value || option.text || option",
+             :selected="option.selected",
+             :key="index") {{ option.text || option }}
 </template>
 
 <script>
@@ -16,7 +17,13 @@ import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Select',
-  mixins: [ fieldsMixin ]
+  mixins: [ fieldsMixin ],
+  mounted () {
+    const optionSelected = this.item.options && this.item.options.find(x => typeof x === 'object' && x.selected)
+    this.$parent.value = optionSelected
+      ? optionSelected.value || optionSelected.text
+      : undefined
+  }
 }
 </script>
 

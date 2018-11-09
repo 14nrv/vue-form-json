@@ -6,11 +6,11 @@
       .field-body(v-if="Array.isArray(item)")
         .field(v-for="(x, i) in item", :key="x.label")
           app-label(:item="x")
-          app-control(:item="x", :formName="formName", ref="control")
+          app-control(:item="x", ref="control")
 
       .field(v-else)
         app-label(:item="item")
-        app-control(:item="item", :formName="formName", ref="control")
+        app-control(:item="item", ref="control")
 
     .field.form-footer.is-grouped.is-opposed
       input.button(type="reset",
@@ -66,6 +66,22 @@ export default {
     resetFormAfterSubmit: {
       type: Boolean,
       default: false
+    },
+    defaultMinLength: {
+      type: [Boolean, Number],
+      default: 1
+    },
+    defaultMaxLength: {
+      type: [Boolean, Number],
+      default: false
+    },
+    defaultMin: {
+      type: [Boolean, Number],
+      default: 0
+    },
+    defaultMax: {
+      type: [Boolean, Number],
+      default: false
     }
   },
   data: () => ({
@@ -80,7 +96,7 @@ export default {
   },
   computed: {
     isFormValid () {
-      const allControlRequire = this.allControls.filter(({ item }) => item.isRequired === undefined)
+      const allControlRequire = this.allControls.filter(({ item }) => item.isRequired !== false)
       const isAllControlRequireWithValue = allControlRequire.every(({ value }) => !!value)
       const isFormValuesEmpty = Object.values(this.formValues).every(x => x === undefined)
       const hasError = !!this.$validator.errors.items.length
@@ -102,11 +118,26 @@ export default {
     emitValues (data) {
       this.$root.$emit('formSubmitted', data)
     },
-    resetFormValues () {
+    clearValues () {
       this.allControls.map(x => { x.value = '' })
 
       const subValues = this.allControls.filter(x => x.$children[0].value)
       subValues.map(x => { x.$children[0].value = [] })
+    },
+    clearPrefillValues () {
+      const inputsPrefilled = this.allControls.filter(x => x.item.value)
+      inputsPrefilled.map(x => { x.item.value = undefined })
+
+      const selects = this.allControls.filter(x => x.item.options)
+      selects.map(select => {
+        select.item.options.map(option => {
+          option.selected && (option.selected = false)
+        })
+      })
+    },
+    resetFormValues () {
+      this.clearValues()
+      this.clearPrefillValues()
     },
     resetForm (ev) {
       this.resetFormValues()
