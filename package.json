@@ -1,6 +1,6 @@
 {
   "name": "vue-form-json",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Generate a vue form with validation and bulma style, from json",
   "author": "14nrv",
   "license": "MIT",
