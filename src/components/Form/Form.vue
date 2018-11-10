@@ -159,7 +159,7 @@ export default {
 <style lang="stylus">
   $defaultMargin = .75rem
   $formWidth = 28rem
-  $tablet_bp = 769px
+  $bp_mobile = 496px
 
   form
     max-width $formWidth
@@ -169,9 +169,17 @@ export default {
     margin-bottom $defaultMargin
 
   .field-body
+    display block
+
+    @media (min-width: $bp_mobile)
+      display flex
+      justify-content space-between
+
     .field
-      @media (min-width: $tablet_bp)
-        width ($formWidth / 2 - $defaultMargin)
+      width 100%
+
+      @media (min-width: $bp_mobile)
+        width ($formWidth / 2 - $defaultMargin / 2)
 
   .form-footer
     .button:not(:last-child)
