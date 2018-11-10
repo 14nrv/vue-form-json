@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/14nrv/vue-form-json/compare/v0.3.1...v0.3.2) (2018-11-10)
+
+
+### Bug Fixes
+
+* responsive form ([d283c66](https://github.com/14nrv/vue-form-json/commit/d283c66))
+
 ## [0.3.1](https://github.com/14nrv/vue-form-json/compare/v0.3.0...v0.3.1) (2018-11-09)
 
 
