@@ -91,7 +91,7 @@ props: {
   },
   defaultMinLength: {
     type: [Boolean, Number],
-    default: 1
+    default: false
   },
   defaultMaxLength: {
     type: [Boolean, Number],

@@ -140,7 +140,6 @@ describe('Form', () => {
   it('have default properties', () => {
     b.hasAttribute('placeholder', 'Last Name placeholder', $inputLastName)
     b.hasAttribute('minlength', '3', $inputLastName)
-    b.hasAttribute('minlength', '1', 'textarea[name=message]')
     b.hasAttribute('min', '0', 'input[name=zip]')
     b.hasAttribute('min', '18', 'input[name=age]')
     b.hasAttribute('max', '99', 'input[name=age]')
