@@ -5,10 +5,11 @@
               :placeholder="item.placeholder",
               :class="{ 'is-danger': !!error }",
               :required="item.isRequired !== false",
-              :minlength="item.type !== 'number' ? item.minLength || defaultMinLength : undefined",
-              :maxlength="item.type !== 'number' ? item.maxLength || defaultMaxLength : undefined",
-              :min="item.type === 'number' ? item.min || defaultMin : undefined",
-              :max="item.type === 'number' ? item.max || defaultMax : undefined",
+              :minlength="!isInputNumber && !hasPattern ? item.minLength || defaultMinLength : undefined",
+              :maxlength="!isInputNumber && !hasPattern ? item.maxLength || defaultMaxLength : undefined",
+              :min="isInputNumber ? item.min || defaultMin : undefined",
+              :max="isInputNumber ? item.max || defaultMax : undefined",
+              :pattern="item.pattern",
               v-model="value",
               @input="updateValue",
               @change="updateValue",
@@ -28,6 +29,12 @@ export default {
     this.value = this.item.value
   },
   computed: {
+    hasPattern () {
+      return !!this.item.pattern
+    },
+    isInputNumber () {
+      return this.item.type === 'number'
+    },
     defaultMin () {
       return this.$parent.$parent.defaultMin
     },

@@ -29,7 +29,7 @@ import Textarea from '@/components/Fields/Textarea'
 import Checkbox from '@/components/Fields/Checkbox'
 import Radio from '@/components/Fields/Radio'
 
-const NOT_NORMAL_INPUT = ['textarea', 'select', 'checkbox', 'radio', 'number']
+const NOT_NORMAL_INPUT = ['textarea', 'select', 'checkbox', 'radio']
 
 export default {
   name: 'Control',
@@ -61,30 +61,25 @@ export default {
       return !NOT_NORMAL_INPUT.includes(this.item.type)
     },
     getComponent () {
-      return (this.isNormalInput || this.item.type === 'number')
-        ? 'input'
-        : this.item.type
+      return this.isNormalInput ? 'input' : this.item.type
     },
     getValidation () {
-      const { type, minLength, maxLength, min, max } = this.item
+      const { type, minLength, maxLength, min, max, pattern } = this.item
       const { defaultMinLength, defaultMaxLength, defaultMin, defaultMax } = this.$parent
+      const isNormalInputOrTextarea = this.isNormalInput || type === 'textarea'
+      const isInputNumber = type === 'number'
       let validation = { required: this.isRequired }
 
-      if (this.isNormalInput || type === 'textarea') {
-        validation = {
+      pattern
+        ? validation = { ...validation, regex: new RegExp(pattern) }
+        : isNormalInputOrTextarea && (validation = {
           ...validation,
-          min: minLength || defaultMinLength,
-          max: maxLength || defaultMaxLength
-        }
-      }
-
-      this.isNormalInput && (validation = { ...validation, email: type === 'email' })
-
-      type === 'number' && (validation = {
-        ...validation,
-        min_value: min || defaultMin,
-        max_value: max || defaultMax
-      })
+          email: type === 'email',
+          min: !isInputNumber ? minLength || defaultMinLength : false,
+          max: !isInputNumber ? maxLength || defaultMaxLength : false,
+          min_value: isInputNumber ? min || defaultMin : false,
+          max_value: isInputNumber ? max || defaultMax : false
+        })
 
       return validation
     }
