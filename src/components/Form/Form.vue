@@ -69,7 +69,7 @@ export default {
     },
     defaultMinLength: {
       type: [Boolean, Number],
-      default: 1
+      default: false
     },
     defaultMaxLength: {
       type: [Boolean, Number],
@@ -82,6 +82,10 @@ export default {
     defaultMax: {
       type: [Boolean, Number],
       default: false
+    },
+    hasIcon: {
+      type: Boolean,
+      default: true
     }
   },
   data: () => ({

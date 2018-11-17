@@ -1,5 +1,5 @@
 <template lang="pug">
-  .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': fieldError}")
+  .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': shouldShowErrorIcon}")
     component(v-if="item.value",
               v-model.lazy.trim="value",
               :is="`app-${getComponent}`"
@@ -17,7 +17,7 @@
 
     span.icon.is-small.is-left(v-if="item.iconLeft")
       i.fas(:class="`fa-${item.iconLeft}`")
-    span.icon.is-small.is-right(v-if="fieldError && item.type !== 'select'")
+    span.icon.is-small.is-right(v-if="shouldShowErrorIcon")
       i.fas.fa-exclamation-triangle
     p.help.is-danger(v-if="fieldError") {{ fieldError.msg }}
 </template>
@@ -29,7 +29,7 @@ import Textarea from '@/components/Fields/Textarea'
 import Checkbox from '@/components/Fields/Checkbox'
 import Radio from '@/components/Fields/Radio'
 
-const NOT_NORMAL_INPUT = ['textarea', 'select', 'checkbox', 'radio', 'number']
+const NOT_NORMAL_INPUT = ['textarea', 'select', 'checkbox', 'radio']
 
 export default {
   name: 'Control',
@@ -49,6 +49,12 @@ export default {
     }
   },
   computed: {
+    hasIcon () {
+      return this.$parent.hasIcon
+    },
+    shouldShowErrorIcon () {
+      return this.fieldError && this.item.type !== 'select' && this.hasIcon
+    },
     fieldError () {
       return this.errors.items.find(
         ({ field }) => field === this.item.label
@@ -61,30 +67,25 @@ export default {
       return !NOT_NORMAL_INPUT.includes(this.item.type)
     },
     getComponent () {
-      return (this.isNormalInput || this.item.type === 'number')
-        ? 'input'
-        : this.item.type
+      return this.isNormalInput ? 'input' : this.item.type
     },
     getValidation () {
-      const { type, minLength, maxLength, min, max } = this.item
+      const { type, minLength, maxLength, min, max, pattern } = this.item
       const { defaultMinLength, defaultMaxLength, defaultMin, defaultMax } = this.$parent
+      const isNormalInputOrTextarea = this.isNormalInput || type === 'textarea'
+      const isInputNumber = type === 'number'
       let validation = { required: this.isRequired }
 
-      if (this.isNormalInput || type === 'textarea') {
-        validation = {
+      pattern
+        ? validation = { ...validation, regex: new RegExp(pattern) }
+        : isNormalInputOrTextarea && (validation = {
           ...validation,
-          min: minLength || defaultMinLength,
-          max: maxLength || defaultMaxLength
-        }
-      }
-
-      this.isNormalInput && (validation = { ...validation, email: type === 'email' })
-
-      type === 'number' && (validation = {
-        ...validation,
-        min_value: min || defaultMin,
-        max_value: max || defaultMax
-      })
+          email: type === 'email',
+          min: !isInputNumber ? minLength || defaultMinLength : false,
+          max: !isInputNumber ? maxLength || defaultMaxLength : false,
+          min_value: isInputNumber ? min || defaultMin : false,
+          max_value: isInputNumber ? max || defaultMax : false
+        })
 
       return validation
     }

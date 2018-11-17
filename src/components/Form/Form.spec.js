@@ -18,6 +18,9 @@ const $inputSubmit = 'input[type=submit]'
 const $reset = 'input[type=reset]'
 const $inputFirstName = 'input[name=first-name]'
 const $inputLastName = 'input[name=last-name]'
+const $inputPassword = 'input[name=password]'
+const $errorMessage = '.help.is-danger'
+const $errorIcon = '.fa-exclamation-triangle'
 
 const FORM_NAME = 'testFormName'
 const DEFAULT_VALUE = 'test'
@@ -25,7 +28,7 @@ const EMAIL_VALUE = `${DEFAULT_VALUE}@aol.fr`
 const RADIO_VALUE = 'Radio-One'
 const NUMBER_VALUE = '18'
 const ZIP_VALUE = '12345'
-const PASSWORD_VALUE = 'password'
+const PASSWORD_VALUE = ZIP_VALUE
 
 const getInitialValue = (label, node, attribute) =>
   fields
@@ -38,8 +41,10 @@ const CHECKBOX_VALUE = getInitialValue('Checkbox', 'items', 'checked')
 
 const allFields = flatten(fields)
 const allNormalInputLabel = allFields
-  .filter(x => !x.type || x.type === 'password' || x.type === 'tel')
+  .filter(x => !x.type || x.type === 'tel')
   .map(x => x.label)
+
+const fieldWithPattern = allFields.find(({ pattern }) => pattern)
 
 describe('Form', () => {
   beforeEach(() => {
@@ -66,7 +71,7 @@ describe('Form', () => {
     )
 
     b.type(EMAIL_VALUE, 'input[name=email]')
-    b.type(PASSWORD_VALUE, 'input[name=password]')
+    b.type(PASSWORD_VALUE, $inputPassword)
     b.type(NUMBER_VALUE, 'input[name=age]')
     b.type(ZIP_VALUE, 'input[name=zip]')
     b.type(DEFAULT_VALUE, 'textarea[name=message]')
@@ -137,13 +142,20 @@ describe('Form', () => {
     b.domHas('.helpLabel')
   })
 
+  it('hide error icon', () => {
+    b.domHas($errorIcon)
+
+    wrapper.setProps({ hasIcon: false })
+    b.domHasNot($errorIcon)
+  })
+
   it('have default properties', () => {
     b.hasAttribute('placeholder', 'Last Name placeholder', $inputLastName)
     b.hasAttribute('minlength', '3', $inputLastName)
-    b.hasAttribute('minlength', '1', 'textarea[name=message]')
     b.hasAttribute('min', '0', 'input[name=zip]')
     b.hasAttribute('min', '18', 'input[name=age]')
     b.hasAttribute('max', '99', 'input[name=age]')
+    b.hasAttribute('pattern', fieldWithPattern.pattern, $inputPassword)
   })
 
   it('validate on blur', async () => {
@@ -155,6 +167,30 @@ describe('Form', () => {
     await wrapper.vm.$nextTick()
 
     b.domHas(`${$inputLastName}${isDanger}`)
+  })
+
+  it('add pattern rule validation', async () => {
+    wrapper.destroy()
+
+    const passwordField = {
+      label: 'Password',
+      pattern: '^([0-9]+)$'
+    }
+    wrapper.setProps({ formFields: [passwordField] })
+    await wrapper.vm.$nextTick()
+
+    b.domHasNot($errorMessage)
+
+    b.type(DEFAULT_VALUE, $inputPassword)
+    await wrapper.vm.$nextTick()
+
+    b.see('The Password field format is invalid.', $errorMessage)
+    expect(wrapper.vm.isFormValid).toBeFalsy()
+
+    b.type(PASSWORD_VALUE, $inputPassword)
+    await wrapper.vm.$nextTick()
+
+    b.domHasNot($errorMessage)
   })
 
   describe('default value', () => {
@@ -183,7 +219,7 @@ describe('Form', () => {
 
     it('can have error on prefill input', () => {
       b.domHas(`${$inputFirstName}.is-danger`)
-      b.see('The First Name field must be at least 4 characters.', '.help.is-danger')
+      b.see('The First Name field must be at least 4 characters.', $errorMessage)
     })
   })
 

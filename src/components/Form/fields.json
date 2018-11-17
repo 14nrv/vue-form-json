@@ -3,7 +3,8 @@
     {
       "label": "First Name",
       "value": "fir",
-      "minLength": 4
+      "minLength": 4,
+      "maxLength": 20
     },
     {
       "label": "Last Name",
@@ -67,8 +68,8 @@
     {
       "label": "Password",
       "type": "password",
-      "minLength": 5,
-      "maxLength": 10
+      "pattern": ".[0-9]{4,}$",
+      "help": "(5 digits at least)"
     }
   ],
   {

@@ -17,8 +17,9 @@ Once submitted an event 'formSubmitted' is emitted on $root with the formName an
 Enjoy
 
 ## Install
-```
+```sh
 yarn add vue-form-json vee-validate bulma @fortawesome/fontawesome-free
+#fontawesome is not needed if hasIcon props is false
 ```
 
 ## Usage
@@ -91,7 +92,7 @@ props: {
   },
   defaultMinLength: {
     type: [Boolean, Number],
-    default: 1
+    default: false
   },
   defaultMaxLength: {
     type: [Boolean, Number],
@@ -104,6 +105,10 @@ props: {
   defaultMax: {
     type: [Boolean, Number],
     default: false
+  },
+  hasIcon: {
+    type: Boolean,
+    default: true
   }
 }
 ```
