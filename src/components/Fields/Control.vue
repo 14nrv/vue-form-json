@@ -1,5 +1,5 @@
 <template lang="pug">
-  .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': fieldError}")
+  .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': shouldShowErrorIcon}")
     component(v-if="item.value",
               v-model.lazy.trim="value",
               :is="`app-${getComponent}`"
@@ -17,7 +17,7 @@
 
     span.icon.is-small.is-left(v-if="item.iconLeft")
       i.fas(:class="`fa-${item.iconLeft}`")
-    span.icon.is-small.is-right(v-if="fieldError && item.type !== 'select'")
+    span.icon.is-small.is-right(v-if="shouldShowErrorIcon")
       i.fas.fa-exclamation-triangle
     p.help.is-danger(v-if="fieldError") {{ fieldError.msg }}
 </template>
@@ -49,6 +49,12 @@ export default {
     }
   },
   computed: {
+    hasIcon () {
+      return this.$parent.hasIcon
+    },
+    shouldShowErrorIcon () {
+      return this.fieldError && this.item.type !== 'select' && this.hasIcon
+    },
     fieldError () {
       return this.errors.items.find(
         ({ field }) => field === this.item.label

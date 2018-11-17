@@ -82,6 +82,10 @@ export default {
     defaultMax: {
       type: [Boolean, Number],
       default: false
+    },
+    hasIcon: {
+      type: Boolean,
+      default: true
     }
   },
   data: () => ({

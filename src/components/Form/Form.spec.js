@@ -19,7 +19,8 @@ const $reset = 'input[type=reset]'
 const $inputFirstName = 'input[name=first-name]'
 const $inputLastName = 'input[name=last-name]'
 const $inputPassword = 'input[name=password]'
-const $error = '.help.is-danger'
+const $errorMessage = '.help.is-danger'
+const $errorIcon = '.fa-exclamation-triangle'
 
 const FORM_NAME = 'testFormName'
 const DEFAULT_VALUE = 'test'
@@ -141,6 +142,13 @@ describe('Form', () => {
     b.domHas('.helpLabel')
   })
 
+  it('hide error icon', () => {
+    b.domHas($errorIcon)
+
+    wrapper.setProps({ hasIcon: false })
+    b.domHasNot($errorIcon)
+  })
+
   it('have default properties', () => {
     b.hasAttribute('placeholder', 'Last Name placeholder', $inputLastName)
     b.hasAttribute('minlength', '3', $inputLastName)
@@ -171,18 +179,18 @@ describe('Form', () => {
     wrapper.setProps({ formFields: [passwordField] })
     await wrapper.vm.$nextTick()
 
-    b.domHasNot($error)
+    b.domHasNot($errorMessage)
 
     b.type(DEFAULT_VALUE, $inputPassword)
     await wrapper.vm.$nextTick()
 
-    b.see('The Password field format is invalid.', $error)
+    b.see('The Password field format is invalid.', $errorMessage)
     expect(wrapper.vm.isFormValid).toBeFalsy()
 
     b.type(PASSWORD_VALUE, $inputPassword)
     await wrapper.vm.$nextTick()
 
-    b.domHasNot($error)
+    b.domHasNot($errorMessage)
   })
 
   describe('default value', () => {
@@ -211,7 +219,7 @@ describe('Form', () => {
 
     it('can have error on prefill input', () => {
       b.domHas(`${$inputFirstName}.is-danger`)
-      b.see('The First Name field must be at least 4 characters.', '.help.is-danger')
+      b.see('The First Name field must be at least 4 characters.', $errorMessage)
     })
   })
 
