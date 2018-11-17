@@ -1,3 +1,16 @@
+# [0.4.0](https://github.com/14nrv/vue-form-json/compare/v0.3.2...v0.4.0) (2018-11-17)
+
+
+### Bug Fixes
+
+* set defaultMinLength props to false by default ([3eacdd3](https://github.com/14nrv/vue-form-json/commit/3eacdd3))
+
+
+### Features
+
+* add hasIcon prop ([41a0a54](https://github.com/14nrv/vue-form-json/commit/41a0a54))
+* add pattern validation rule ([c98b194](https://github.com/14nrv/vue-form-json/commit/c98b194))
+
 ## [0.3.2](https://github.com/14nrv/vue-form-json/compare/v0.3.1...v0.3.2) (2018-11-10)
 
 
