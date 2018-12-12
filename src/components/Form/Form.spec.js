@@ -39,7 +39,7 @@ const getInitialValue = (label, node, attribute) =>
 const COUNTRY_VALUE = getInitialValue('Country', 'options', 'selected')[0]
 const CHECKBOX_VALUE = getInitialValue('Checkbox', 'items', 'checked')
 
-const allFields = flatten(fields)
+const allFields = flatten(fields).filter(field => Object.keys(field)[0] !== 'html')
 const allNormalInputLabel = allFields
   .filter(x => !x.type || x.type === 'tel')
   .map(x => x.label)

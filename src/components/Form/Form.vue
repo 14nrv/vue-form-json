@@ -4,9 +4,13 @@
 
     div(v-for="(item, index) in formFields", :key="index")
       .field-body(v-if="Array.isArray(item)")
-        .field(v-for="(x, i) in item", :key="x.label")
+        .field(v-for="x in item", :key="x.label")
           app-label(:item="x")
           app-control(:item="x", ref="control")
+
+      .field(v-else-if="Object.keys(item) == 'html'",
+            v-html="Object.values(item)[0]",
+            data-test="htmlContentFromFormFields")
 
       .field(v-else)
         app-label(:item="item")
