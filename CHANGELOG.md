@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/14nrv/vue-form-json/compare/v0.5.0...v0.6.0) (2019-02-02)
+
+
+### Features
+
+* allow slot ([2d04d3c](https://github.com/14nrv/vue-form-json/commit/2d04d3c))
+
 # [0.5.0](https://github.com/14nrv/vue-form-json/compare/v0.4.0...v0.5.0) (2018-12-12)
 
 
