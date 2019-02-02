@@ -12,6 +12,10 @@
             v-html="Object.values(item)[0]",
             data-test="htmlContentFromFormFields")
 
+      .field(v-else-if="Object.keys(item) == 'slot'",
+            data-test="slot")
+        slot(:name="Object.values(item)[0]")
+
       .field(v-else)
         app-label(:item="item")
         app-control(:item="item", ref="control")
