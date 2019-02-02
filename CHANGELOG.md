@@ -1,3 +1,11 @@
+# [0.7.0](https://github.com/14nrv/vue-form-json/compare/v0.6.0...v0.7.0) (2019-02-02)
+
+
+### Features
+
+* allow custom css classes ([bb1a356](https://github.com/14nrv/vue-form-json/commit/bb1a356))
+* allow custom css classes ([3a5f5f5](https://github.com/14nrv/vue-form-json/commit/3a5f5f5))
+
 # [0.6.0](https://github.com/14nrv/vue-form-json/compare/v0.5.0...v0.6.0) (2019-02-02)
 
 
