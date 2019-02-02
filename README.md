@@ -36,6 +36,8 @@ Vue.use(VeeValidate)
   #app.section
     form-json(:formFields="jsonFields",
               :formName="'userProfil'")
+      div(slot="slotNameAddedInJsonFields")
+        p Your slot content
 </template>
 
 <script>

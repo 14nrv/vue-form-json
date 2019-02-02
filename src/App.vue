@@ -2,6 +2,15 @@
   #app.section
     app-form(:formFields="jsonFields",
              :formName="'userProfil'")
+      div(slot="boxSlot")
+        .box
+          article
+            .content
+              p
+                strong.has-text-info Info<br>
+                | You can also use
+                strong  named slot
+                |  like this one
 </template>
 
 <script>
