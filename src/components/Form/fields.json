@@ -76,6 +76,24 @@
     }
   ],
   {
+    "html": "<p class='label'>Custom css classes</p>",
+    "parentClass": "labelDefaultMb has-text-centered"
+  },
+  [
+    {
+      "label": "small",
+      "placeholder": "small",
+      "showLabel": false,
+      "isRequired": false
+    },
+    {
+      "label": "big",
+      "placeholder": "big",
+      "showLabel": false,
+      "isRequired": false
+    }
+  ],
+  {
     "label": "Message",
     "type": "textarea",
     "isRequired": false
