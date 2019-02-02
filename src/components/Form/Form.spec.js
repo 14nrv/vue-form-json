@@ -39,7 +39,8 @@ const getInitialValue = (label, node, attribute) =>
 const COUNTRY_VALUE = getInitialValue('Country', 'options', 'selected')[0]
 const CHECKBOX_VALUE = getInitialValue('Checkbox', 'items', 'checked')
 
-const allFields = flatten(fields).filter(field => Object.keys(field)[0] !== 'html')
+const allFields = flatten(fields)
+  .filter(field => !['html', 'slot'].includes(Object.keys(field)[0]))
 const allNormalInputLabel = allFields
   .filter(x => !x.type || x.type === 'tel')
   .map(x => x.label)
@@ -191,6 +192,24 @@ describe('Form', () => {
     await wrapper.vm.$nextTick()
 
     b.domHasNot($errorMessage)
+  })
+
+  describe('slot', () => {
+    const slotContainer = '[data-test=slot]'
+
+    it('have no slot by default', async () => {
+      wrapper.setProps({ formFields: [{ label: 'superLabel' }] })
+      await wrapper.vm.$nextTick()
+
+      b.domHasNot(slotContainer)
+    })
+
+    it('have a slot', () => {
+      b.domHas(slotContainer)
+
+      const allSlots = wrapper.findAll(slotContainer)
+      expect(allSlots).toHaveLength(1)
+    })
   })
 
   describe('default value', () => {

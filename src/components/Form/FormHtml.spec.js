@@ -2,7 +2,6 @@ import Helpers from 'mwangaben-vthelpers'
 import VeeValidate from 'vee-validate'
 import { mount, createLocalVue } from '@vue/test-utils'
 import Form from '@/components/Form'
-import fields from './fields'
 
 const v = new VeeValidate.Validator()
 const localVue = createLocalVue()
@@ -11,9 +10,9 @@ localVue.use(VeeValidate)
 let wrapper, b
 
 const FORM_NAME = 'testFormName'
-const fakeSlot = '[data-test=htmlContentFromFormFields]'
+const htmlContainer = '[data-test=htmlContentFromFormFields]'
 
-describe('Fake slot', () => {
+describe('Form with html content inside json', () => {
   beforeEach(() => {
     wrapper = mount(Form, {
       localVue,
@@ -21,32 +20,23 @@ describe('Fake slot', () => {
         $validator: v
       }),
       propsData: {
-        formFields: fields,
+        formFields: [{ label: 'defaultLabel' }],
         formName: FORM_NAME
       }
     })
     b = new Helpers(wrapper)
   })
 
-  afterEach(() => {
-    wrapper.destroy()
-  })
+  it('show html content inside json if html key is defined in json', async () => {
+    const htmlContent = 'this is a html content'
 
-  it('does not have fake slot if no key html in json', async () => {
-    wrapper.setProps({ formFields: [ { label: 'x' }, [{ label: 'y' }, { label: 'z' }] ] })
+    b.domHasNot(htmlContainer)
+
+    wrapper.setProps({ formFields: [{ html: `<p>${htmlContent}</p>` }] })
     await wrapper.vm.$nextTick()
 
-    b.domHasNot(fakeSlot)
-  })
-
-  it('show fake slot if html key is defined in json', async () => {
-    const fakeSlotContent = 'this is a fake slot'
-
-    wrapper.setProps({ formFields: [{ html: `<p>${fakeSlotContent}</p>` }] })
-    await wrapper.vm.$nextTick()
-
-    b.domHas(fakeSlot)
-    b.see(fakeSlotContent)
+    b.domHas(htmlContainer)
+    b.see(htmlContent)
 
     const allParagraphs = wrapper.findAll('form > div p')
     expect(allParagraphs).toHaveLength(1)
