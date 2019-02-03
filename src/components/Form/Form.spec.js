@@ -227,21 +227,19 @@ describe('Form', () => {
       expect(allZ).toHaveLength(1)
     })
 
-    it('add custom class with classic json', async () => {
+    it('add custom class with classic json & slot', async () => {
       const LABEL_CLASS = 'labelClass'
-
-      wrapper.setProps({ formFields: [{ label: 'label', parentClass: LABEL_CLASS }] })
-      await wrapper.vm.$nextTick()
-
-      b.domHas(`.field.${LABEL_CLASS}`)
-    })
-
-    it('add custom class with json slot', async () => {
       const SLOT_CLASS = 'slotClass'
 
-      wrapper.setProps({ formFields: [{ slot: 'slotName', parentClass: SLOT_CLASS }] })
+      wrapper.setProps({
+        formFields: [
+          { label: 'label', parentClass: LABEL_CLASS },
+          { slot: 'slotName', parentClass: SLOT_CLASS }
+        ]
+      })
       await wrapper.vm.$nextTick()
 
+      b.domHas(`.field.${LABEL_CLASS} > .control input#label`)
       b.domHas(`.field.${SLOT_CLASS}`)
     })
 
@@ -249,7 +247,12 @@ describe('Form', () => {
       const HTML_CLASS = 'htmlClass'
       const CONTENT_CLASS = 'custom-content'
 
-      wrapper.setProps({ formFields: [{ html: `<p class=${CONTENT_CLASS}>content</p>`, parentClass: HTML_CLASS }] })
+      wrapper.setProps({
+        formFields: [{
+          html: `<p class=${CONTENT_CLASS}>content</p>`,
+          parentClass: HTML_CLASS
+        }]
+      })
       await wrapper.vm.$nextTick()
 
       b.domHas(`.field.${HTML_CLASS} > .${CONTENT_CLASS}`)
