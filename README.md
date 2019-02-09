@@ -38,11 +38,11 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
   ```
 - [x] Named slot everywhere inside form
   ```js
-  formFields: [{ slot: 'nameOfTheSlot' }]
+  const formFields: [{ slot: 'nameOfTheSlot' }]
   ```
 - [x] Html directly inside json (formFields props)
   ```js
-  formFields: [{ html: '<p>Your html content</p>' }]
+  const formFields: [{ html: '<p>Your html content</p>' }]
   ```
 
 ## Install
