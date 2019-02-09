@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/14nrv/vue-form-json/compare/v1.0.0...v1.1.0) (2019-02-09)
+
+
+### Features
+
+* allow VeeValidate simple validation rules ([78da861](https://github.com/14nrv/vue-form-json/commit/78da861))
+
 # [1.0.0](https://github.com/14nrv/vue-form-json/compare/v0.7.0...v1.0.0) (2019-02-09)
 
 
