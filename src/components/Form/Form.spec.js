@@ -29,6 +29,7 @@ const RADIO_VALUE = 'Radio-One'
 const NUMBER_VALUE = '18'
 const ZIP_VALUE = '12345'
 const PASSWORD_VALUE = ZIP_VALUE
+const BIG_VALUE = ZIP_VALUE
 
 const getInitialValue = (label, node, attribute) =>
   fields
@@ -43,6 +44,7 @@ const allFields = flatten(fields)
   .filter(field => !['html', 'slot'].includes(Object.keys(field)[0]))
 const allNormalInputLabel = allFields
   .filter(x => !x.type || x.type === 'tel')
+  .filter(x => !x.validation)
   .map(x => x.label)
 
 const fieldWithPattern = allFields.find(({ pattern }) => pattern)
@@ -76,6 +78,8 @@ describe('Form', () => {
     b.type(NUMBER_VALUE, 'input[name=age]')
     b.type(ZIP_VALUE, 'input[name=zip]')
     b.type(DEFAULT_VALUE, 'textarea[name=message]')
+    b.type(DEFAULT_VALUE, 'input[name=small]')
+    b.type(BIG_VALUE, 'input[name=big]')
   }
 
   const getFormValues = () => {
@@ -92,7 +96,9 @@ describe('Form', () => {
       Email: EMAIL_VALUE,
       Radio: RADIO_VALUE,
       Age: NUMBER_VALUE,
-      Zip: ZIP_VALUE
+      Zip: ZIP_VALUE,
+      big: BIG_VALUE,
+      small: DEFAULT_VALUE
     }
   }
 

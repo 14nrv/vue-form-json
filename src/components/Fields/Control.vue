@@ -87,7 +87,7 @@ export default {
           max_value: isInputNumber ? max || defaultMax : false
         })
 
-      return validation
+      return { ...validation, ...this.item.validation }
     }
   },
   props: {
