@@ -37,15 +37,19 @@
     "dist"
   ],
   "keywords": [
-    "vue",
-    "vuejs",
+    "form-builder",
+    "form-generator",
+    "form-json",
     "form",
-    "generator",
+    "json-schema-form",
     "schema",
-    "json",
-    "bulma",
+    "vue-json-form",
+    "vue",
+    "vue.js",
+    "vuejs",
+    "generator",
     "validation",
-    "vee-validate"
+    "bulma"
   ],
   "repository": {
     "type": "git",
