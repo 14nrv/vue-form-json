@@ -76,21 +76,33 @@
     }
   ],
   {
-    "html": "<p class='label'>Custom css classes</p>",
-    "parentClass": "labelDefaultMb has-text-centered"
+    "html": "<p class='label'>Custom attr<sup class='has-text-grey-light is-size-7'> *</sup></p>",
+    "attr": {
+      "class": "labelDefaultMb has-text-centered",
+      "data-test": "dataTestFromJson"
+    }
   },
   [
     {
       "label": "small",
       "placeholder": "small",
       "showLabel": false,
-      "isRequired": false
+      "isRequired": false,
+      "attr": {
+        "data-attr": "testingAttrFromJson",
+        "class": "is-rounded"
+      }
     },
     {
       "label": "big",
       "placeholder": "big",
       "showLabel": false,
-      "isRequired": false
+      "isRequired": false,
+      "field": {
+        "attr": {
+          "data-attr": "dataAttrOnField"
+        }
+      }
     }
   ],
   {

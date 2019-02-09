@@ -1,9 +1,7 @@
 import Helpers from 'mwangaben-vthelpers'
 import VeeValidate from 'vee-validate'
 import { mount, createLocalVue } from '@vue/test-utils'
-import flatten from 'ramda/src/flatten'
 import Form from '@/components/Form'
-import fields from './fields'
 
 const v = new VeeValidate.Validator()
 const localVue = createLocalVue()
@@ -20,7 +18,7 @@ describe('custom css class', () => {
         $validator: v
       }),
       propsData: {
-        formFields: fields,
+        formFields: [{ label: 'default' }],
         formName: FORM_NAME
       }
     })
@@ -31,11 +29,24 @@ describe('custom css class', () => {
     wrapper.destroy()
   })
 
-  it('apply custom classes', () => {
-    const customClassInJson = flatten(fields).find(x => Object.keys(x).includes('parentClass')).parentClass
-    const allCustomClass = wrapper.findAll(`.field.${customClassInJson.split(' ').join('.')}`)
+  it('apply custom class on .field & input', async () => {
+    const fields = [{
+      label: 'custom label',
+      attr: {
+        class: 'inputClass'
+      },
+      field: {
+        attr: {
+          class: 'labelDefaultMb has-text-centered'
+        }
+      }
+    }]
 
-    expect(allCustomClass).toHaveLength(1)
+    wrapper.setProps({ formFields: fields })
+    await wrapper.vm.$nextTick()
+
+    const fieldClass = fields[0].field.attr.class
+    b.domHas(`.field.${fieldClass.split(' ').join('.')} input.${fields[0].attr.class}`)
   })
 
   it('add customs class in json array', async () => {
@@ -46,8 +57,8 @@ describe('custom css class', () => {
       formFields: [
         [
           { label: 'x' },
-          { label: 'y', parentClass: Y_CLASS_NAME },
-          { label: 'z', parentClass: Z_CLASS_NAME }
+          { label: 'y', field: { attr: { class: Y_CLASS_NAME } } },
+          { label: 'z', field: { attr: { class: Z_CLASS_NAME } } }
         ]
       ]
     })
@@ -69,8 +80,8 @@ describe('custom css class', () => {
 
     wrapper.setProps({
       formFields: [
-        { label: 'label', parentClass: LABEL_CLASS },
-        { slot: 'slotName', parentClass: SLOT_CLASS }
+        { label: 'label', field: { attr: { class: LABEL_CLASS } } },
+        { slot: 'slotName', attr: { class: SLOT_CLASS } }
       ]
     })
     await wrapper.vm.$nextTick()
@@ -86,11 +97,30 @@ describe('custom css class', () => {
     wrapper.setProps({
       formFields: [{
         html: `<p class=${CONTENT_CLASS}>content</p>`,
-        parentClass: HTML_CLASS
+        attr: { class: HTML_CLASS }
       }]
     })
     await wrapper.vm.$nextTick()
 
     b.domHas(`.field.${HTML_CLASS} > .${CONTENT_CLASS}`)
   })
+
+  it.each([['', 'select'], ['', 'textarea'], ['input', 'radio'], ['input', 'checkbox']])(
+    `apply attr on %s %s`,
+    async (dom, type) => {
+      const EL_CLASS = `${type}Class`
+
+      wrapper.setProps({
+        formFields: [{
+          label: `${type} label`,
+          type: `${type}`,
+          attr: { class: EL_CLASS },
+          items: dom === 'input' && ['item1']
+        }]
+      })
+      await wrapper.vm.$nextTick()
+
+      b.domHas(`${dom || type}.${EL_CLASS}`)
+    }
+  )
 })

@@ -6,9 +6,10 @@
       input(:id="x.text || x | slugify",
             :name="item.label | slugify",
             :value="x.value || x.text || x",
-            v-model="value",
             :type="item.type",
-            :class="{ 'is-danger': !!error }",
+            v-model="value",
+            v-bind="item.attr",
+            :class="[{ 'is-danger': !!error }, item.attr && item.attr.class]",
             @input="updateValue",
             @change="updateValue",
             @blur="updateValue")

@@ -108,6 +108,7 @@ describe('Form', () => {
   it('set input type text and required by default', () => {
     const LABEL_INPUT = 'testInput'
     const LABEL_INPUT_SLUGIFY = slug(LABEL_INPUT)
+
     wrapper.setProps({ formFields: [{ label: LABEL_INPUT }] })
 
     b.domHas(`input[name=${LABEL_INPUT_SLUGIFY}]`)
@@ -119,6 +120,7 @@ describe('Form', () => {
 
   it('set not required', () => {
     const label = 'plop'
+
     wrapper.setProps({ formFields: [{ label, isRequired: false }] })
 
     b.domHasNot('.label sup.has-text-grey-light')
@@ -128,6 +130,7 @@ describe('Form', () => {
 
   it('hide label', () => {
     const label = 'plop'
+
     wrapper.setProps({ formFields: [{ label, showLabel: false }] })
 
     b.domHasNot('.label')
@@ -147,6 +150,7 @@ describe('Form', () => {
     b.domHas($errorIcon)
 
     wrapper.setProps({ hasIcon: false })
+
     b.domHasNot($errorIcon)
   })
 
@@ -185,6 +189,7 @@ describe('Form', () => {
     b.type(DEFAULT_VALUE, $inputPassword)
     await wrapper.vm.$nextTick()
 
+    b.domHas($errorMessage)
     b.see('The Password field format is invalid.', $errorMessage)
     expect(wrapper.vm.isFormValid).toBeFalsy()
 
@@ -192,6 +197,12 @@ describe('Form', () => {
     await wrapper.vm.$nextTick()
 
     b.domHasNot($errorMessage)
+  })
+
+  it('have custom attr', () => {
+    b.domHas('.field[data-attr=dataAttrOnField]')
+    b.domHas('input[data-attr=testingAttrFromJson]')
+    b.domHas('input.input.is-rounded')
   })
 
   describe('slot', () => {

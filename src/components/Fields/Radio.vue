@@ -9,7 +9,8 @@
             v-model="value",
             :type="item.type",
             :required="item.isRequired !== false",
-            :class="{ 'is-danger': !!error }",
+            v-bind="item.attr",
+            :class="[{ 'is-danger': !!error }, item.attr && item.attr.class]",
             @input="updateValue",
             @change="updateValue",
             @blur="updateValue")
