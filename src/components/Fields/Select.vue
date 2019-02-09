@@ -3,6 +3,7 @@
     select.is-fullwidth(:id="item.label | slugify",
           :name="item.label | slugify",
           :required="item.isRequired !== false",
+          v-bind="item.attr",
           @change="updateValue",
           @blur="updateValue")
       option(v-if="item.placeholder", disabled, selected, value="") {{ item.placeholder }}

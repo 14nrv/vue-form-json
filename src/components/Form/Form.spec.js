@@ -108,6 +108,7 @@ describe('Form', () => {
   it('set input type text and required by default', () => {
     const LABEL_INPUT = 'testInput'
     const LABEL_INPUT_SLUGIFY = slug(LABEL_INPUT)
+
     wrapper.setProps({ formFields: [{ label: LABEL_INPUT }] })
 
     b.domHas(`input[name=${LABEL_INPUT_SLUGIFY}]`)
@@ -119,6 +120,7 @@ describe('Form', () => {
 
   it('set not required', () => {
     const label = 'plop'
+
     wrapper.setProps({ formFields: [{ label, isRequired: false }] })
 
     b.domHasNot('.label sup.has-text-grey-light')
@@ -128,6 +130,7 @@ describe('Form', () => {
 
   it('hide label', () => {
     const label = 'plop'
+
     wrapper.setProps({ formFields: [{ label, showLabel: false }] })
 
     b.domHasNot('.label')
@@ -147,6 +150,7 @@ describe('Form', () => {
     b.domHas($errorIcon)
 
     wrapper.setProps({ hasIcon: false })
+
     b.domHasNot($errorIcon)
   })
 
@@ -185,6 +189,7 @@ describe('Form', () => {
     b.type(DEFAULT_VALUE, $inputPassword)
     await wrapper.vm.$nextTick()
 
+    b.domHas($errorMessage)
     b.see('The Password field format is invalid.', $errorMessage)
     expect(wrapper.vm.isFormValid).toBeFalsy()
 
@@ -194,66 +199,10 @@ describe('Form', () => {
     b.domHasNot($errorMessage)
   })
 
-  describe('custom css class', () => {
-    it('apply custom classes', () => {
-      const customClassInJson = flatten(fields).find(x => Object.keys(x).includes('parentClass')).parentClass
-      const allCustomClass = wrapper.findAll(`.field.${customClassInJson.split(' ').join('.')}`)
-
-      expect(allCustomClass).toHaveLength(1)
-    })
-
-    it('add customs class in json array', async () => {
-      const Y_CLASS_NAME = 'yClass'
-      const Z_CLASS_NAME = 'zClass'
-
-      wrapper.setProps({
-        formFields: [
-          [
-            { label: 'x' },
-            { label: 'y', parentClass: Y_CLASS_NAME },
-            { label: 'z', parentClass: Z_CLASS_NAME }
-          ]
-        ]
-      })
-      await wrapper.vm.$nextTick()
-
-      b.domHas(`.field.${Y_CLASS_NAME}`)
-      b.domHas(`.field.${Z_CLASS_NAME}`)
-
-      const allY = wrapper.findAll(`.${Y_CLASS_NAME}`)
-      expect(allY).toHaveLength(1)
-
-      const allZ = wrapper.findAll(`.${Z_CLASS_NAME}`)
-      expect(allZ).toHaveLength(1)
-    })
-
-    it('add custom class with classic json', async () => {
-      const LABEL_CLASS = 'labelClass'
-
-      wrapper.setProps({ formFields: [{ label: 'label', parentClass: LABEL_CLASS }] })
-      await wrapper.vm.$nextTick()
-
-      b.domHas(`.field.${LABEL_CLASS}`)
-    })
-
-    it('add custom class with json slot', async () => {
-      const SLOT_CLASS = 'slotClass'
-
-      wrapper.setProps({ formFields: [{ slot: 'slotName', parentClass: SLOT_CLASS }] })
-      await wrapper.vm.$nextTick()
-
-      b.domHas(`.field.${SLOT_CLASS}`)
-    })
-
-    it('add custom class with json html content', async () => {
-      const HTML_CLASS = 'htmlClass'
-      const CONTENT_CLASS = 'custom-content'
-
-      wrapper.setProps({ formFields: [{ html: `<p class=${CONTENT_CLASS}>content</p>`, parentClass: HTML_CLASS }] })
-      await wrapper.vm.$nextTick()
-
-      b.domHas(`.field.${HTML_CLASS} > .${CONTENT_CLASS}`)
-    })
+  it('have custom attr', () => {
+    b.domHas('.field[data-attr=dataAttrOnField]')
+    b.domHas('input[data-attr=testingAttrFromJson]')
+    b.domHas('input.input.is-rounded')
   })
 
   describe('slot', () => {

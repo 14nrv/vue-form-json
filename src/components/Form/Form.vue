@@ -4,21 +4,23 @@
 
     div(v-for="(item, index) in formFields", :key="index")
       .field-body(v-if="Array.isArray(item)")
-        .field(v-for="x in item", :key="x.label", :class="x.parentClass")
+        .field(v-for="x in item",
+              :key="x.label",
+              v-bind="x.field && x.field.attr")
           app-label(:item="x")
           app-control(:item="x", ref="control")
 
       .field(v-else-if="Object.keys(item).includes('html')",
             v-html="Object.values(item)[0]",
-            :class="item.parentClass",
+            v-bind="item.attr",
             data-test="htmlContentFromFormFields")
 
       .field(v-else-if="Object.keys(item).includes('slot')",
-            :class="item.parentClass",
+            v-bind="item.attr",
             data-test="slot")
         slot(:name="Object.values(item)[0]")
 
-      .field(v-else, :class="item.parentClass")
+      .field(v-else, v-bind="item.field && item.field.attr")
         app-label(:item="item")
         app-control(:item="item", ref="control")
 
