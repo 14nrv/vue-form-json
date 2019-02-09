@@ -13,30 +13,34 @@ All fields are required and input text by default.
 Once submitted, an event 'formSubmitted' is emitted on $root with the formName and all values.
 
 ## Key Features
-* generate a form from json / array (formFields props)
-* bulma style
-* responsive
-* fields on multiples columns
+- [x] Generate a form from json / array (formFields props)
+- [x] Bulma style
+- [x] Responsive
+- [x] Fields on multiples columns
   ```js
-  formFields: [ [{ label: 'label one' }], [{ label: 'label two' }] ]
+  const formFields: [ [{ label: 'label one' }], [{ label: 'label two' }] ]
   ```
-* pre filled values
+- [x] Pre filled values
   ```js
-  formFields: [{ label: 'the label', value: 'the value' }]
+  const formFields: [{ label: 'the label', value: 'the value' }]
   ```
-* validation & VeeValidate [simple rules validation](https://baianat.github.io/vee-validate/guide/rules.html)
+- [x] Validation & VeeValidate [simple rules validation](https://baianat.github.io/vee-validate/guide/rules.html)
   ```js
-  formFields: [{ label: 'the label', validation: { is_not: 'label' } }]
+  const formFields: [{ label: 'the label', validation: { is_not: 'label' } }]
   ```
-* custom attr (class, data-*, ...) on .field & real fields (input, textarea...)
+- [x] Custom attr (class, data-*, ...) on .field & real fields (input, textarea...)
   ```js
-  formFields: [{ label: 'the label', attr: { class: 'classOnInput' }, field: { attr: { class: 'classOnFieldClassName' } }}]
+  const formFields: [{
+    label: 'the label',
+    attr: { class: 'classOnInput' },
+    field: { attr: { class: 'classOnFieldClassName' } }
+  }]
   ```
-* named slot everywhere inside form
+- [x] Named slot everywhere inside form
   ```js
   formFields: [{ slot: 'nameOfTheSlot' }]
   ```
-* html directly inside json (formFields props)
+- [x] Html directly inside json (formFields props)
   ```js
   formFields: [{ html: '<p>Your html content</p>' }]
   ```
