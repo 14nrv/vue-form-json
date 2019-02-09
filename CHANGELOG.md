@@ -1,3 +1,15 @@
+# [1.0.0](https://github.com/14nrv/vue-form-json/compare/v0.7.0...v1.0.0) (2019-02-09)
+
+
+### Features
+
+* allow custom attr ([de67d77](https://github.com/14nrv/vue-form-json/commit/de67d77))
+
+
+### BREAKING CHANGES
+
+* replace parentClass by field.attr.class or attr.class
+
 # [0.7.0](https://github.com/14nrv/vue-form-json/compare/v0.6.0...v0.7.0) (2019-02-02)
 
 
