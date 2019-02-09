@@ -10,9 +10,36 @@
 
 ## Generate a responsive vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
 All fields are required and input text by default.
-They can have pre filled values.\
-Once submitted an event 'formSubmitted' is emitted on $root with the formName and all values.\
-Enjoy
+Once submitted, an event 'formSubmitted' is emitted on $root with the formName and all values.
+
+## Key Features
+* generate a form from json / array (formFields props)
+* bulma style
+* responsive
+* fields on multiples columns
+  ```js
+  formFields: [ [{ label: 'label one' }], [{ label: 'label two' }] ]
+  ```
+* pre filled values
+  ```js
+  formFields: [{ label: 'the label', value: 'the value' }]
+  ```
+* validation & VeeValidate [simple rules validation](https://baianat.github.io/vee-validate/guide/rules.html)
+  ```js
+  formFields: [{ label: 'the label', validation: { is_not: 'label' } }]
+  ```
+* custom attr (class, data-*, ...) on .field & real fields (input, textarea...)
+  ```js
+  formFields: [{ label: 'the label', attr: { class: 'classOnInput' }, field: { attr: { class: 'classOnFieldClassName' } }}]
+  ```
+* named slot everywhere inside form
+  ```js
+  formFields: [{ slot: 'nameOfTheSlot' }]
+  ```
+* html directly inside json (formFields props)
+  ```js
+  formFields: [{ html: '<p>Your html content</p>' }]
+  ```
 
 ## Install
 ```sh
