@@ -18,19 +18,19 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
 - [x] Responsive
 - [x] Fields on multiples columns
   ```js
-  const formFields: [ [{ label: 'label one' }], [{ label: 'label two' }] ]
+  const formFields = [ [{ label: 'label one' }], [{ label: 'label two' }] ]
   ```
 - [x] Pre filled values
   ```js
-  const formFields: [{ label: 'the label', value: 'the value' }]
+  const formFields = [{ label: 'the label', value: 'the value' }]
   ```
 - [x] Validation & VeeValidate [simple rules validation](https://baianat.github.io/vee-validate/guide/rules.html)
   ```js
-  const formFields: [{ label: 'the label', validation: { is_not: 'label' } }]
+  const formFields = [{ label: 'the label', validation: { is_not: 'label' } }]
   ```
 - [x] Custom attr (class, data-*, ...) on .field & real fields (input, textarea...)
   ```js
-  const formFields: [{
+  const formFields = [{
     label: 'the label',
     attr: { class: 'classOnInput' },
     field: { attr: { class: 'classOnFieldClassName' } }
@@ -38,11 +38,11 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
   ```
 - [x] Named slot everywhere inside form
   ```js
-  const formFields: [{ slot: 'nameOfTheSlot' }]
+  const formFields = [{ slot: 'nameOfTheSlot' }]
   ```
 - [x] Html directly inside json (formFields props)
   ```js
-  const formFields: [{ html: '<p>Your html content</p>' }]
+  const formFields = [{ html: '<p>Your html content</p>' }]
   ```
 
 ## Install
