@@ -29,6 +29,7 @@ const RADIO_VALUE = 'Radio-One'
 const NUMBER_VALUE = '18'
 const ZIP_VALUE = '12345'
 const PASSWORD_VALUE = ZIP_VALUE
+const BIG_VALUE = ZIP_VALUE
 
 const getInitialValue = (label, node, attribute) =>
   fields
@@ -43,6 +44,7 @@ const allFields = flatten(fields)
   .filter(field => !['html', 'slot'].includes(Object.keys(field)[0]))
 const allNormalInputLabel = allFields
   .filter(x => !x.type || x.type === 'tel')
+  .filter(x => !x.validation)
   .map(x => x.label)
 
 const fieldWithPattern = allFields.find(({ pattern }) => pattern)
@@ -76,6 +78,8 @@ describe('Form', () => {
     b.type(NUMBER_VALUE, 'input[name=age]')
     b.type(ZIP_VALUE, 'input[name=zip]')
     b.type(DEFAULT_VALUE, 'textarea[name=message]')
+    b.type(DEFAULT_VALUE, 'input[name=small]')
+    b.type(BIG_VALUE, 'input[name=big]')
   }
 
   const getFormValues = () => {
@@ -92,7 +96,9 @@ describe('Form', () => {
       Email: EMAIL_VALUE,
       Radio: RADIO_VALUE,
       Age: NUMBER_VALUE,
-      Zip: ZIP_VALUE
+      Zip: ZIP_VALUE,
+      big: BIG_VALUE,
+      small: DEFAULT_VALUE
     }
   }
 
@@ -108,7 +114,6 @@ describe('Form', () => {
   it('set input type text and required by default', () => {
     const LABEL_INPUT = 'testInput'
     const LABEL_INPUT_SLUGIFY = slug(LABEL_INPUT)
-
     wrapper.setProps({ formFields: [{ label: LABEL_INPUT }] })
 
     b.domHas(`input[name=${LABEL_INPUT_SLUGIFY}]`)
@@ -120,7 +125,6 @@ describe('Form', () => {
 
   it('set not required', () => {
     const label = 'plop'
-
     wrapper.setProps({ formFields: [{ label, isRequired: false }] })
 
     b.domHasNot('.label sup.has-text-grey-light')
@@ -129,10 +133,7 @@ describe('Form', () => {
   })
 
   it('hide label', () => {
-    const label = 'plop'
-
-    wrapper.setProps({ formFields: [{ label, showLabel: false }] })
-
+    wrapper.setProps({ formFields: [{ label: 'plop', showLabel: false }] })
     b.domHasNot('.label')
   })
 
@@ -148,7 +149,6 @@ describe('Form', () => {
 
   it('hide error icon', () => {
     b.domHas($errorIcon)
-
     wrapper.setProps({ hasIcon: false })
 
     b.domHasNot($errorIcon)
@@ -165,7 +165,6 @@ describe('Form', () => {
 
   it('validate on blur', async () => {
     const isDanger = '.is-danger'
-
     b.domHas(`${$inputLastName}:not(${isDanger})`)
 
     b.type('la', $inputLastName, 'blur')
@@ -197,12 +196,6 @@ describe('Form', () => {
     await wrapper.vm.$nextTick()
 
     b.domHasNot($errorMessage)
-  })
-
-  it('have custom attr', () => {
-    b.domHas('.field[data-attr=dataAttrOnField]')
-    b.domHas('input[data-attr=testingAttrFromJson]')
-    b.domHas('input.input.is-rounded')
   })
 
   describe('slot', () => {
@@ -316,7 +309,6 @@ describe('Form', () => {
       wrapper.setMethods({ resetForm: resetFormStub })
 
       b.click($reset)
-
       expect(resetFormStub).toHaveBeenCalled()
     })
   })

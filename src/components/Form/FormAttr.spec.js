@@ -14,9 +14,7 @@ describe('custom css class', () => {
   beforeEach(() => {
     wrapper = mount(Form, {
       localVue,
-      provide: () => ({
-        $validator: v
-      }),
+      provide: () => ({ $validator: v }),
       propsData: {
         formFields: [{ label: 'default' }],
         formName: FORM_NAME

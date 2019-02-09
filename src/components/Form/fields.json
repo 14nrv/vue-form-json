@@ -76,7 +76,7 @@
     }
   ],
   {
-    "html": "<p class='label'>Custom attr<sup class='has-text-grey-light is-size-7'> *</sup></p>",
+    "html": "<p class='label'>Custom attr & validation<sup class='has-text-grey-light is-size-7'> *</sup></p>",
     "attr": {
       "class": "labelDefaultMb has-text-centered",
       "data-test": "dataTestFromJson"
@@ -85,9 +85,12 @@
   [
     {
       "label": "small",
-      "placeholder": "small",
+      "placeholder": "no string small",
       "showLabel": false,
-      "isRequired": false,
+      "value": "small",
+      "validation": {
+        "is_not": "small"
+      },
       "attr": {
         "data-attr": "testingAttrFromJson",
         "class": "is-rounded"
@@ -95,9 +98,11 @@
     },
     {
       "label": "big",
-      "placeholder": "big",
+      "placeholder": "must be a numeric value",
       "showLabel": false,
-      "isRequired": false,
+      "validation": {
+        "numeric": true
+      },
       "field": {
         "attr": {
           "data-attr": "dataAttrOnField"
