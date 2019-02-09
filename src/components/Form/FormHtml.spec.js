@@ -16,9 +16,7 @@ describe('Form with html content inside json', () => {
   beforeEach(() => {
     wrapper = mount(Form, {
       localVue,
-      provide: () => ({
-        $validator: v
-      }),
+      provide: () => ({ $validator: v }),
       propsData: {
         formFields: [{ label: 'defaultLabel' }],
         formName: FORM_NAME
