@@ -18,7 +18,7 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
 - [x] Responsive
 - [x] Fields on multiples columns
   ```js
-  const formFields = [ [{ label: 'label one' }], [{ label: 'label two' }] ]
+  const formFields = [ [{ label: 'label one' }, { label: 'label two' }] ]
   ```
 - [x] Pre filled values
   ```js
