@@ -6,13 +6,44 @@
 
 # vue-form-json
 
-[![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/74omp7n1mx?autoresize=1&hidenavigation=1&module=%2Fsrc%2FApp.vue&view=preview)
+[![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/mxow346yj?autoresize=1&hidenavigation=1&module=%2Fsrc%2FApp.vue&view=preview)
 
 ## Generate a responsive vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
 All fields are required and input text by default.
-They can have pre filled values.\
-Once submitted an event 'formSubmitted' is emitted on $root with the formName and all values.\
-Enjoy
+Once submitted, an event 'formSubmitted' is emitted on $root with the formName and all values.
+
+## Key Features
+- [x] Generate a form from json / array (formFields props)
+- [x] Bulma style
+- [x] Responsive
+- [x] Fields on multiples columns
+  ```js
+  const formFields = [ [{ label: 'label one' }, { label: 'label two' }] ]
+  ```
+- [x] Pre filled values
+  ```js
+  const formFields = [{ label: 'the label', value: 'the value' }]
+  ```
+- [x] Validation & VeeValidate [simple rules validation](https://baianat.github.io/vee-validate/guide/rules.html)
+  ```js
+  const formFields = [{ label: 'the label', validation: { is_not: 'label' } }]
+  ```
+- [x] Custom attr (class, data-*, ...) on .field & real fields (input, textarea...)
+  ```js
+  const formFields = [{
+    label: 'the label',
+    attr: { class: 'classOnInput' },
+    field: { attr: { class: 'classOnFieldClassName' } }
+  }]
+  ```
+- [x] Named slot everywhere inside form
+  ```js
+  const formFields = [{ slot: 'nameOfTheSlot' }]
+  ```
+- [x] Html directly inside json (formFields props)
+  ```js
+  const formFields = [{ html: '<p>Your html content</p>' }]
+  ```
 
 ## Install
 ```sh
