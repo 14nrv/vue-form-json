@@ -1,3 +1,3 @@
 import slugify from 'slugify'
 
-export const slug = str => slugify(str.toLowerCase())
+export const slug = str => slugify(str.toLowerCase()) || str
