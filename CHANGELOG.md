@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/14nrv/vue-form-json/compare/v1.1.0...v1.1.1) (2019-07-07)
+
+
+### Bug Fixes
+
+* **slugify:** return non ASCII characters ([10f57ca](https://github.com/14nrv/vue-form-json/commit/10f57ca))
+
 # [1.1.0](https://github.com/14nrv/vue-form-json/compare/v1.0.0...v1.1.0) (2019-02-09)
 
 
