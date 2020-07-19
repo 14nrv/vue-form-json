@@ -1,7 +1,9 @@
 <template lang="pug">
   #app.section
     app-form(:formFields="jsonFields",
-             :formName="'userProfil'")
+             formName="userProfil",
+             :btnSubmit="{value: 'Submit'}",
+             :btnReset="{value: 'Reset'}")
       div(slot="boxSlot")
         .box
           article

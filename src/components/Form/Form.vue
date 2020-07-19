@@ -25,12 +25,14 @@
         app-control(:item="item", ref="control")
 
     .field.form-footer.is-grouped.is-opposed
-      input.button(type="reset",
-                  :value="btnResetText",
-                  @click="resetForm")
-      input.button.is-primary(type="submit",
-                              :value="btnSubmitText",
-                              :disabled="!isFormValid")
+      input(type="reset",
+            v-bind="btnReset"
+            :class="btnReset.class || 'button'"
+            @click="resetForm")
+      input(type="submit",
+            v-bind="btnSubmit",
+            :class="btnSubmit.class || 'button is-primary'"
+            :disabled="!isFormValid")
 
     p.is-size-7.fieldRequiredLegend {{ mandatoryAsteriskLegend }}
 </template>
@@ -67,13 +69,13 @@ export default {
       type: String,
       default: '* field required'
     },
-    btnSubmitText: {
-      type: String,
-      default: 'Submit'
+    btnSubmit: {
+      type: Object,
+      default: () => ({})
     },
-    btnResetText: {
-      type: String,
-      default: 'Reset'
+    btnReset: {
+      type: Object,
+      default: () => ({})
     },
     resetFormAfterSubmit: {
       type: Boolean,

@@ -64,7 +64,9 @@ Vue.use(VeeValidate)
 <template lang="pug">
   #app.section
     form-json(:formFields="jsonFields",
-              :formName="'userProfil'")
+              :formName="'userProfil'"
+              :btnSubmit="{value: 'Submit'}",
+              :btnReset="{value: 'Reset'}")
       div(slot="slotNameAddedInJsonFields")
         p Your slot content
 </template>
@@ -109,13 +111,13 @@ props: {
     type: String,
     default: '* field required'
   },
-  btnSubmitText: {
-    type: String,
-    default: 'Submit'
+  btnSubmit: {
+    type: Object,
+    default: () => ({})
   },
-  btnResetText: {
-    type: String,
-    default: 'Reset'
+  btnReset: {
+    type: Object,
+    default: () => ({})
   },
   resetFormAfterSubmit: {
     type: Boolean,

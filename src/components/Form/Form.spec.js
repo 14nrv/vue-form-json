@@ -106,7 +106,7 @@ describe('Form', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
-  it('have some props', () => {
+  it('has some props', () => {
     expect(wrapper.props().formFields).toBeTruthy()
     expect(wrapper.props().formName).toBeTruthy()
   })
@@ -132,22 +132,22 @@ describe('Form', () => {
     b.domHas(`input#${label}[aria-required=false]`)
   })
 
-  it('hide label', () => {
+  it('hides label', () => {
     wrapper.setProps({ formFields: [{ label: 'plop', showLabel: false }] })
     b.domHasNot('.label')
   })
 
-  it('show fields', () => {
+  it('shows fields', () => {
     b.domHas('.field-body .field .input')
     b.domHas('form > div > .field .input')
     b.domHas($inputSubmit)
   })
 
-  it('have a help field', () => {
+  it('has a help field', () => {
     b.domHas('.helpLabel')
   })
 
-  it('hide error icon', () => {
+  it('hides error icon', () => {
     b.domHas($errorIcon)
     wrapper.setProps({ hasIcon: false })
 
@@ -201,14 +201,14 @@ describe('Form', () => {
   describe('slot', () => {
     const slotContainer = '[data-test=slot]'
 
-    it('have no slot by default', async () => {
+    it('has no slot by default', async () => {
       wrapper.setProps({ formFields: [{ label: 'superLabel' }] })
       await wrapper.vm.$nextTick()
 
       b.domHasNot(slotContainer)
     })
 
-    it('have a slot', () => {
+    it('has a slot', () => {
       b.domHas(slotContainer)
 
       const allSlots = wrapper.findAll(slotContainer)
@@ -235,7 +235,7 @@ describe('Form', () => {
       expect(inputSubmit.attributes().disabled).toBe(undefined)
     })
 
-    it('have default value', () => {
+    it('has default value', () => {
       b.inputValueIs('fir', $inputFirstName)
       b.inputValueIs('ZB', 'select[name=country]')
     })
@@ -247,7 +247,7 @@ describe('Form', () => {
   })
 
   describe('submit', () => {
-    it('have submit btn disabled', () => {
+    it('has submit btn disabled', () => {
       const inputSubmit = b.find($inputSubmit)
       b.click('.checkbox')
       b.type(RADIO_VALUE, 'input[name=radio]', 'change')
@@ -255,7 +255,7 @@ describe('Form', () => {
       expect(inputSubmit.attributes().disabled).toBe('disabled')
     })
 
-    it('enable submit input if all fields are valid', () => {
+    it('enables submit input if all fields are valid', () => {
       const inputSubmit = b.find($inputSubmit)
       expect(inputSubmit.attributes().disabled).toBe('disabled')
 
@@ -265,7 +265,12 @@ describe('Form', () => {
       expect(inputSubmit.attributes().disabled).toBe(undefined)
     })
 
-    it('send an event formSubmitted with all values when submit', async () => {
+    it('has default class', () => {
+      const inputSubmit = b.find($inputSubmit)
+      expect(inputSubmit.attributes().class).toBe('button is-primary')
+    })
+
+    it('sends an event formSubmitted with all values when submit', async () => {
       fillForm()
       await wrapper.vm.beforeSubmit()
 
@@ -299,9 +304,14 @@ describe('Form', () => {
       expect(resetFormStub).not.toHaveBeenCalled()
     })
 
-    it('have a btn to reset values', () => {
+    it('has a btn to reset values', () => {
       b.domHas($reset)
       b.click($reset)
+    })
+
+    it('has default class', () => {
+      const inputReset = b.find($reset)
+      expect(inputReset.attributes().class).toBe('button')
     })
 
     it('can reset value', () => {
