@@ -1,3 +1,16 @@
+# [2.0.0](https://github.com/14nrv/vue-form-json/compare/v1.1.1...v2.0.0) (2020-07-19)
+
+
+### Features
+
+* allow custom attr on btn reset & submit ([f92c961](https://github.com/14nrv/vue-form-json/commit/f92c961))
+* allow custom attr on btn reset & submit ([b4116cc](https://github.com/14nrv/vue-form-json/commit/b4116cc))
+
+
+### BREAKING CHANGES
+
+* btnSubmitText will become btnSubmit.value same for btnResetText
+
 ## [1.1.1](https://github.com/14nrv/vue-form-json/compare/v1.1.0...v1.1.1) (2019-07-07)
 
 
