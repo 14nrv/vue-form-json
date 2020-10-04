@@ -1,26 +1,19 @@
-import Helpers from 'mwangaben-vthelpers'
-import VeeValidate from 'vee-validate'
-import { mount, createLocalVue } from '@vue/test-utils'
+import matchers from 'jest-vue-matcher'
+import { mount } from '@vue/test-utils'
 import Form from '@/components/Form'
 
-const v = new VeeValidate.Validator()
-const localVue = createLocalVue()
-localVue.use(VeeValidate)
-
-let wrapper, b
+let wrapper
 const FORM_NAME = 'testFormName'
 
 describe('custom css class', () => {
   beforeEach(() => {
     wrapper = mount(Form, {
-      localVue,
-      provide: () => ({ $validator: v }),
       propsData: {
         formFields: [{ label: 'default' }],
         formName: FORM_NAME
       }
     })
-    b = new Helpers(wrapper)
+    expect.extend(matchers(wrapper))
   })
 
   afterEach(() => {
@@ -40,18 +33,17 @@ describe('custom css class', () => {
       }
     }]
 
-    wrapper.setProps({ formFields: fields })
-    await wrapper.vm.$nextTick()
+    await wrapper.setProps({ formFields: fields })
 
     const fieldClass = fields[0].field.attr.class
-    b.domHas(`.field.${fieldClass.split(' ').join('.')} input.${fields[0].attr.class}`)
+    expect(`.field.${fieldClass.split(' ').join('.')} input.${fields[0].attr.class}`).toBeADomElement()
   })
 
   it('add customs class in json array', async () => {
     const Y_CLASS_NAME = 'yClass'
     const Z_CLASS_NAME = 'zClass'
 
-    wrapper.setProps({
+    await wrapper.setProps({
       formFields: [
         [
           { label: 'x' },
@@ -60,10 +52,9 @@ describe('custom css class', () => {
         ]
       ]
     })
-    await wrapper.vm.$nextTick()
 
-    b.domHas(`.field.${Y_CLASS_NAME}`)
-    b.domHas(`.field.${Z_CLASS_NAME}`)
+    expect(`.field.${Y_CLASS_NAME}`).toBeADomElement()
+    expect(`.field.${Z_CLASS_NAME}`).toBeADomElement()
 
     const allY = wrapper.findAll(`.${Y_CLASS_NAME}`)
     expect(allY).toHaveLength(1)
@@ -76,39 +67,37 @@ describe('custom css class', () => {
     const LABEL_CLASS = 'labelClass'
     const SLOT_CLASS = 'slotClass'
 
-    wrapper.setProps({
+    await wrapper.setProps({
       formFields: [
         { label: 'label', field: { attr: { class: LABEL_CLASS } } },
         { slot: 'slotName', attr: { class: SLOT_CLASS } }
       ]
     })
-    await wrapper.vm.$nextTick()
 
-    b.domHas(`.field.${LABEL_CLASS} > .control input#label`)
-    b.domHas(`.field.${SLOT_CLASS}`)
+    expect(`.field.${LABEL_CLASS} .control input#label`).toBeADomElement()
+    expect(`.field.${SLOT_CLASS}`).toBeADomElement()
   })
 
   it('add custom class with json html content', async () => {
     const HTML_CLASS = 'htmlClass'
     const CONTENT_CLASS = 'custom-content'
 
-    wrapper.setProps({
+    await wrapper.setProps({
       formFields: [{
         html: `<p class=${CONTENT_CLASS}>content</p>`,
         attr: { class: HTML_CLASS }
       }]
     })
-    await wrapper.vm.$nextTick()
 
-    b.domHas(`.field.${HTML_CLASS} > .${CONTENT_CLASS}`)
+    expect(`.field.${HTML_CLASS} > .${CONTENT_CLASS}`).toBeADomElement()
   })
 
   it.each([['', 'select'], ['', 'textarea'], ['input', 'radio'], ['input', 'checkbox']])(
-    `apply attr on %s %s`,
+    'apply attr on %s %s',
     async (dom, type) => {
       const EL_CLASS = `${type}Class`
 
-      wrapper.setProps({
+      await wrapper.setProps({
         formFields: [{
           label: `${type} label`,
           type: `${type}`,
@@ -116,9 +105,8 @@ describe('custom css class', () => {
           items: dom === 'input' && ['item1']
         }]
       })
-      await wrapper.vm.$nextTick()
 
-      b.domHas(`${dom || type}.${EL_CLASS}`)
+      expect(`${dom || type}.${EL_CLASS}`).toBeADomElement()
     }
   )
 })

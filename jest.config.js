@@ -10,9 +10,6 @@ module.exports = {
     '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
     '^.+\\.jsx?$': 'babel-jest'
   },
-  transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!mwangaben-vthelpers)'
-  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   },

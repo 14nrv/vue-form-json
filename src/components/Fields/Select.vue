@@ -1,7 +1,7 @@
 <template lang="pug">
   .select.is-block(:class="{ 'is-danger': !!error }")
     select.is-fullwidth(:id="item.label | slugify",
-          :name="item.label | slugify",
+          :name="item.name || item.label | slugify",
           :required="item.isRequired !== false",
           v-bind="item.attr",
           @change="updateValue",
@@ -18,10 +18,10 @@ import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Select',
-  mixins: [ fieldsMixin ],
+  mixins: [fieldsMixin],
   mounted () {
     const optionSelected = this.item.options && this.item.options.find(x => typeof x === 'object' && x.selected)
-    this.$parent.value = optionSelected
+    this.$parent.$parent.value = optionSelected
       ? optionSelected.value || optionSelected.text
       : undefined
   }

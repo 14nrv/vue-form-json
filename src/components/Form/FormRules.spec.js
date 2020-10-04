@@ -1,13 +1,23 @@
-import Helpers from 'mwangaben-vthelpers'
-import VeeValidate from 'vee-validate'
+import matchers from 'jest-vue-matcher'
 import { mount, createLocalVue } from '@vue/test-utils'
 import Form from '@/components/Form'
+import flushPromises from 'flush-promises'
+import * as rules from 'vee-validate/dist/rules.umd.js'
+import { messages } from 'vee-validate/dist/locale/en.json'
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
 
-const v = new VeeValidate.Validator()
+Object.keys(rules).forEach(rule => {
+  extend(rule, {
+    ...rules[rule],
+    message: messages[rule]
+  })
+})
+
 const localVue = createLocalVue()
-localVue.use(VeeValidate)
+localVue.component('ValidationProvider', ValidationProvider)
+localVue.component('ValidationObserver', ValidationObserver)
 
-let wrapper, b
+let wrapper
 
 const FORM_NAME = 'testFormName'
 const WORD_IN_IS_NOT_RULE = 'small'
@@ -16,22 +26,27 @@ const $inputSmall = 'input#small'
 const $isDanger = '.is-danger'
 const $helpIsDanger = `.help${$isDanger}`
 
+const type = (text, input, event = 'input') => {
+  const node = wrapper.find(input)
+  node.element.type === 'radio'
+    ? node.setChecked()
+    : node.setValue(text)
+  node.trigger(event)
+}
+
 describe('Form with html content inside json', () => {
   beforeEach(() => {
     wrapper = mount(Form, {
       localVue,
-      provide: () => ({
-        $validator: v
-      }),
       propsData: {
         formFields: [{
           label: 'small',
-          validation: { is_not: WORD_IN_IS_NOT_RULE, numeric: true }
+          rules: { is_not: WORD_IN_IS_NOT_RULE, numeric: true }
         }],
         formName: FORM_NAME
       }
     })
-    b = new Helpers(wrapper)
+    expect.extend(matchers(wrapper))
   })
 
   afterEach(() => {
@@ -39,27 +54,25 @@ describe('Form with html content inside json', () => {
   })
 
   it('apply custom rules in order', async () => {
-    b.domHasNot($isDanger)
+    expect($isDanger).not.toBeADomElement()
 
-    b.type(WORD_IN_IS_NOT_RULE, $inputSmall)
-    await wrapper.vm.$nextTick()
+    type(WORD_IN_IS_NOT_RULE, $inputSmall)
+    await flushPromises()
 
-    b.domHas($isDanger)
-    b.see(`The ${WORD_IN_IS_NOT_RULE} value is not valid.`, $helpIsDanger)
+    expect($isDanger).toBeADomElement()
+    expect($helpIsDanger).toHaveText(`${WORD_IN_IS_NOT_RULE} is not valid.`)
 
-    b.type('not-small', $inputSmall)
-    await wrapper.vm.$nextTick()
+    type('not-small', $inputSmall)
+    await flushPromises()
 
-    b.see('The small field may only contain numeric characters.', $helpIsDanger)
+    expect($helpIsDanger).toHaveText('The small field may only contain numeric characters')
 
-    b.type(0, $inputSmall)
-    await wrapper.vm.$nextTick()
+    type(0, $inputSmall)
+    await flushPromises()
 
-    b.domHasNot($isDanger)
+    expect($isDanger).not.toBeADomElement()
 
-    expect(wrapper.vm.isFormValid).toBeTruthy()
-
-    const $inputSubmit = b.find('input[type=submit]')
-    expect($inputSubmit.attributes().disabled).toBe(undefined)
+    const $inputSubmit = 'input[type=submit]'
+    expect($inputSubmit).toHaveAttribute('disabled', undefined)
   })
 })

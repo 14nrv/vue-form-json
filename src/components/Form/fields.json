@@ -3,13 +3,17 @@
     {
       "label": "First Name",
       "value": "fir",
-      "minLength": 4,
-      "maxLength": 20
+      "rules": {
+        "min": 4,
+        "max": 20
+      }
     },
     {
       "label": "Last Name",
       "placeholder": "Last Name placeholder",
-      "minLength": 3
+      "rules": {
+        "min": 3
+      }
     }
   ],
   {
@@ -64,8 +68,10 @@
     {
       "label": "Age",
       "type": "number",
-      "min": 18,
-      "max": 99,
+      "rules": {
+        "min_value": 18,
+        "max_value": 99
+      },
       "help": "( >= 18 <= 99 )"
     },
     {
@@ -88,7 +94,7 @@
       "placeholder": "no string small",
       "showLabel": false,
       "value": "small",
-      "validation": {
+      "rules": {
         "is_not": "small"
       },
       "attr": {
@@ -100,7 +106,7 @@
       "label": "big",
       "placeholder": "must be a numeric value",
       "showLabel": false,
-      "validation": {
+      "rules": {
         "numeric": true
       },
       "field": {

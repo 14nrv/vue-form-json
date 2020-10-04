@@ -4,7 +4,7 @@
                 :key="index",
                 :for="x.text || x | slugify")
       input(:id="x.text || x | slugify",
-            :name="item.label | slugify",
+            :name="item.name || item.label | slugify",
             :value="x.value || x.text || x",
             v-model="value",
             :type="item.type",
@@ -22,7 +22,7 @@ import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Radio',
-  mixins: [ fieldsMixin ],
+  mixins: [fieldsMixin],
   data: () => ({
     value: []
   }),
@@ -36,7 +36,7 @@ export default {
       const { value, text } = this.item.items.find(({ checked }) => checked)
 
       this.value = value || text
-      this.$parent.value = value || text
+      this.$parent.$parent.value = value || text
     } catch (error) {}
   }
 }

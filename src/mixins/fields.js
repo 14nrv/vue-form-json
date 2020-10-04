@@ -19,6 +19,6 @@ export default {
     }
   },
   created () {
-    this.item.value && (this.$parent.value = this.item.value)
+    this.item.value && (this.$parent.$parent.value = this.item.value)
   }
 }
