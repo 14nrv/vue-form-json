@@ -3,7 +3,7 @@
     p {{ item.label }}
       span.helpLabel.has-text-grey-light.is-size-7.is-italic(v-if="item.help") {{ item.help }}
       span(v-if="item.isRequired !== false")
-        sup.has-text-grey-light.is-size-7  *
+        sup.has-text-grey-light.is-size-7 *
 
 </template>
 

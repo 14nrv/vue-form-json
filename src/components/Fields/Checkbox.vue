@@ -4,7 +4,7 @@
                   :key="index",
                   :for="x.text || x | slugify")
       input(:id="x.text || x | slugify",
-            :name="item.label | slugify",
+            :name="item.name || item.label | slugify",
             :value="x.value || x.text || x",
             :type="item.type",
             v-model="value",
@@ -21,7 +21,7 @@ import fieldsMixin from '@/mixins/fields'
 
 export default {
   name: 'Checkbox',
-  mixins: [ fieldsMixin ],
+  mixins: [fieldsMixin],
   data: () => ({
     value: []
   }),
@@ -37,7 +37,7 @@ export default {
 
     this.value = itemsChecked
 
-    itemsChecked.length && (this.$parent.value = itemsChecked)
+    itemsChecked.length && (this.$parent.$parent.value = itemsChecked)
   }
 }
 </script>

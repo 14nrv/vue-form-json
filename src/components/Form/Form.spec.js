@@ -1,19 +1,34 @@
-import Helpers from 'mwangaben-vthelpers'
-import VeeValidate from 'vee-validate'
-import { mount, createLocalVue } from '@vue/test-utils'
-import flatten from 'ramda/src/flatten'
-import pickAll from 'ramda/src/pickAll'
-import map from 'ramda/src/map'
+import matchers from 'jest-vue-matcher'
+import { mount, createLocalVue, createWrapper } from '@vue/test-utils'
+import { flatten, pickAll, map } from 'ramda'
 import { slug } from '@/helpers'
+import * as rules from 'vee-validate/dist/rules.umd.js'
+import { messages } from 'vee-validate/dist/locale/en.json'
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
 import Form from '@/components/Form'
 import fields from './fields'
+import flushPromises from 'flush-promises'
 
-const v = new VeeValidate.Validator()
+const flush = async () => {
+  // Flush pending Vue promises
+  await new Promise(resolve => setTimeout(resolve, 0))
+  // Wait a browser tick to make sure changes are applied
+  return new Promise(resolve => setTimeout(resolve, 20))
+}
+
+Object.keys(rules).forEach(rule => {
+  extend(rule, {
+    ...rules[rule],
+    message: messages[rule]
+  })
+})
+
 const localVue = createLocalVue()
-localVue.use(VeeValidate)
+localVue.component('ValidationProvider', ValidationProvider)
+localVue.component('ValidationObserver', ValidationObserver)
 localVue.filter('slugify', str => slug(str))
 
-let wrapper, b
+let wrapper
 const $inputSubmit = 'input[type=submit]'
 const $reset = 'input[type=reset]'
 const $inputFirstName = 'input[name=first-name]'
@@ -49,37 +64,48 @@ const allNormalInputLabel = allFields
 
 const fieldWithPattern = allFields.find(({ pattern }) => pattern)
 
+const type = (text, input, event = 'input') => {
+  const node = wrapper.find(input)
+  node.element.type === 'radio'
+    ? node.setChecked()
+    : node.setValue(text)
+  node.trigger(event)
+}
+
+const trigger = (element, event = 'click') => {
+  wrapper.find(element).trigger(event)
+}
+
 describe('Form', () => {
   beforeEach(() => {
     wrapper = mount(Form, {
       localVue,
-      provide: () => ({
-        $validator: v
-      }),
       propsData: {
         formFields: fields,
         formName: FORM_NAME
       }
     })
-    b = new Helpers(wrapper)
+    expect.extend(matchers(wrapper))
   })
 
   afterEach(() => {
     wrapper.destroy()
   })
 
-  const fillForm = () => {
+  const fillForm = async () => {
     allNormalInputLabel.forEach(x =>
-      b.type(DEFAULT_VALUE, `input[name=${slug(x)}]`)
+      type(DEFAULT_VALUE, `input[name=${slug(x)}]`)
     )
 
-    b.type(EMAIL_VALUE, 'input[name=email]')
-    b.type(PASSWORD_VALUE, $inputPassword)
-    b.type(NUMBER_VALUE, 'input[name=age]')
-    b.type(ZIP_VALUE, 'input[name=zip]')
-    b.type(DEFAULT_VALUE, 'textarea[name=message]')
-    b.type(DEFAULT_VALUE, 'input[name=small]')
-    b.type(BIG_VALUE, 'input[name=big]')
+    type(EMAIL_VALUE, 'input[name=email]')
+    type(PASSWORD_VALUE, $inputPassword)
+    type(NUMBER_VALUE, 'input[name=age]')
+    type(ZIP_VALUE, 'input[name=zip]')
+    type(DEFAULT_VALUE, 'textarea[name=message]')
+    type(DEFAULT_VALUE, 'input[name=small]')
+    type(BIG_VALUE, 'input[name=big]')
+
+    await flush()
   }
 
   const getFormValues = () => {
@@ -103,7 +129,7 @@ describe('Form', () => {
   }
 
   it('is a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper.vm).toBeTruthy()
   })
 
   it('has some props', () => {
@@ -111,105 +137,111 @@ describe('Form', () => {
     expect(wrapper.props().formName).toBeTruthy()
   })
 
-  it('set input type text and required by default', () => {
+  it('set input type text and required by default', async () => {
     const LABEL_INPUT = 'testInput'
     const LABEL_INPUT_SLUGIFY = slug(LABEL_INPUT)
-    wrapper.setProps({ formFields: [{ label: LABEL_INPUT }] })
+    await wrapper.setProps({ formFields: [{ label: LABEL_INPUT }] })
 
-    b.domHas(`input[name=${LABEL_INPUT_SLUGIFY}]`)
-    b.domHas('input[type=text]')
-    b.domHas(`input#${LABEL_INPUT_SLUGIFY}[required=required]`)
-    b.see(LABEL_INPUT, `label[for=${LABEL_INPUT_SLUGIFY}].label p`)
-    b.see(' *', 'sup.has-text-grey-light')
+    expect(`input[name=${LABEL_INPUT_SLUGIFY}]`).toBeADomElement()
+    expect('input[type=text]').toBeADomElement()
+    expect(`input#${LABEL_INPUT_SLUGIFY}[required=required]`).toBeADomElement()
+    expect(`label[for=${LABEL_INPUT_SLUGIFY}].label p`).toHaveText(LABEL_INPUT)
+    expect('sup.has-text-grey-light').toHaveText('*')
   })
 
-  it('set not required', () => {
+  it('set not required', async () => {
     const label = 'plop'
-    wrapper.setProps({ formFields: [{ label, isRequired: false }] })
+    await wrapper.setProps({ formFields: [{ label, isRequired: false }] })
 
-    b.domHasNot('.label sup.has-text-grey-light')
-    b.domHasNot(`input#${label}[required=required]`)
-    b.domHas(`input#${label}[aria-required=false]`)
+    expect('.label sup.has-text-grey-light').not.toBeADomElement()
+    expect(`input#${label}[required=required]`).not.toBeADomElement()
+    expect(`input#${label}[aria-required=false]`).toBeADomElement()
   })
 
-  it('hides label', () => {
-    wrapper.setProps({ formFields: [{ label: 'plop', showLabel: false }] })
-    b.domHasNot('.label')
+  it('hides label', async () => {
+    await wrapper.setProps({ formFields: [{ label: 'plop', showLabel: false }] })
+    expect('.label').not.toBeADomElement()
   })
 
   it('shows fields', () => {
-    b.domHas('.field-body .field .input')
-    b.domHas('form > div > .field .input')
-    b.domHas($inputSubmit)
+    expect('.field-body .field .input').toBeADomElement()
+    expect('form > div > .field .input').toBeADomElement()
+    expect($inputSubmit).toBeADomElement()
   })
 
   it('has a help field', () => {
-    b.domHas('.helpLabel')
+    expect('.helpLabel').toBeADomElement()
   })
 
-  it('hides error icon', () => {
-    b.domHas($errorIcon)
-    wrapper.setProps({ hasIcon: false })
+  it('hides error icon', async () => {
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect($errorIcon).toBeADomElement()
+    await wrapper.setProps({ hasIcon: false })
 
-    b.domHasNot($errorIcon)
+    expect($errorIcon).not.toBeADomElement()
   })
 
   it('have default properties', () => {
-    b.hasAttribute('placeholder', 'Last Name placeholder', $inputLastName)
-    b.hasAttribute('minlength', '3', $inputLastName)
-    b.hasAttribute('min', '0', 'input[name=zip]')
-    b.hasAttribute('min', '18', 'input[name=age]')
-    b.hasAttribute('max', '99', 'input[name=age]')
-    b.hasAttribute('pattern', fieldWithPattern.pattern, $inputPassword)
+    expect($inputLastName).toHaveAttribute('placeholder', 'Last Name placeholder')
+    expect($inputLastName).toHaveAttribute('minlength', '3')
+    expect('input[name=zip]').toHaveAttribute('min', '0')
+    expect('input[name=age]').toHaveAttribute('min', '18')
+    expect('input[name=age]').toHaveAttribute('max', '99')
+    expect($inputPassword).toHaveAttribute('pattern', fieldWithPattern.pattern)
   })
 
   it('validate on blur', async () => {
     const isDanger = '.is-danger'
-    b.domHas(`${$inputLastName}:not(${isDanger})`)
+    expect(`${$inputLastName}:not(${isDanger})`).toBeADomElement()
 
-    b.type('la', $inputLastName, 'blur')
+    type('la', $inputLastName)
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
 
-    b.domHas(`${$inputLastName}${isDanger}`)
+    expect(`${$inputLastName}${isDanger}`).toBeADomElement()
   })
 
   it('add pattern rule validation', async () => {
-    wrapper.destroy()
-
     const passwordField = {
       label: 'Password',
       pattern: '^([0-9]+)$'
     }
-    wrapper.setProps({ formFields: [passwordField] })
-    await wrapper.vm.$nextTick()
+    await wrapper.setProps({ formFields: [passwordField] })
 
-    b.domHasNot($errorMessage)
+    expect($errorMessage).not.toBeADomElement()
 
-    b.type(DEFAULT_VALUE, $inputPassword)
-    await wrapper.vm.$nextTick()
+    type(DEFAULT_VALUE, $inputPassword)
+    await flushPromises()
 
-    b.domHas($errorMessage)
-    b.see('The Password field format is invalid.', $errorMessage)
-    expect(wrapper.vm.isFormValid).toBeFalsy()
+    expect($errorMessage).toBeADomElement()
 
-    b.type(PASSWORD_VALUE, $inputPassword)
-    await wrapper.vm.$nextTick()
+    const errorMessage = wrapper.find($errorMessage).text()
+    expect(errorMessage).toBe('The Password field format is invalid')
 
-    b.domHasNot($errorMessage)
+    type(PASSWORD_VALUE, $inputPassword)
+    await flushPromises()
+
+    expect($errorMessage).not.toBeADomElement()
   })
 
   describe('slot', () => {
     const slotContainer = '[data-test=slot]'
 
     it('has no slot by default', async () => {
-      wrapper.setProps({ formFields: [{ label: 'superLabel' }] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ formFields: [{ label: 'superLabel' }] })
 
-      b.domHasNot(slotContainer)
+      expect(slotContainer).not.toBeADomElement()
     })
 
     it('has a slot', () => {
-      b.domHas(slotContainer)
+      expect(slotContainer).toBeADomElement()
 
       const allSlots = wrapper.findAll(slotContainer)
       expect(allSlots).toHaveLength(1)
@@ -218,63 +250,66 @@ describe('Form', () => {
 
   describe('default value', () => {
     it('set default value on radio', async () => {
-      const inputSubmit = b.find($inputSubmit)
+      const inputSubmit = wrapper.find($inputSubmit)
       const radioField = {
         label: 'Radio0',
         type: 'radio',
         items: [{ text: 'vRadioOne', checked: true }, 'vRadioTwo', 'vRadioThree']
       }
 
-      wrapper.setProps({ formFields: [radioField] })
-      await wrapper.vm.$nextTick()
+      await wrapper.setProps({ formFields: [radioField] })
 
       const radioValue = radioField.items[0].text
-      b.inputValueIs(radioValue, `input[name=${slug(radioField.label)}]`)
+      expect(`input[name=${slug(radioField.label)}]`).toHaveValue(radioValue)
 
-      expect(wrapper.vm.isFormValid).toBeTruthy()
       expect(inputSubmit.attributes().disabled).toBe(undefined)
     })
 
     it('has default value', () => {
-      b.inputValueIs('fir', $inputFirstName)
-      b.inputValueIs('ZB', 'select[name=country]')
+      expect($inputFirstName).toHaveValue('fir')
+      expect('select[name=country]').toHaveValue('ZB')
     })
 
-    it('can have error on prefill input', () => {
-      b.domHas(`${$inputFirstName}.is-danger`)
-      b.see('The First Name field must be at least 4 characters.', $errorMessage)
+    it('can have error on prefill input', async () => {
+      await flushPromises()
+
+      expect(`${$inputFirstName}.is-danger`).toBeADomElement()
+
+      const errorMessage = wrapper.find($errorMessage).text()
+      expect(errorMessage).toBe('The First Name field must be at least 4 characters')
     })
   })
 
   describe('submit', () => {
-    it('has submit btn disabled', () => {
-      const inputSubmit = b.find($inputSubmit)
-      b.click('.checkbox')
-      b.type(RADIO_VALUE, 'input[name=radio]', 'change')
-      b.type(COUNTRY_VALUE, 'select[name=country]', 'change')
-      expect(inputSubmit.attributes().disabled).toBe('disabled')
+    it('has submit btn disabled', async () => {
+      trigger('.checkbox')
+      type(RADIO_VALUE, 'input[name=radio]', 'change')
+      type(COUNTRY_VALUE, 'select[name=country]', 'change')
+      await flush()
+
+      expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
     })
 
-    it('enables submit input if all fields are valid', () => {
-      const inputSubmit = b.find($inputSubmit)
-      expect(inputSubmit.attributes().disabled).toBe('disabled')
+    it('enables submit input if all fields are valid', async () => {
+      await flush()
+      expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
 
-      fillForm()
+      await fillForm()
 
-      expect(wrapper.vm.isFormValid).toBeTruthy()
-      expect(inputSubmit.attributes().disabled).toBe(undefined)
+      expect($inputSubmit).toHaveAttribute('disabled', undefined)
     })
 
     it('has default class', () => {
-      const inputSubmit = b.find($inputSubmit)
-      expect(inputSubmit.attributes().class).toBe('button is-primary')
+      expect($inputSubmit).toHaveClass('button is-primary')
     })
 
     it('sends an event formSubmitted with all values when submit', async () => {
-      fillForm()
-      await wrapper.vm.beforeSubmit()
+      const rootWrapper = createWrapper(wrapper.vm.$root)
 
-      b.emittedContains('formSubmitted', {
+      await fillForm()
+      await wrapper.vm.onSubmit()
+
+      expect(rootWrapper).toEmitWith('formSubmitted', {
         formName: FORM_NAME,
         values: getFormValues()
       })
@@ -282,44 +317,31 @@ describe('Form', () => {
   })
 
   describe('reset', () => {
-    it('reset values after submit', async () => {
-      wrapper.setProps({ resetFormAfterSubmit: true })
-
-      const resetFormStub = jest.fn()
-      wrapper.setMethods({ resetForm: resetFormStub })
-
-      fillForm()
-      await wrapper.vm.beforeSubmit()
-
-      expect(resetFormStub).toHaveBeenCalled()
-    })
-
-    it(`doesn't reset values after submit`, async () => {
-      const resetFormStub = jest.fn()
-      wrapper.setMethods({ resetForm: resetFormStub })
-
-      fillForm()
-      await wrapper.vm.beforeSubmit()
-
-      expect(resetFormStub).not.toHaveBeenCalled()
-    })
-
     it('has a btn to reset values', () => {
-      b.domHas($reset)
-      b.click($reset)
+      expect($reset).toBeADomElement()
     })
 
     it('has default class', () => {
-      const inputReset = b.find($reset)
-      expect(inputReset.attributes().class).toBe('button')
+      expect($reset).toHaveClass('button')
     })
 
-    it('can reset value', () => {
-      const resetFormStub = jest.fn()
-      wrapper.setMethods({ resetForm: resetFormStub })
+    it.each([true, false])(
+      'can reset value',
+      async hasResetAfterSubmit => {
+        hasResetAfterSubmit && wrapper.setProps({ resetFormAfterSubmit: true })
 
-      b.click($reset)
-      expect(resetFormStub).toHaveBeenCalled()
-    })
+        const getValues = () => wrapper.vm.allControls.map(({ value }) => value)
+        const hasAllValuesEmpty = () => getValues().every(value => value === '')
+
+        await fillForm()
+        expect(hasAllValuesEmpty()).toBeFalsy()
+
+        hasResetAfterSubmit
+          ? await wrapper.vm.onSubmit()
+          : trigger($reset)
+
+        expect(hasAllValuesEmpty()).toBeTruthy()
+      }
+    )
   })
 })

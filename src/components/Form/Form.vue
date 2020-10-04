@@ -1,47 +1,53 @@
 <template lang="pug">
-  form(:data-vv-scope="formName",
-       @submit.prevent="beforeSubmit")
+  ValidationObserver(v-slot="{ handleSubmit, invalid, reset }", tag="div", ref="form")
+    form(:data-vv-scope="formName",
+        @submit.prevent="handleSubmit(onSubmit)",
+        @reset.prevent="reset")
 
-    div(v-for="(item, index) in formFields", :key="index")
-      .field-body(v-if="Array.isArray(item)")
-        .field(v-for="x in item",
-              :key="x.label",
-              v-bind="x.field && x.field.attr")
-          app-label(:item="x")
-          app-control(:item="x", ref="control")
+      div(v-for="(item, index) in formFields", :key="index")
+        .field-body(v-if="Array.isArray(item)")
+          .field(v-for="x in item",
+                :key="x.label",
+                v-bind="x.field && x.field.attr")
+            app-label(:item="x")
+            app-control(:item="x", ref="control")
 
-      .field(v-else-if="Object.keys(item).includes('html')",
-            v-html="Object.values(item)[0]",
-            v-bind="item.attr",
-            data-test="htmlContentFromFormFields")
+        .field(v-else-if="Object.keys(item).includes('html')",
+              v-html="Object.values(item)[0]",
+              v-bind="item.attr",
+              data-test="htmlContentFromFormFields")
 
-      .field(v-else-if="Object.keys(item).includes('slot')",
-            v-bind="item.attr",
-            data-test="slot")
-        slot(:name="Object.values(item)[0]")
+        .field(v-else-if="Object.keys(item).includes('slot')",
+              v-bind="item.attr",
+              data-test="slot")
+          slot(:name="Object.values(item)[0]")
 
-      .field(v-else, v-bind="item.field && item.field.attr")
-        app-label(:item="item")
-        app-control(:item="item", ref="control")
+        .field(v-else, v-bind="item.field && item.field.attr")
+          app-label(:item="item")
+          app-control(:item="item", ref="control")
 
-    .field.form-footer.is-grouped.is-opposed
-      input(type="reset",
-            v-bind="btnReset"
-            :class="btnReset.class || 'button'"
-            @click="resetForm")
-      input(type="submit",
-            v-bind="btnSubmit",
-            :class="btnSubmit.class || 'button is-primary'"
-            :disabled="!isFormValid")
+      .field.form-footer.is-grouped.is-opposed
+        input(type="reset",
+              v-bind="btnReset"
+              :class="btnReset.class || 'button'"
+              @click="resetForm")
+        input(type="submit",
+              v-bind="btnSubmit",
+              :class="btnSubmit.class || 'button is-primary'"
+              :disabled="invalid")
 
-    p.is-size-7.fieldRequiredLegend {{ mandatoryAsteriskLegend }}
+      p.is-size-7.fieldRequiredLegend {{ mandatoryAsteriskLegend }}
 </template>
 
 <script>
-import flatten from 'ramda/src/flatten'
-import pickAll from 'ramda/src/pickAll'
-import pipe from 'ramda/src/pipe'
-import map from 'ramda/src/map'
+import { ValidationObserver } from 'vee-validate'
+
+import {
+  flatten,
+  pickAll,
+  pipe,
+  map
+} from 'ramda'
 
 import Label from '@/components/Fields/Label'
 import Control from '@/components/Fields/Control'
@@ -52,10 +58,10 @@ const valueToProp = object => pickAll(object, {})
 export default {
   name: 'Form',
   components: {
+    ValidationObserver,
     appLabel: Label,
     appControl: Control
   },
-  inject: ['$validator'],
   props: {
     formFields: {
       type: Array,
@@ -81,19 +87,19 @@ export default {
       type: Boolean,
       default: false
     },
-    defaultMinLength: {
-      type: [Boolean, Number],
-      default: false
-    },
-    defaultMaxLength: {
-      type: [Boolean, Number],
-      default: false
-    },
     defaultMin: {
+      type: [Boolean, Number],
+      default: false
+    },
+    defaultMax: {
+      type: [Boolean, Number],
+      default: false
+    },
+    defaultMinValue: {
       type: [Boolean, Number],
       default: 0
     },
-    defaultMax: {
+    defaultMaxValue: {
       type: [Boolean, Number],
       default: false
     },
@@ -112,22 +118,11 @@ export default {
   mounted () {
     this.allControls = this.$refs.control
   },
-  computed: {
-    isFormValid () {
-      const allControlRequire = this.allControls.filter(({ item }) => item.isRequired !== false)
-      const isAllControlRequireWithValue = allControlRequire.every(({ value }) => !!value)
-      const isFormValuesEmpty = Object.values(this.formValues).every(x => x === undefined)
-      const hasError = !!this.$validator.errors.items.length
-      return isAllControlRequireWithValue && !isFormValuesEmpty && !hasError
-    }
-  },
   methods: {
-    async beforeSubmit (ev) {
-      let isValidated = false
-      await this.$validator.validateAll(this.formName)
-        .then(result => { isValidated = result })
+    async onSubmit (ev) {
+      const isValidated = await this.$refs.form.validate()
 
-      isValidated && this.isFormValid && this.emitValues({
+      isValidated && this.emitValues({
         formName: this.formName,
         values: this.formValues
       })
@@ -139,8 +134,8 @@ export default {
     clearValues () {
       this.allControls.map(x => { x.value = '' })
 
-      const subValues = this.allControls.filter(x => x.$children[0].value)
-      subValues.map(x => { x.$children[0].value = [] })
+      const subValues = this.allControls.filter(x => x.$children[0].$children[0].value)
+      subValues.map(x => { x.$children[0].$children[0].value = [] })
     },
     clearPrefillValues () {
       const inputsPrefilled = this.allControls.filter(x => x.item.value)
@@ -157,9 +152,8 @@ export default {
       this.clearValues()
       this.clearPrefillValues()
     },
-    resetForm (ev) {
+    async resetForm (ev) {
       this.resetFormValues()
-      this.errors.clear(this.formName)
 
       try {
         ev.target.reset()
@@ -168,7 +162,8 @@ export default {
         ev && ev.target.reset
       }
 
-      this.$validator.reset()
+      await this.$nextTick()
+      this.$refs.form.reset()
     }
   }
 }

@@ -26,7 +26,7 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
   ```
 - [x] Validation & VeeValidate [simple rules validation](https://baianat.github.io/vee-validate/guide/rules.html)
   ```js
-  const formFields = [{ label: 'the label', validation: { is_not: 'label' } }]
+  const formFields = [{ label: 'the label', rules: { is_not: 'label' } }]
   ```
 - [x] Custom attr (class, data-*, ...) on .field & real fields (input, textarea...)
   ```js
@@ -54,9 +54,16 @@ yarn add vue-form-json vee-validate bulma @fortawesome/fontawesome-free
 ## Usage
 ```js
 // main.js
-import VeeValidate from 'vee-validate'
+import { extend } from 'vee-validate'
+import * as rules from 'vee-validate/dist/rules'
+import { messages } from 'vee-validate/dist/locale/en.json'
 // ...
-Vue.use(VeeValidate)
+Object.keys(rules).forEach(rule => {
+  extend(rule, {
+    ...rules[rule],
+    message: messages[rule]
+  })
+})
 // ...
 ```
 
@@ -123,19 +130,19 @@ props: {
     type: Boolean,
     default: false
   },
-  defaultMinLength: {
-    type: [Boolean, Number],
-    default: false
-  },
-  defaultMaxLength: {
-    type: [Boolean, Number],
-    default: false
-  },
   defaultMin: {
+    type: [Boolean, Number],
+    default: false
+  },
+  defaultMax: {
+    type: [Boolean, Number],
+    default: false
+  },
+  defaultMinValue: {
     type: [Boolean, Number],
     default: 0
   },
-  defaultMax: {
+  defaultMaxValue: {
     type: [Boolean, Number],
     default: false
   },

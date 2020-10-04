@@ -1,28 +1,28 @@
 <template lang="pug">
-  .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': shouldShowErrorIcon}")
-    component(v-if="item.value",
-              v-model.lazy.trim="value",
-              :is="`app-${getComponent}`"
-              :item="item",
-              :error="fieldError",
-              :data-vv-name="item.label",
-              v-validate.immediate="getValidation")
-    component(v-else,
-              v-model.lazy.trim="value",
-              :is="`app-${getComponent}`"
-              :item="item",
-              :error="fieldError",
-              :data-vv-name="item.label",
-              v-validate="getValidation")
+  ValidationProvider(
+    tag="div"
+    :vid="item.vid"
+    :rules="getRules"
+    :name="item.name || item.label"
+    :immediate="!!item.value"
+    v-slot="{ errors, required, ariaInput }")
 
-    span.icon.is-small.is-left(v-if="item.iconLeft")
-      i.fas(:class="`fa-${item.iconLeft}`")
-    span.icon.is-small.is-right(v-if="shouldShowErrorIcon")
-      i.fas.fa-exclamation-triangle
-    p.help.is-danger(v-if="fieldError") {{ fieldError.msg }}
+    .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': shouldShowErrorIcon}")
+      component(v-model.lazy.trim="value",
+                :is="`app-${getComponent}`"
+                :item="item",
+                :error="errors[0]",
+                :ariaInput="ariaInput")
+
+      span.icon.is-small.is-left(v-if="item.iconLeft")
+        i.fas(:class="`fa-${item.iconLeft}`")
+      span.icon.is-small.is-right(v-if="shouldShowErrorIcon")
+        i.fas.fa-exclamation-triangle
+      p.help.is-danger(v-if="errors.length") {{ errors[0] }}
 </template>
 
 <script>
+import { ValidationProvider } from 'vee-validate'
 import Input from '@/components/Fields/Input'
 import Select from '@/components/Fields/Select'
 import Textarea from '@/components/Fields/Textarea'
@@ -34,6 +34,7 @@ const NOT_NORMAL_INPUT = ['textarea', 'select', 'checkbox', 'radio']
 export default {
   name: 'Control',
   components: {
+    ValidationProvider,
     appInput: Input,
     appSelect: Select,
     appTextarea: Textarea,
@@ -45,20 +46,18 @@ export default {
   }),
   watch: {
     value (val) {
-      this.$parent.formValues[this.item.label] = val
+      this.$parent.$parent.formValues[this.item.label] = val
     }
   },
   computed: {
     hasIcon () {
-      return this.$parent.hasIcon
+      return this.$parent.$parent.hasIcon
     },
     shouldShowErrorIcon () {
       return this.fieldError && this.item.type !== 'select' && this.hasIcon
     },
     fieldError () {
-      return this.errors.items.find(
-        ({ field }) => field === this.item.label
-      )
+      return this.$children[0].errors[0]
     },
     isRequired () {
       return this.item.isRequired !== false
@@ -69,11 +68,13 @@ export default {
     getComponent () {
       return this.isNormalInput ? 'input' : this.item.type
     },
-    getValidation () {
-      const { type, minLength, maxLength, min, max, pattern } = this.item
-      const { defaultMinLength, defaultMaxLength, defaultMin, defaultMax } = this.$parent
+    getRules () {
+      const { type, rules = {}, pattern } = this.item
+      const { min, max, min_value: minValue, max_value: maxValue } = rules
+      const { defaultMin, defaultMax, defaultMinValue, defaultMaxValue } = this.$parent.$parent
       const isNormalInputOrTextarea = this.isNormalInput || type === 'textarea'
       const isInputNumber = type === 'number'
+
       let validation = { required: this.isRequired }
 
       pattern
@@ -81,13 +82,13 @@ export default {
         : isNormalInputOrTextarea && (validation = {
           ...validation,
           email: type === 'email',
-          min: !isInputNumber ? minLength || defaultMinLength : false,
-          max: !isInputNumber ? maxLength || defaultMaxLength : false,
-          min_value: isInputNumber ? min || defaultMin : false,
-          max_value: isInputNumber ? max || defaultMax : false
+          min: !isInputNumber ? min || defaultMin : false,
+          max: !isInputNumber ? max || defaultMax : false,
+          min_value: isInputNumber ? minValue || defaultMinValue : false,
+          max_value: isInputNumber ? maxValue || defaultMaxValue : false
         })
 
-      return { ...validation, ...this.item.validation }
+      return { ...rules, ...validation }
     }
   },
   props: {
