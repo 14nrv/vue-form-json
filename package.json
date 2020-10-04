@@ -1,6 +1,6 @@
 {
   "name": "vue-form-json",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Generate a vue form with validation and bulma style, from json",
   "author": "14nrv",
   "license": "MIT",
@@ -24,7 +24,11 @@
       "@commitlint/config-conventional"
     ],
     "rules": {
-      "footer-max-line-length": [1, "always", 100]
+      "footer-max-line-length": [
+        1,
+        "always",
+        100
+      ]
     }
   },
   "lint-staged": {

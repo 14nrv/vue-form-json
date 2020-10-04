@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/14nrv/vue-form-json/compare/v2.0.0...v3.0.0) (2020-10-04)
+
+
+### chore
+
+* bump npm dependencies ([39beab7](https://github.com/14nrv/vue-form-json/commit/39beab792da168e0e483d398f53e75d1a8a374a5))
+
+
+### BREAKING CHANGES
+
+* renamed validation to rules, defaultMinLength to defaultMin, defaultMaxLength to defaultMax, defaultMin to defaultMinValue, defaultMax to defaultMaxValue, minLength to rules.min, maxLength to rules.max, min to rules.min_value, max to rules.max_value
+
 # [2.0.0](https://github.com/14nrv/vue-form-json/compare/v1.1.1...v2.0.0) (2020-07-19)
 
 
