@@ -1,27 +1,12 @@
 import matchers from 'jest-vue-matcher'
 import { mount, createLocalVue, createWrapper } from '@vue/test-utils'
 import { flatten, pickAll, map } from 'ramda'
-import { slug } from '@/helpers'
-import * as rules from 'vee-validate/dist/rules.umd.js'
-import { messages } from 'vee-validate/dist/locale/en.json'
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
+import { extendRules, flush, slug } from '@/helpers'
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import Form from '@/components/Form'
 import fields from './fields'
-import flushPromises from 'flush-promises'
 
-const flush = async () => {
-  // Flush pending Vue promises
-  await new Promise(resolve => setTimeout(resolve, 0))
-  // Wait a browser tick to make sure changes are applied
-  return new Promise(resolve => setTimeout(resolve, 20))
-}
-
-Object.keys(rules).forEach(rule => {
-  extend(rule, {
-    ...rules[rule],
-    message: messages[rule]
-  })
-})
+extendRules()
 
 const localVue = createLocalVue()
 localVue.component('ValidationProvider', ValidationProvider)
@@ -218,7 +203,7 @@ describe('Form', () => {
     expect($errorMessage).not.toBeADomElement()
 
     type(DEFAULT_VALUE, $inputPassword)
-    await flushPromises()
+    await flush()
 
     expect($errorMessage).toBeADomElement()
 
@@ -226,7 +211,7 @@ describe('Form', () => {
     expect(errorMessage).toBe('The Password field format is invalid')
 
     type(PASSWORD_VALUE, $inputPassword)
-    await flushPromises()
+    await flush()
 
     expect($errorMessage).not.toBeADomElement()
   })
@@ -271,7 +256,7 @@ describe('Form', () => {
     })
 
     it('can have error on prefill input', async () => {
-      await flushPromises()
+      await flush()
 
       expect(`${$inputFirstName}.is-danger`).toBeADomElement()
 

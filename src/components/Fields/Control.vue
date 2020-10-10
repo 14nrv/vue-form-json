@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { ValidationProvider } from 'vee-validate'
 import Input from '@/components/Fields/Input'
 import Select from '@/components/Fields/Select'
 import Textarea from '@/components/Fields/Textarea'
@@ -34,7 +33,6 @@ const NOT_NORMAL_INPUT = ['textarea', 'select', 'checkbox', 'radio']
 export default {
   name: 'Control',
   components: {
-    ValidationProvider,
     appInput: Input,
     appSelect: Select,
     appTextarea: Textarea,
@@ -53,14 +51,11 @@ export default {
     hasIcon () {
       return this.$parent.$parent.hasIcon
     },
-    shouldShowErrorIcon () {
-      return this.fieldError && this.item.type !== 'select' && this.hasIcon
-    },
     fieldError () {
       return this.$children[0].errors[0]
     },
-    isRequired () {
-      return this.item.isRequired !== false
+    shouldShowErrorIcon () {
+      return this.fieldError && this.item.type !== 'select' && this.hasIcon
     },
     isNormalInput () {
       return !NOT_NORMAL_INPUT.includes(this.item.type)
@@ -69,25 +64,9 @@ export default {
       return this.isNormalInput ? 'input' : this.item.type
     },
     getRules () {
-      const { type, rules = {}, pattern } = this.item
-      const { min, max, min_value: minValue, max_value: maxValue } = rules
-      const { defaultMin, defaultMax, defaultMinValue, defaultMaxValue } = this.$parent.$parent
-      const isNormalInputOrTextarea = this.isNormalInput || type === 'textarea'
-      const isInputNumber = type === 'number'
-
-      let validation = { required: this.isRequired }
-
-      pattern
-        ? validation = { ...validation, regex: new RegExp(pattern) }
-        : isNormalInputOrTextarea && (validation = {
-          ...validation,
-          email: type === 'email',
-          min: !isInputNumber ? min || defaultMin : false,
-          max: !isInputNumber ? max || defaultMax : false,
-          min_value: isInputNumber ? minValue || defaultMinValue : false,
-          max_value: isInputNumber ? maxValue || defaultMaxValue : false
-        })
-
+      const { rules = {}, pattern } = this.item
+      let validation
+      pattern && (validation = { regex: new RegExp(pattern) })
       return { ...rules, ...validation }
     }
   },

@@ -34,9 +34,6 @@ export default {
 </script>
 
 <style lang="stylus">
-  @require '../node_modules/bulma/css/bulma.min.css'
-  @require '../node_modules/@fortawesome/fontawesome-free/css/all.min.css'
-
   .labelDefaultMb
     margin-bottom .5rem
 </style>

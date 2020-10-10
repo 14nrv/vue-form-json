@@ -1,6 +1,10 @@
 import matchers from 'jest-vue-matcher'
-import { mount } from '@vue/test-utils'
+import { ValidationProvider } from 'vee-validate'
+import { mount, createLocalVue } from '@vue/test-utils'
 import Form from '@/components/Form'
+
+const localVue = createLocalVue()
+localVue.component('ValidationProvider', ValidationProvider)
 
 let wrapper
 const FORM_NAME = 'testFormName'
@@ -8,6 +12,7 @@ const FORM_NAME = 'testFormName'
 describe('custom css class', () => {
   beforeEach(() => {
     wrapper = mount(Form, {
+      localVue,
       propsData: {
         formFields: [{ label: 'default' }],
         formName: FORM_NAME

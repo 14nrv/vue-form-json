@@ -7,7 +7,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "prepare": "yarn build",
-    "build": "vue-cli-service build --target lib --name vue-form-json ./src/components/Form/Form.vue",
+    "build": "vue-cli-service build --formats commonjs,umd-min --target lib --name vue-form-json ./src/components/Form/Form.vue",
     "lint": "vue-cli-service lint",
     "test": "NODE_ENV=test vue-cli-service test:unit --coverage",
     "test:tdd": "NODE_ENV=test vue-cli-service test:unit --coverage --watchAll",
@@ -62,14 +62,10 @@
   },
   "homepage": "https://github.com/14nrv/vue-form-json#readme",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.14.0",
-    "bulma": "^0.9.0",
-    "pug": "^3.0.0",
     "ramda": "^0.27.0",
     "slugify": "^1.4.4",
-    "stylus": "^0.54.8",
-    "vee-validate": "^3.3.9",
-    "vue": "^2.6.11"
+    "vee-validate": "^3.4.0",
+    "vue": "^2.6.12"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
@@ -95,13 +91,14 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.2",
-    "flush-promises": "^1.0.2",
     "husky": "^4.2.5",
     "jest-junit": "^11.0.1",
     "jest-vue-matcher": "^2.0.0",
     "lint-staged": "^10.2.11",
+    "pug": "^3.0.0",
     "pug-plain-loader": "^1.0.0",
     "semantic-release": "^17.1.1",
+    "stylus": "^0.54.8",
     "stylus-loader": "^3.0.2",
     "vue-template-compiler": "^2.6.11"
   },
