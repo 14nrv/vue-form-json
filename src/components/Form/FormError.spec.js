@@ -1,24 +1,10 @@
 import matchers from 'jest-vue-matcher'
 import { mount, createLocalVue } from '@vue/test-utils'
-import { slug } from '@/helpers'
+import { extendRules, flush, slug } from '@/helpers'
 import Form from '@/components/Form'
-import * as rules from 'vee-validate/dist/rules.umd.js'
-import { messages } from 'vee-validate/dist/locale/en.json'
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
 
-const flush = async () => {
-  // Flush pending Vue promises
-  await new Promise(resolve => setTimeout(resolve, 0))
-  // Wait a browser tick to make sure changes are applied
-  return new Promise(resolve => setTimeout(resolve, 20))
-}
-
-Object.keys(rules).forEach(rule => {
-  extend(rule, {
-    ...rules[rule],
-    message: messages[rule]
-  })
-})
+extendRules()
 
 const localVue = createLocalVue()
 localVue.component('ValidationProvider', ValidationProvider)

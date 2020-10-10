@@ -208,7 +208,7 @@ export default {
         justify-content space-between
 
         .control
-          line-height 36px
+          line-height 3.6rem
 
   .error-title
     margin-bottom 0
