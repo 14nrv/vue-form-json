@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/14nrv/vue-form-json/compare/v3.0.0...v3.0.1) (2020-10-10)
+
+
+### Bug Fixes
+
+* use ValidationProvider of user ([8765a2d](https://github.com/14nrv/vue-form-json/commit/8765a2d2cce3e54c82cc56a220baa69b8b2ff33f))
+
 # [3.0.0](https://github.com/14nrv/vue-form-json/compare/v2.0.0...v3.0.0) (2020-10-04)
 
 
