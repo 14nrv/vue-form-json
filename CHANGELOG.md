@@ -1,3 +1,12 @@
+# [3.1.0](https://github.com/14nrv/vue-form-json/compare/v3.0.1...v3.1.0) (2020-10-24)
+
+
+### Features
+
+* slugify label in ValidationProvider name ([fe326f3](https://github.com/14nrv/vue-form-json/commit/fe326f3b5ed87f2ed70cd077c6512a28a3afda88))
+* **label:** add for attr ([0568eb2](https://github.com/14nrv/vue-form-json/commit/0568eb26b46b6b219b4a32deb57cffe6a9a57ecb))
+* add alternativeLabel & for attr ([c72bab3](https://github.com/14nrv/vue-form-json/commit/c72bab32f143672dad29068a18485f54129c6f40))
+
 ## [3.0.1](https://github.com/14nrv/vue-form-json/compare/v3.0.0...v3.0.1) (2020-10-10)
 
 
