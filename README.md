@@ -74,10 +74,10 @@ Object.keys(rules).forEach(rule => {
 ```html
 <template lang="pug">
   #app.section
-    form-json(:formFields="jsonFields",
-              :formName="'userProfil'"
+    form-json(:btnReset="{value: 'Reset'}",
               :btnSubmit="{value: 'Submit'}",
-              :btnReset="{value: 'Reset'}")
+              :formFields="jsonFields",
+              formName="userProfil")
       div(slot="slotNameAddedInJsonFields")
         p Your slot content
 </template>
@@ -91,11 +91,11 @@ Object.keys(rules).forEach(rule => {
     components: {
       formJson
     },
-    data: () => ({
-      jsonFields
-    }),
     mounted () {
       this.$root.$on('formSubmitted', values => alert(JSON.stringify(values)))
+    },
+    computed: {
+      jsonFields: () => jsonFields
     }
   }
 </script>
