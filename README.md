@@ -8,7 +8,6 @@
 
 [![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/mxow346yj?autoresize=1&hidenavigation=1&module=%2Fsrc%2FApp.vue&view=preview)
 
-
 ## Generate a responsive vue form with validation, from [an array](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
 All fields are required and input text by default.
 Once submitted, an event 'formSubmitted' is emitted on $root with the formName and all values.
