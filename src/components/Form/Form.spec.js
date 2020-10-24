@@ -275,6 +275,13 @@ describe('Form', () => {
       expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
     })
 
+    it('has submit btn disabled if no default value in field', async () => {
+      await wrapper.setProps({ formFields: [{ label: 'a label' }] })
+      await flush()
+
+      expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
+    })
+
     it('enables submit input if all fields are valid', async () => {
       await flush()
       expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
