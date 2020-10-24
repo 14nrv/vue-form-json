@@ -1,5 +1,5 @@
 <template lang="pug">
-  label.label(:for="item.label | slugify", v-if="item.showLabel !== false")
+  label.label(:for="item.for || item.label | slugify", v-if="item.showLabel !== false")
     p {{ item.alternativeLabel || item.label }}
       span.helpLabel.has-text-grey-light.is-size-7.is-italic(v-if="item.help") {{ item.help }}
       span(v-if="item.isRequired !== false")
