@@ -50,10 +50,13 @@ describe('Label', () => {
     expect('label').not.toBeADomElement()
   })
 
-  it('has a for attribute', async () => {
+  it('has a for attribute by default', () => {
     expect('label').toHaveAttribute('for', 'the-label')
+  })
 
+  it('has a custom for attribute', async () => {
     const ATTR_FOR = 'a-custom-for-attribute'
+
     await wrapper.setProps({
       item: {
         label: LABEL,
