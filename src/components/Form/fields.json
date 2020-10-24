@@ -22,7 +22,10 @@
   [
     {
       "label": "Email",
-      "type": "email"
+      "type": "email",
+      "rules": {
+        "email": true
+      }
     },
     {
       "label": "Phone Number",
