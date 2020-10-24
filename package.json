@@ -10,7 +10,7 @@
     "build": "vue-cli-service build --formats commonjs,umd-min --target lib --name vue-form-json ./src/components/Form/Form.vue",
     "lint": "vue-cli-service lint",
     "test": "NODE_ENV=test vue-cli-service test:unit --coverage",
-    "test:tdd": "NODE_ENV=test vue-cli-service test:unit --coverage --watchAll",
+    "test:tdd": "yarn test --watchAll",
     "semantic-release": "semantic-release"
   },
   "husky": {
