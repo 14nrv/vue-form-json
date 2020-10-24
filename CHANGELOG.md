@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/14nrv/vue-form-json/compare/v3.1.0...v3.1.1) (2020-10-24)
+
+
+### Bug Fixes
+
+* add required rule ([d6f6dc0](https://github.com/14nrv/vue-form-json/commit/d6f6dc0760d6f4e2e0f2629016780ca12e7ee415))
+
 # [3.1.0](https://github.com/14nrv/vue-form-json/compare/v3.0.1...v3.1.0) (2020-10-24)
 
 
