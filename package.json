@@ -1,7 +1,7 @@
 {
   "name": "vue-form-json",
   "version": "3.0.1",
-  "description": "Generate a vue form with validation and bulma style, from json",
+  "description": "Generate a vue form with validation from an array",
   "author": "14nrv",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,7 @@
     "build": "vue-cli-service build --formats commonjs,umd-min --target lib --name vue-form-json ./src/components/Form/Form.vue",
     "lint": "vue-cli-service lint",
     "test": "NODE_ENV=test vue-cli-service test:unit --coverage",
-    "test:tdd": "NODE_ENV=test vue-cli-service test:unit --coverage --watchAll",
+    "test:tdd": "yarn test --watchAll",
     "semantic-release": "semantic-release"
   },
   "husky": {
@@ -64,7 +64,7 @@
   "dependencies": {
     "ramda": "^0.27.0",
     "slugify": "^1.4.4",
-    "vee-validate": "^3.4.0",
+    "vee-validate": "^3.4.2",
     "vue": "^2.6.12"
   },
   "devDependencies": {

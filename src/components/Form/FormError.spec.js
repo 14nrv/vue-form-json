@@ -69,7 +69,7 @@ describe('Form Error', () => {
     expect('.is-danger').toBeADomElement()
     expect(`${$inputTest} ~ .icon.is-right`).toBeADomElement()
 
-    expect($error).toHaveText(`The ${LABEL_INPUT} field must be at least ${MIN_LENGTH} characters`, $error)
+    expect($error).toHaveText(`The ${LABEL_INPUT_SLUGIFY} field must be at least ${MIN_LENGTH} characters`, $error)
 
     expect('input[type=submit]').toHaveAttribute('disabled', 'disabled')
   })
@@ -92,7 +92,7 @@ describe('Form Error', () => {
         await flush()
 
         expect(`${INPUT_NUMBER}.is-danger`).toBeADomElement()
-        expect($error).toHaveText(`The Number field must be ${val} or ${isMinValue ? 'more' : 'less'}`)
+        expect($error).toHaveText(`The number field must be ${val} or ${isMinValue ? 'more' : 'less'}`)
       })
     }
 

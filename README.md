@@ -8,13 +8,13 @@
 
 [![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/mxow346yj?autoresize=1&hidenavigation=1&module=%2Fsrc%2FApp.vue&view=preview)
 
-## Generate a responsive vue form with validation and bulma style, from [json](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
+## Generate a responsive vue form with validation, from [an array](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
 All fields are required and input text by default.
 Once submitted, an event 'formSubmitted' is emitted on $root with the formName and all values.
 
 ## Key Features
 - [x] Generate a form from json / array (formFields props)
-- [x] Bulma style
+- [x] Bulma classes by default (that can be overwritten)
 - [x] Responsive
 - [x] Fields on multiples columns
   ```js
@@ -24,16 +24,18 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
   ```js
   const formFields = [{ label: 'the label', value: 'the value' }]
   ```
-- [x] Validation & VeeValidate [simple rules validation](https://baianat.github.io/vee-validate/guide/rules.html)
+- [x] [Simple rules validation](https://logaretm.github.io/vee-validate/guide/rules.html#rules)
   ```js
   const formFields = [{ label: 'the label', rules: { is_not: 'label' } }]
   ```
+- [x] Cross field validation
 - [x] Custom attr (class, data-*, ...) on .field & real fields (input, textarea...)
   ```js
   const formFields = [{
-    label: 'the label',
     attr: { class: 'classOnInput' },
-    field: { attr: { class: 'classOnFieldClassName' } }
+    alternativeLabel: 'an alternative label text that will be displayed',
+    field: { attr: { class: 'classOnFieldClassName' } },
+    label: 'the label'
   }]
   ```
 - [x] Named slot everywhere inside form

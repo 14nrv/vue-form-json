@@ -3,7 +3,7 @@
     tag="div"
     :vid="item.vid"
     :rules="getRules"
-    :name="item.name || item.label"
+    :name="item.name || item.label | slugify"
     :immediate="!!item.value"
     v-slot="{ errors, required, ariaInput }")
 
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { slug } from '@/helpers'
 import Input from '@/components/Fields/Input'
 import Select from '@/components/Fields/Select'
 import Textarea from '@/components/Fields/Textarea'
@@ -32,6 +33,9 @@ const NOT_NORMAL_INPUT = ['textarea', 'select', 'checkbox', 'radio']
 
 export default {
   name: 'Control',
+  filters: {
+    slugify: value => slug(value)
+  },
   components: {
     appInput: Input,
     appSelect: Select,

@@ -208,7 +208,7 @@ describe('Form', () => {
     expect($errorMessage).toBeADomElement()
 
     const errorMessage = wrapper.find($errorMessage).text()
-    expect(errorMessage).toBe('The Password field format is invalid')
+    expect(errorMessage).toBe('The password field format is invalid')
 
     type(PASSWORD_VALUE, $inputPassword)
     await flush()
@@ -261,7 +261,7 @@ describe('Form', () => {
       expect(`${$inputFirstName}.is-danger`).toBeADomElement()
 
       const errorMessage = wrapper.find($errorMessage).text()
-      expect(errorMessage).toBe('The First Name field must be at least 4 characters')
+      expect(errorMessage).toBe('The first-name field must be at least 4 characters')
     })
   })
 
