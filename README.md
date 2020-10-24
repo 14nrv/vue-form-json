@@ -6,7 +6,7 @@
 
 # vue-form-json
 
-[![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/mxow346yj?autoresize=1&hidenavigation=1&module=%2Fsrc%2FApp.vue&view=preview)
+[![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vue-form-json-demo-t97l5?file=/src/main.js)
 
 ## Generate a responsive vue form with validation, from [an array](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
 All fields are required and input text by default.
@@ -28,7 +28,7 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
   ```js
   const formFields = [{ label: 'the label', rules: { is_not: 'label' } }]
   ```
-- [x] Cross field validation
+- [x] Cross field validation (see password confirmation example in the CodeSandbox link)
 - [x] Custom attr (class, data-*, ...) on .field & real fields (input, textarea...)
   ```js
   const formFields = [{
