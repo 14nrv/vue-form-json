@@ -69,6 +69,8 @@ export default {
     },
     getRules () {
       const { rules = {}, pattern } = this.item
+      rules.required = this.item.isRequired !== false
+
       let validation
       pattern && (validation = { regex: new RegExp(pattern) })
       return { ...rules, ...validation }

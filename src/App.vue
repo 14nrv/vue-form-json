@@ -1,9 +1,9 @@
 <template lang="pug">
   #app.section
-    app-form(:formFields="jsonFields",
-             formName="userProfil",
+    app-form(:btnReset="{value: 'Reset'}",
              :btnSubmit="{value: 'Submit'}",
-             :btnReset="{value: 'Reset'}")
+             :formFields="jsonFields",
+             formName="userProfil")
       div(slot="boxSlot")
         .box
           article
@@ -24,11 +24,11 @@ export default {
   components: {
     appForm: Form
   },
-  data: () => ({
-    jsonFields
-  }),
   mounted () {
     this.$root.$on('formSubmitted', values => alert(JSON.stringify(values)))
+  },
+  computed: {
+    jsonFields: () => jsonFields
   }
 }
 </script>
