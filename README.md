@@ -31,9 +31,10 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
 - [x] Custom attr (class, data-*, ...) on .field & real fields (input, textarea...)
   ```js
   const formFields = [{
-    label: 'the label',
     attr: { class: 'classOnInput' },
-    field: { attr: { class: 'classOnFieldClassName' } }
+    alternativeLabel: 'an alternative label text that will be displayed',
+    field: { attr: { class: 'classOnFieldClassName' } },
+    label: 'the label'
   }]
   ```
 - [x] Named slot everywhere inside form
