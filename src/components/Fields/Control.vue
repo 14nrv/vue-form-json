@@ -5,7 +5,7 @@
     :rules="getRules"
     :name="item.name || item.label | slugify"
     :immediate="!!item.value"
-    v-slot="{ errors, required, ariaInput }")
+    v-slot="{ errors, ariaInput }")
 
     .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': shouldShowErrorIcon}")
       component(v-model.lazy.trim="value",
@@ -48,7 +48,8 @@ export default {
   }),
   watch: {
     value (val) {
-      this.$parent.$parent.formValues[this.item.label] = val
+      const { label, name } = this.item
+      this.$parent.$parent.formValues[name || label] = val
     }
   },
   computed: {

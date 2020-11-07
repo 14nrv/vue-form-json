@@ -2,6 +2,7 @@ import matchers from 'jest-vue-matcher'
 import { mount, createLocalVue, createWrapper } from '@vue/test-utils'
 import { flatten, pickAll, map } from 'ramda'
 import { extendRules, flush, slug } from '@/helpers'
+import { camelizeKeys } from 'humps'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import Form from '@/components/Form'
 import fields from './fields'
@@ -31,8 +32,11 @@ const ZIP_VALUE = '12345'
 const PASSWORD_VALUE = ZIP_VALUE
 const BIG_VALUE = ZIP_VALUE
 
+const allFields = flatten(fields)
+  .filter(field => !['html', 'slot'].includes(Object.keys(field)[0]))
+
 const getInitialValue = (label, node, attribute) =>
-  fields
+  allFields
     .find(field => field.label === label)[node]
     .filter(x => x[attribute])
     .map(({ value, text }) => value || text)
@@ -40,12 +44,10 @@ const getInitialValue = (label, node, attribute) =>
 const COUNTRY_VALUE = getInitialValue('Country', 'options', 'selected')[0]
 const CHECKBOX_VALUE = getInitialValue('Checkbox', 'items', 'checked')
 
-const allFields = flatten(fields)
-  .filter(field => !['html', 'slot'].includes(Object.keys(field)[0]))
 const allNormalInputLabel = allFields
   .filter(x => !x.type || x.type === 'tel')
   .filter(x => !x.validation)
-  .map(x => x.label)
+  .map(x => x.name || x.label)
 
 const fieldWithPattern = allFields.find(({ pattern }) => pattern)
 
@@ -282,6 +284,13 @@ describe('Form', () => {
       expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
     })
 
+    it('has submit btn enabled if field is not required', async () => {
+      await wrapper.setProps({ formFields: [{ label: 'a label', isRequired: false }] })
+      await flush()
+
+      expect($inputSubmit).not.toHaveAttribute('disabled', 'disabled')
+    })
+
     it('enables submit input if all fields are valid', async () => {
       await flush()
       expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
@@ -295,17 +304,25 @@ describe('Form', () => {
       expect($inputSubmit).toHaveClass('button is-primary')
     })
 
-    it('sends an event formSubmitted with all values when submit', async () => {
-      const rootWrapper = createWrapper(wrapper.vm.$root)
+    it.each([true, false])(
+      'sends an event formSubmitted with all values when submit with camelizePayloadKeys set to %s',
+      async camelizePayloadKeys => {
+        const rootWrapper = createWrapper(wrapper.vm.$root)
 
-      await fillForm()
-      await wrapper.vm.onSubmit()
+        await wrapper.setProps({ camelizePayloadKeys })
+        await flush()
 
-      expect(rootWrapper).toEmitWith('formSubmitted', {
-        formName: FORM_NAME,
-        values: getFormValues()
-      })
-    })
+        await fillForm()
+        await wrapper.vm.onSubmit()
+
+        expect(rootWrapper).toEmitWith('formSubmitted', {
+          formName: FORM_NAME,
+          values: camelizePayloadKeys
+            ? camelizeKeys(getFormValues())
+            : getFormValues()
+        })
+      }
+    )
   })
 
   describe('reset', () => {
@@ -318,7 +335,7 @@ describe('Form', () => {
     })
 
     it.each([true, false])(
-      'can reset value',
+      'can reset value with resetFormAfterSubmit set to %s',
       async hasResetAfterSubmit => {
         hasResetAfterSubmit && wrapper.setProps({ resetFormAfterSubmit: true })
 

@@ -48,11 +48,12 @@ import {
   pipe,
   map
 } from 'ramda'
+import { camelizeKeys } from 'humps'
 
 import Label from '@/components/Fields/Label'
 import Control from '@/components/Fields/Control'
 
-const getLabels = ({ label }) => label
+const getNameOrLabel = ({ label, name }) => name || label
 const valueToProp = object => pickAll(object, {})
 
 export default {
@@ -106,6 +107,10 @@ export default {
     hasIcon: {
       type: Boolean,
       default: true
+    },
+    camelizePayloadKeys: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -113,7 +118,7 @@ export default {
     allControls: []
   }),
   created () {
-    this.formValues = pipe(flatten, map(getLabels), valueToProp)(this.formFields)
+    this.formValues = pipe(flatten, map(getNameOrLabel), valueToProp)(this.formFields)
   },
   mounted () {
     this.allControls = this.$refs.control
@@ -122,29 +127,42 @@ export default {
     async onSubmit (ev) {
       const isValidated = await this.$refs.form.validate()
 
-      isValidated && this.emitValues({
-        formName: this.formName,
-        values: this.formValues
-      })
-      isValidated && this.resetFormAfterSubmit && this.resetForm(ev)
+      if (isValidated) {
+        const valuesFormatted = JSON.parse(JSON.stringify(this.formValues))
+
+        this.emitValues({
+          formName: this.formName,
+          values: this.camelizePayloadKeys
+            ? camelizeKeys(valuesFormatted)
+            : valuesFormatted
+        })
+        this.resetFormAfterSubmit && this.resetForm(ev)
+      }
     },
     emitValues (data) {
       this.$root.$emit('formSubmitted', data)
     },
     clearValues () {
+      const fieldsWithArrayValue = ['radio, checkbox']
+
       this.allControls.map(x => { x.value = '' })
 
       const subValues = this.allControls.filter(x => x.$children[0].$children[0].value)
-      subValues.map(x => { x.$children[0].$children[0].value = [] })
+      subValues.map(x => {
+        const { type } = x.$children[0].$children[0].item
+        const hasArrayAsValue = fieldsWithArrayValue.includes(type)
+
+        x.$children[0].$children[0].value = hasArrayAsValue ? [] : ''
+      })
     },
     clearPrefillValues () {
       const inputsPrefilled = this.allControls.filter(x => x.item.value)
       inputsPrefilled.map(x => { x.item.value = undefined })
 
-      const selects = this.allControls.filter(x => x.item.options)
+      const selects = this.allControls.filter(x => x.item.type === 'select')
       selects.map(select => {
         select.item.options.map(option => {
-          option.selected && (option.selected = false)
+          option.selected && !option.disabled && (delete option.selected)
         })
       })
     },
