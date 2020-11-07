@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/14nrv/vue-form-json/compare/v3.1.1...v3.2.0) (2020-11-07)
+
+
+### Features
+
+* add camelizePayloadKeys props ([66f24ef](https://github.com/14nrv/vue-form-json/commit/66f24ef6afb1cf87ce4c4a3683b85544b245a421))
+
 ## [3.1.1](https://github.com/14nrv/vue-form-json/compare/v3.1.0...v3.1.1) (2020-10-24)
 
 
