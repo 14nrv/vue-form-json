@@ -37,7 +37,7 @@ export default {
 
     this.value = itemsChecked
 
-    itemsChecked.length && (this.$parent.$parent.value = itemsChecked)
+    itemsChecked && itemsChecked.length && (this.$parent.$parent.value = itemsChecked)
   }
 }
 </script>

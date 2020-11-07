@@ -8,7 +8,7 @@
 
 [![Edit vue-form-json-demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vue-form-json-demo-t97l5?file=/src/main.js)
 
-## Generate a responsive vue form with validation, from [an array](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
+## Generate a vue form with validation from [an array](https://github.com/14nrv/vue-form-json/blob/master/src/components/Form/fields.json)
 All fields are required and input text by default.
 Once submitted, an event 'formSubmitted' is emitted on $root with the formName and all values.
 
@@ -49,8 +49,8 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
 
 ## Install
 ```sh
-yarn add vue-form-json vee-validate bulma @fortawesome/fontawesome-free
-#fontawesome is not needed if hasIcon props is false
+yarn add vue-form-json
+# Optional: bulma @fortawesome/fontawesome-free (fontawesome is not needed if hasIcon props is false)
 ```
 
 ## Usage
@@ -153,6 +153,10 @@ props: {
   hasIcon: {
     type: Boolean,
     default: true
+  },
+  camelizePayloadKeys: {
+    type: Boolean,
+    default: false
   }
 }
 ```
