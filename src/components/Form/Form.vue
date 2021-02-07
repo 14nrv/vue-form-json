@@ -119,11 +119,33 @@ export default {
   }),
   created () {
     this.formValues = pipe(flatten, map(getNameOrLabel), valueToProp)(this.formFields)
+    this.addUpdateValueCallback()
   },
   mounted () {
     this.allControls = this.$refs.control
   },
+  watch: {
+    formFields: {
+      deep: true,
+      handler () {
+        this.addUpdateValueCallback()
+      }
+    }
+  },
   methods: {
+    addUpdateValueCallback () {
+      for (const field of this.formFields) {
+        if (field.slot) {
+          field.props = field.props || {}
+          field.props.updateValue = (value) => {
+            field.props.value = value
+            const nameOrLabel = getNameOrLabel(field.props)
+            if (nameOrLabel) this.formValues[nameOrLabel] = value
+          }
+          if (field.props.value) { field.props.updateValue(field.props.value) }
+        }
+      }
+    },
     async onSubmit (ev) {
       const isValidated = await this.$refs.form.validate()
 
