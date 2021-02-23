@@ -78,8 +78,8 @@ Object.keys(rules).forEach(rule => {
               :btnSubmit="{value: 'Submit'}",
               :formFields="jsonFields",
               formName="userProfil")
-      div(slot="slotNameAddedInJsonFields")
-        p Your slot content
+      template(#slotNameAddedInJsonFields="{ prop }")
+        p Your slot content and {{ prop }}
 </template>
 
 <script>
