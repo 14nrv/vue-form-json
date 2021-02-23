@@ -125,7 +125,10 @@
     "isRequired": false
   },
   {
-    "slot": "boxSlot"
+    "slot": "boxSlot",
+    "props": {
+      "prop": "scoped slot"
+    }
   },
   {
     "label": "Checkbox",

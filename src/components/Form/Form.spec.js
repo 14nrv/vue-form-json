@@ -70,6 +70,9 @@ describe('Form', () => {
       propsData: {
         formFields: fields,
         formName: FORM_NAME
+      },
+      scopedSlots: {
+        boxSlot: '<p>{{ props.prop }}</p>'
       }
     })
     expect.extend(matchers(wrapper))
@@ -227,11 +230,14 @@ describe('Form', () => {
       expect(slotContainer).not.toBeADomElement()
     })
 
-    it('has a slot', () => {
+    it('has a scoped slot', () => {
       expect(slotContainer).toBeADomElement()
 
       const allSlots = wrapper.findAll(slotContainer)
       expect(allSlots).toHaveLength(1)
+
+      const { props: { prop } } = fields.find(field => Object.keys(field)[0] === 'slot')
+      expect(allSlots.at(0).text()).toBe(prop)
     })
   })
 
