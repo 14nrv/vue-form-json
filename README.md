@@ -38,9 +38,9 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
     label: 'the label'
   }]
   ```
-- [x] Named slot everywhere inside form
+- [x] Scoped slot everywhere inside form
   ```js
-  const formFields = [{ slot: 'nameOfTheSlot' }]
+  const formFields = [{ slot: 'nameOfTheSlot', props: { foo: 'bar' } }]
   ```
 - [x] Html directly inside json (formFields props)
   ```js

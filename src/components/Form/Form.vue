@@ -20,7 +20,7 @@
         .field(v-else-if="Object.keys(item).includes('slot')",
               v-bind="item.attr",
               data-test="slot")
-          slot(:name="Object.values(item)[0]")
+          slot(:name="item['slot']", v-bind="item.props")
 
         .field(v-else, v-bind="item.field && item.field.attr")
           app-label(:item="item")

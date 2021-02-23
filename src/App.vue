@@ -1,17 +1,17 @@
 <template lang="pug">
   #app.section
-    app-form(:btnReset="{value: 'Reset'}",
-             :btnSubmit="{value: 'Submit'}",
+    app-form(:btnReset="{ value: 'Reset' }",
+             :btnSubmit="{ value: 'Submit' }",
              :formFields="jsonFields",
              formName="userProfil")
-      div(slot="boxSlot")
+      template(#boxSlot="{ prop }")
         .box
           article
             .content
               p
                 strong.has-text-info Info<br>
                 | You can also use
-                strong  named slot
+                strong  {{ prop }}
                 |  like this one
 </template>
 
