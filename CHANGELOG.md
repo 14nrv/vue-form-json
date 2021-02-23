@@ -1,3 +1,10 @@
+# [3.3.0](https://github.com/14nrv/vue-form-json/compare/v3.2.0...v3.3.0) (2021-02-23)
+
+
+### Features
+
+* use scoped slot instead of slot ([168d41e](https://github.com/14nrv/vue-form-json/commit/168d41eaed3206091ad0f25bfc08e03ec921b510))
+
 # [3.2.0](https://github.com/14nrv/vue-form-json/compare/v3.1.1...v3.2.0) (2020-11-07)
 
 
