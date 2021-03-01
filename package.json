@@ -1,6 +1,6 @@
 {
   "name": "vue-form-json",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Generate a vue form with validation from an array",
   "author": "14nrv",
   "license": "MIT",

@@ -1,3 +1,15 @@
+# [3.4.0](https://github.com/14nrv/vue-form-json/compare/v3.3.0...v3.4.0) (2021-03-01)
+
+
+### Bug Fixes
+
+* reset with select field ([50b4ddf](https://github.com/14nrv/vue-form-json/commit/50b4ddf2697a16d34f71672aeada542f9813cea8))
+
+
+### Features
+
+* support custom field via scoped slot ([5932805](https://github.com/14nrv/vue-form-json/commit/59328057bbcb43048e2201c3fd74b386a22d3782))
+
 # [3.3.0](https://github.com/14nrv/vue-form-json/compare/v3.2.0...v3.3.0) (2021-02-23)
 
 
