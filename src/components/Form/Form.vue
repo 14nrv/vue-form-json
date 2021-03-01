@@ -1,8 +1,12 @@
 <template lang="pug">
-  ValidationObserver(v-slot="{ handleSubmit, invalid, reset }", tag="div", ref="form")
+  ValidationObserver(
+    v-slot="{ handleSubmit, invalid }",
+    tag="div",
+    ref="observer"
+  )
     form(:data-vv-scope="formName",
         @submit.prevent="handleSubmit(onSubmit)",
-        @reset.prevent="reset")
+        @reset.prevent="handleReset")
 
       div(v-for="(item, index) in formFields", :key="index")
         .field-body(v-if="Array.isArray(item)")
@@ -29,8 +33,7 @@
       .field.form-footer.is-grouped.is-opposed
         input(type="reset",
               v-bind="btnReset"
-              :class="btnReset.class || 'button'"
-              @click="resetForm")
+              :class="btnReset.class || 'button'")
         input(type="submit",
               v-bind="btnSubmit",
               :class="btnSubmit.class || 'button is-primary'"
@@ -125,9 +128,9 @@ export default {
   },
   methods: {
     async onSubmit (ev) {
-      const isValidated = await this.$refs.form.validate()
+      const isValid = await this.$refs.observer.validate()
 
-      if (isValidated) {
+      if (isValid) {
         const valuesFormatted = JSON.parse(JSON.stringify(this.formValues))
 
         this.emitValues({
@@ -136,14 +139,14 @@ export default {
             ? camelizeKeys(valuesFormatted)
             : valuesFormatted
         })
-        this.resetFormAfterSubmit && this.resetForm(ev)
+        this.resetFormAfterSubmit && this.handleReset(ev)
       }
     },
     emitValues (data) {
       this.$root.$emit('formSubmitted', data)
     },
     clearValues () {
-      const fieldsWithArrayValue = ['radio, checkbox']
+      const fieldsWithArrayValue = ['radio', 'checkbox']
 
       this.allControls.map(x => { x.value = '' })
 
@@ -161,16 +164,15 @@ export default {
 
       const selects = this.allControls.filter(x => x.item.type === 'select')
       selects.map(select => {
-        select.item.options.map(option => {
-          option.selected && !option.disabled && (delete option.selected)
-        })
+        select.$el.querySelector('select').selectedIndex =
+          select.item.placeholder ? 0 : -1
       })
     },
     resetFormValues () {
       this.clearValues()
       this.clearPrefillValues()
     },
-    async resetForm (ev) {
+    async handleReset (ev) {
       this.resetFormValues()
 
       try {
@@ -181,7 +183,7 @@ export default {
       }
 
       await this.$nextTick()
-      this.$refs.form.reset()
+      this.$refs.observer.reset()
     }
   }
 }
