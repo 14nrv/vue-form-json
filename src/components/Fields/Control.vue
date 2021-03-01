@@ -23,13 +23,18 @@
 
 <script>
 import { slug } from '@/helpers'
+import Checkbox from '@/components/Fields/Checkbox'
 import Input from '@/components/Fields/Input'
+import Radio from '@/components/Fields/Radio'
 import Select from '@/components/Fields/Select'
 import Textarea from '@/components/Fields/Textarea'
-import Checkbox from '@/components/Fields/Checkbox'
-import Radio from '@/components/Fields/Radio'
 
-const NOT_NORMAL_INPUT = ['textarea', 'select', 'checkbox', 'radio']
+const NOT_NORMAL_INPUT = [
+  'checkbox',
+  'radio',
+  'select',
+  'textarea'
+]
 
 export default {
   name: 'Control',
@@ -37,11 +42,11 @@ export default {
     slugify: value => slug(value)
   },
   components: {
-    appInput: Input,
-    appSelect: Select,
-    appTextarea: Textarea,
     appCheckbox: Checkbox,
-    appRadio: Radio
+    appInput: Input,
+    appRadio: Radio,
+    appSelect: Select,
+    appTextarea: Textarea
   },
   data: () => ({
     value: undefined
