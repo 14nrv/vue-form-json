@@ -24,7 +24,10 @@
         .field(v-else-if="Object.keys(item).includes('slot')",
               v-bind="item.attr",
               data-test="slot")
-          slot(:name="item['slot']", v-bind="item.props")
+          slot(
+            :name="item['slot']",
+            v-bind="{...item.props, updateFormValues, isFormReseted }"
+          )
 
         .field(v-else, v-bind="item.field && item.field.attr")
           app-label(:item="item")
@@ -47,17 +50,19 @@ import { ValidationObserver } from 'vee-validate'
 
 import {
   flatten,
+  map,
+  omit,
   pickAll,
-  pipe,
-  map
+  pipe
 } from 'ramda'
-import { camelizeKeys } from 'humps'
+import { camelizeKeys } from '@/helpers'
 
 import Label from '@/components/Fields/Label'
 import Control from '@/components/Fields/Control'
 
 const getNameOrLabel = ({ label, name }) => name || label
 const valueToProp = object => pickAll(object, {})
+const removeUndefinedKey = object => omit([undefined], object)
 
 export default {
   name: 'Form',
@@ -117,11 +122,17 @@ export default {
     }
   },
   data: () => ({
+    allControls: [],
     formValues: undefined,
-    allControls: []
+    isFormReseted: false
   }),
   created () {
-    this.formValues = pipe(flatten, map(getNameOrLabel), valueToProp)(this.formFields)
+    this.formValues = pipe(
+      flatten,
+      map(getNameOrLabel),
+      valueToProp,
+      removeUndefinedKey
+    )(this.formFields)
   },
   mounted () {
     this.allControls = this.$refs.control
@@ -130,14 +141,19 @@ export default {
     async onSubmit (ev) {
       const isValid = await this.$refs.observer.validate()
 
-      if (isValid) {
-        const valuesFormatted = JSON.parse(JSON.stringify(this.formValues))
+      const valuesFormatted = Object.assign({}, this.formValues)
+      const arrayValuesFormatted = Object.entries(valuesFormatted).reduce(
+        (acc, [key, value]) => {
+          if (Array.isArray(value)) value = Object.assign([], value)
+          return { ...acc, [key]: value }
+        }, {})
 
+      if (isValid) {
         this.emitValues({
           formName: this.formName,
           values: this.camelizePayloadKeys
-            ? camelizeKeys(valuesFormatted)
-            : valuesFormatted
+            ? camelizeKeys(arrayValuesFormatted)
+            : arrayValuesFormatted
         })
         this.resetFormAfterSubmit && this.handleReset(ev)
       }
@@ -173,6 +189,7 @@ export default {
       this.clearPrefillValues()
     },
     async handleReset (ev) {
+      this.isFormReseted = true
       this.resetFormValues()
 
       try {
@@ -184,6 +201,10 @@ export default {
 
       await this.$nextTick()
       this.$refs.observer.reset()
+      this.isFormReseted = false
+    },
+    updateFormValues (obj) {
+      this.formValues = { ...this.formValues, ...obj }
     }
   }
 }
