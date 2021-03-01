@@ -65,7 +65,7 @@
     "humps": "^2.0.1",
     "ramda": "^0.27.0",
     "slugify": "^1.4.4",
-    "vee-validate": "^3.4.2",
+    "vee-validate": "^3.4.5",
     "vue": "^2.6.12"
   },
   "devDependencies": {

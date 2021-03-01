@@ -1,8 +1,12 @@
 <template lang="pug">
-  ValidationObserver(v-slot="{ handleSubmit, invalid, reset }", tag="div", ref="form")
+  ValidationObserver(
+    v-slot="{ handleSubmit, invalid }",
+    tag="div",
+    ref="observer"
+  )
     form(:data-vv-scope="formName",
         @submit.prevent="handleSubmit(onSubmit)",
-        @reset.prevent="reset")
+        @reset.prevent="handleReset")
 
       div(v-for="(item, index) in formFields", :key="index")
         .field-body(v-if="Array.isArray(item)")
@@ -20,7 +24,10 @@
         .field(v-else-if="Object.keys(item).includes('slot')",
               v-bind="item.attr",
               data-test="slot")
-          slot(:name="item['slot']", v-bind="item.props")
+          slot(
+            :name="item['slot']",
+            v-bind="{...item.props, updateFormValues, isFormReseted }"
+          )
 
         .field(v-else, v-bind="item.field && item.field.attr")
           app-label(:item="item")
@@ -29,8 +36,7 @@
       .field.form-footer.is-grouped.is-opposed
         input(type="reset",
               v-bind="btnReset"
-              :class="btnReset.class || 'button'"
-              @click="resetForm")
+              :class="btnReset.class || 'button'")
         input(type="submit",
               v-bind="btnSubmit",
               :class="btnSubmit.class || 'button is-primary'"
@@ -44,17 +50,19 @@ import { ValidationObserver } from 'vee-validate'
 
 import {
   flatten,
+  map,
+  omit,
   pickAll,
-  pipe,
-  map
+  pipe
 } from 'ramda'
-import { camelizeKeys } from 'humps'
+import { camelizeKeys } from '@/helpers'
 
 import Label from '@/components/Fields/Label'
 import Control from '@/components/Fields/Control'
 
 const getNameOrLabel = ({ label, name }) => name || label
 const valueToProp = object => pickAll(object, {})
+const removeUndefinedKey = object => omit([undefined], object)
 
 export default {
   name: 'Form',
@@ -114,36 +122,47 @@ export default {
     }
   },
   data: () => ({
+    allControls: [],
     formValues: undefined,
-    allControls: []
+    isFormReseted: false
   }),
   created () {
-    this.formValues = pipe(flatten, map(getNameOrLabel), valueToProp)(this.formFields)
+    this.formValues = pipe(
+      flatten,
+      map(getNameOrLabel),
+      valueToProp,
+      removeUndefinedKey
+    )(this.formFields)
   },
   mounted () {
     this.allControls = this.$refs.control
   },
   methods: {
     async onSubmit (ev) {
-      const isValidated = await this.$refs.form.validate()
+      const isValid = await this.$refs.observer.validate()
 
-      if (isValidated) {
-        const valuesFormatted = JSON.parse(JSON.stringify(this.formValues))
+      const valuesFormatted = Object.assign({}, this.formValues)
+      const arrayValuesFormatted = Object.entries(valuesFormatted).reduce(
+        (acc, [key, value]) => {
+          if (Array.isArray(value)) value = Object.assign([], value)
+          return { ...acc, [key]: value }
+        }, {})
 
+      if (isValid) {
         this.emitValues({
           formName: this.formName,
           values: this.camelizePayloadKeys
-            ? camelizeKeys(valuesFormatted)
-            : valuesFormatted
+            ? camelizeKeys(arrayValuesFormatted)
+            : arrayValuesFormatted
         })
-        this.resetFormAfterSubmit && this.resetForm(ev)
+        this.resetFormAfterSubmit && this.handleReset(ev)
       }
     },
     emitValues (data) {
       this.$root.$emit('formSubmitted', data)
     },
     clearValues () {
-      const fieldsWithArrayValue = ['radio, checkbox']
+      const fieldsWithArrayValue = ['radio', 'checkbox']
 
       this.allControls.map(x => { x.value = '' })
 
@@ -161,16 +180,16 @@ export default {
 
       const selects = this.allControls.filter(x => x.item.type === 'select')
       selects.map(select => {
-        select.item.options.map(option => {
-          option.selected && !option.disabled && (delete option.selected)
-        })
+        select.$el.querySelector('select').selectedIndex =
+          select.item.placeholder ? 0 : -1
       })
     },
     resetFormValues () {
       this.clearValues()
       this.clearPrefillValues()
     },
-    async resetForm (ev) {
+    async handleReset (ev) {
+      this.isFormReseted = true
       this.resetFormValues()
 
       try {
@@ -181,7 +200,11 @@ export default {
       }
 
       await this.$nextTick()
-      this.$refs.form.reset()
+      this.$refs.observer.reset()
+      this.isFormReseted = false
+    },
+    updateFormValues (obj) {
+      this.formValues = { ...this.formValues, ...obj }
     }
   }
 }

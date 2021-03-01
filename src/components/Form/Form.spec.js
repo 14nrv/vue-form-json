@@ -1,8 +1,7 @@
 import matchers from 'jest-vue-matcher'
 import { mount, createLocalVue, createWrapper } from '@vue/test-utils'
 import { flatten, pickAll, map } from 'ramda'
-import { extendRules, flush, slug } from '@/helpers'
-import { camelizeKeys } from 'humps'
+import { camelizeKeys, extendRules, flush, slug } from '@/helpers'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import Form from '@/components/Form'
 import fields from './fields'
@@ -16,7 +15,8 @@ localVue.filter('slugify', str => slug(str))
 
 let wrapper
 const $inputSubmit = 'input[type=submit]'
-const $reset = 'input[type=reset]'
+const $inputReset = 'input[type=reset]'
+
 const $inputFirstName = 'input[name=first-name]'
 const $inputLastName = 'input[name=last-name]'
 const $inputPassword = 'input[name=password]'
@@ -63,66 +63,65 @@ const trigger = (element, event = 'click') => {
   wrapper.find(element).trigger(event)
 }
 
+const setup = ({
+  camelizePayloadKeys = false,
+  formFields = fields,
+  scopedSlots = {
+    boxSlot: '<p>{{ props.prop }}</p>'
+  }
+} = {}) => {
+  wrapper = mount(Form, {
+    localVue,
+    propsData: {
+      camelizePayloadKeys,
+      formFields,
+      formName: FORM_NAME
+    },
+    scopedSlots
+  })
+  expect.extend(matchers(wrapper))
+  return { wrapper }
+}
+
+const fillForm = async () => {
+  allNormalInputLabel.forEach(x =>
+    type(DEFAULT_VALUE, `input[name=${slug(x)}]`)
+  )
+
+  type(EMAIL_VALUE, 'input[name=email]')
+  type(PASSWORD_VALUE, $inputPassword)
+  type(NUMBER_VALUE, 'input[name=age]')
+  type(ZIP_VALUE, 'input[name=zip]')
+  type(DEFAULT_VALUE, 'textarea[name=message]')
+  type(DEFAULT_VALUE, 'input[name=small]')
+  type(BIG_VALUE, 'input[name=big]')
+
+  await flush()
+}
+
+const getFormValues = () => {
+  let allValueFromNormalInput = pickAll(allNormalInputLabel, {})
+  const setDefaultValue = obj => DEFAULT_VALUE
+  allValueFromNormalInput = map(setDefaultValue, allValueFromNormalInput)
+
+  return {
+    ...allValueFromNormalInput,
+    Password: PASSWORD_VALUE,
+    Message: DEFAULT_VALUE,
+    Checkbox: CHECKBOX_VALUE,
+    Country: COUNTRY_VALUE,
+    Email: EMAIL_VALUE,
+    Radio: RADIO_VALUE,
+    Age: NUMBER_VALUE,
+    Zip: ZIP_VALUE,
+    big: BIG_VALUE,
+    small: DEFAULT_VALUE
+  }
+}
+
 describe('Form', () => {
-  beforeEach(() => {
-    wrapper = mount(Form, {
-      localVue,
-      propsData: {
-        formFields: fields,
-        formName: FORM_NAME
-      },
-      scopedSlots: {
-        boxSlot: '<p>{{ props.prop }}</p>'
-      }
-    })
-    expect.extend(matchers(wrapper))
-  })
-
-  afterEach(() => {
-    wrapper.destroy()
-  })
-
-  const fillForm = async () => {
-    allNormalInputLabel.forEach(x =>
-      type(DEFAULT_VALUE, `input[name=${slug(x)}]`)
-    )
-
-    type(EMAIL_VALUE, 'input[name=email]')
-    type(PASSWORD_VALUE, $inputPassword)
-    type(NUMBER_VALUE, 'input[name=age]')
-    type(ZIP_VALUE, 'input[name=zip]')
-    type(DEFAULT_VALUE, 'textarea[name=message]')
-    type(DEFAULT_VALUE, 'input[name=small]')
-    type(BIG_VALUE, 'input[name=big]')
-
-    await flush()
-  }
-
-  const getFormValues = () => {
-    let allValueFromNormalInput = pickAll(allNormalInputLabel, {})
-    const setDefaultValue = obj => DEFAULT_VALUE
-    allValueFromNormalInput = map(setDefaultValue, allValueFromNormalInput)
-
-    return {
-      ...allValueFromNormalInput,
-      Password: PASSWORD_VALUE,
-      Message: DEFAULT_VALUE,
-      Checkbox: CHECKBOX_VALUE,
-      Country: COUNTRY_VALUE,
-      Email: EMAIL_VALUE,
-      Radio: RADIO_VALUE,
-      Age: NUMBER_VALUE,
-      Zip: ZIP_VALUE,
-      big: BIG_VALUE,
-      small: DEFAULT_VALUE
-    }
-  }
-
-  it('is a Vue instance', () => {
-    expect(wrapper.vm).toBeTruthy()
-  })
-
   it('has some props', () => {
+    setup()
     expect(wrapper.props().formFields).toBeTruthy()
     expect(wrapper.props().formName).toBeTruthy()
   })
@@ -130,7 +129,7 @@ describe('Form', () => {
   it('set input type text and required by default', async () => {
     const LABEL_INPUT = 'testInput'
     const LABEL_INPUT_SLUGIFY = slug(LABEL_INPUT)
-    await wrapper.setProps({ formFields: [{ label: LABEL_INPUT }] })
+    setup({ formFields: [{ label: LABEL_INPUT }] })
 
     expect(`input[name=${LABEL_INPUT_SLUGIFY}]`).toBeADomElement()
     expect('input[type=text]').toBeADomElement()
@@ -141,7 +140,7 @@ describe('Form', () => {
 
   it('set not required', async () => {
     const label = 'plop'
-    await wrapper.setProps({ formFields: [{ label, isRequired: false }] })
+    setup({ formFields: [{ label, isRequired: false }] })
 
     expect('.label sup.has-text-grey-light').not.toBeADomElement()
     expect(`input#${label}[required=required]`).not.toBeADomElement()
@@ -149,31 +148,33 @@ describe('Form', () => {
   })
 
   it('hides label', async () => {
-    await wrapper.setProps({ formFields: [{ label: 'plop', showLabel: false }] })
+    setup({ formFields: [{ label: 'plop', showLabel: false }] })
     expect('.label').not.toBeADomElement()
   })
 
   it('shows fields', () => {
+    setup()
     expect('.field-body .field .input').toBeADomElement()
     expect('form > div > .field .input').toBeADomElement()
     expect($inputSubmit).toBeADomElement()
   })
 
   it('has a help field', () => {
+    setup()
     expect('.helpLabel').toBeADomElement()
   })
 
   it('hides error icon', async () => {
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
+    const { wrapper } = setup()
+    await flush()
     expect($errorIcon).toBeADomElement()
-    await wrapper.setProps({ hasIcon: false })
 
+    await wrapper.setProps({ hasIcon: false })
     expect($errorIcon).not.toBeADomElement()
   })
 
   it('have default properties', () => {
+    setup()
     expect($inputLastName).toHaveAttribute('placeholder', 'Last Name placeholder')
     expect($inputLastName).toHaveAttribute('minlength', '3')
     expect('input[name=zip]').toHaveAttribute('min', '0')
@@ -184,16 +185,11 @@ describe('Form', () => {
 
   it('validate on blur', async () => {
     const isDanger = '.is-danger'
+    setup()
     expect(`${$inputLastName}:not(${isDanger})`).toBeADomElement()
 
     type('la', $inputLastName)
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
+    await flush()
 
     expect(`${$inputLastName}${isDanger}`).toBeADomElement()
   })
@@ -203,7 +199,7 @@ describe('Form', () => {
       label: 'Password',
       pattern: '^([0-9]+)$'
     }
-    await wrapper.setProps({ formFields: [passwordField] })
+    setup({ formFields: [passwordField] })
 
     expect($errorMessage).not.toBeADomElement()
 
@@ -225,45 +221,112 @@ describe('Form', () => {
     const slotContainer = '[data-test=slot]'
 
     it('has no slot by default', async () => {
-      await wrapper.setProps({ formFields: [{ label: 'superLabel' }] })
+      setup({ formFields: [{ label: 'superLabel' }] })
 
       expect(slotContainer).not.toBeADomElement()
     })
 
     it('has a scoped slot', () => {
+      setup()
       expect(slotContainer).toBeADomElement()
 
       const allSlots = wrapper.findAll(slotContainer)
       expect(allSlots).toHaveLength(1)
 
-      const { props: { prop } } = fields.find(field => Object.keys(field)[0] === 'slot')
+      const { props: { prop } } = fields.find(field => 'slot' in field)
       expect(allSlots.at(0).text()).toBe(prop)
+    })
+
+    const formFields = [
+      {
+        slot: 'customField',
+        props: {
+          placeholder: 'the placeholder'
+        }
+      },
+      {
+        label: 'normalInput'
+      },
+      {
+        label: 'notRequiredInput',
+        isRequired: false
+      }
+    ]
+
+    const scopedSlots = {
+      customField: `
+        <ValidationProvider rules="required" name="fieldInSlot">
+          <input
+            name="fieldInSlot"
+            type="text"
+            @input.prevent="props.updateFormValues({
+              customField: $event.target.value
+            })"
+            :placeholder="props.placeholder"
+          />
+        </ValidationProvider>`
+    }
+    it('handles a field in a scoped slot', async () => {
+      const { wrapper } = setup({ formFields, scopedSlots })
+      const rootWrapper = createWrapper(wrapper.vm.$root)
+      wrapper.vm.$refs.observer.validate = jest.fn(() => true)
+      await flush()
+
+      const $normalInput = 'input[name=normalinput]'
+      const $fieldInSlot = 'input[name=fieldInSlot]'
+      const fieldInSlotValue = 'value for field in slot'
+      const normalInputValue = 'a value'
+
+      expect($fieldInSlot).toHaveAttribute('placeholder', formFields[0].props.placeholder)
+
+      expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
+
+      type(fieldInSlotValue, $fieldInSlot)
+      type(normalInputValue, $normalInput)
+      await flush()
+
+      expect($inputSubmit).toHaveAttribute('disabled', undefined)
+
+      trigger($inputSubmit, 'submit')
+      await flush()
+
+      expect(rootWrapper).toEmitWith('formSubmitted', {
+        formName: FORM_NAME,
+        values: {
+          customField: fieldInSlotValue,
+          normalInput: normalInputValue,
+          notRequiredInput: undefined
+        }
+      })
     })
   })
 
   describe('default value', () => {
     it('set default value on radio', async () => {
-      const inputSubmit = wrapper.find($inputSubmit)
       const radioField = {
         label: 'Radio0',
         type: 'radio',
         items: [{ text: 'vRadioOne', checked: true }, 'vRadioTwo', 'vRadioThree']
       }
 
-      await wrapper.setProps({ formFields: [radioField] })
+      setup({ formFields: [radioField] })
 
       const radioValue = radioField.items[0].text
       expect(`input[name=${slug(radioField.label)}]`).toHaveValue(radioValue)
 
-      expect(inputSubmit.attributes().disabled).toBe(undefined)
+      expect($inputSubmit).toHaveAttribute('disabled', undefined)
     })
 
-    it('has default value', () => {
+    it('has default value', async () => {
+      setup()
+      await flush()
+
       expect($inputFirstName).toHaveValue('fir')
       expect('select[name=country]').toHaveValue('ZB')
     })
 
     it('can have error on prefill input', async () => {
+      setup()
       await flush()
 
       expect(`${$inputFirstName}.is-danger`).toBeADomElement()
@@ -275,6 +338,7 @@ describe('Form', () => {
 
   describe('submit', () => {
     it('has submit btn disabled', async () => {
+      setup()
       trigger('.checkbox')
       type(RADIO_VALUE, 'input[name=radio]', 'change')
       type(COUNTRY_VALUE, 'select[name=country]', 'change')
@@ -284,42 +348,43 @@ describe('Form', () => {
     })
 
     it('has submit btn disabled if no default value in field', async () => {
-      await wrapper.setProps({ formFields: [{ label: 'a label' }] })
+      setup({ formFields: [{ label: 'a label' }] })
       await flush()
 
       expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
     })
 
     it('has submit btn enabled if field is not required', async () => {
-      await wrapper.setProps({ formFields: [{ label: 'a label', isRequired: false }] })
+      setup({ formFields: [{ label: 'a label', isRequired: false }] })
       await flush()
-
-      expect($inputSubmit).not.toHaveAttribute('disabled', 'disabled')
-    })
-
-    it('enables submit input if all fields are valid', async () => {
-      await flush()
-      expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
-
-      await fillForm()
 
       expect($inputSubmit).toHaveAttribute('disabled', undefined)
     })
 
+    it('enables submit input if all fields are valid', async () => {
+      setup()
+      await flush()
+
+      expect($inputSubmit).toHaveAttribute('disabled', 'disabled')
+
+      await fillForm()
+      expect($inputSubmit).toHaveAttribute('disabled', undefined)
+    })
+
     it('has default class', () => {
+      setup()
       expect($inputSubmit).toHaveClass('button is-primary')
     })
 
     it.each([true, false])(
       'sends an event formSubmitted with all values when submit with camelizePayloadKeys set to %s',
       async camelizePayloadKeys => {
+        const { wrapper } = setup({ camelizePayloadKeys })
         const rootWrapper = createWrapper(wrapper.vm.$root)
 
-        await wrapper.setProps({ camelizePayloadKeys })
-        await flush()
-
         await fillForm()
-        await wrapper.vm.onSubmit()
+        trigger($inputSubmit, 'submit')
+        await flush()
 
         expect(rootWrapper).toEmitWith('formSubmitted', {
           formName: FORM_NAME,
@@ -329,21 +394,31 @@ describe('Form', () => {
         })
       }
     )
+
+    it('does not send event on root if form is not valid', async () => {
+      const { wrapper } = setup()
+      const rootWrapper = createWrapper(wrapper.vm.$root)
+      await wrapper.vm.onSubmit()
+      expect(rootWrapper).not.toEmit('formSubmitted')
+    })
   })
 
   describe('reset', () => {
     it('has a btn to reset values', () => {
-      expect($reset).toBeADomElement()
+      setup()
+      expect($inputReset).toBeADomElement()
     })
 
     it('has default class', () => {
-      expect($reset).toHaveClass('button')
+      setup()
+      expect($inputReset).toHaveClass('button')
     })
 
     it.each([true, false])(
       'can reset value with resetFormAfterSubmit set to %s',
       async hasResetAfterSubmit => {
-        hasResetAfterSubmit && wrapper.setProps({ resetFormAfterSubmit: true })
+        const { wrapper } = setup()
+        if (hasResetAfterSubmit) wrapper.setProps({ resetFormAfterSubmit: true })
 
         const getValues = () => wrapper.vm.allControls.map(({ value }) => value)
         const hasAllValuesEmpty = () => getValues().every(value => value === '')
@@ -352,8 +427,9 @@ describe('Form', () => {
         expect(hasAllValuesEmpty()).toBeFalsy()
 
         hasResetAfterSubmit
-          ? await wrapper.vm.onSubmit()
-          : trigger($reset)
+          ? trigger($inputSubmit, 'submit')
+          : trigger($inputReset, 'reset')
+        await flush()
 
         expect(hasAllValuesEmpty()).toBeTruthy()
       }

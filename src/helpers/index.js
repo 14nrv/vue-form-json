@@ -1,4 +1,5 @@
 import slugify from 'slugify'
+import { camelize } from 'humps'
 import { extend } from 'vee-validate'
 import { messages } from 'vee-validate/dist/locale/en.json'
 import * as rules from 'vee-validate/dist/rules.umd.js'
@@ -18,3 +19,9 @@ export const extendRules = () => Object.keys(rules).forEach(rule => {
     message: messages[rule]
   })
 })
+
+export const camelizeKeys = (object) =>
+  Object.entries(object).reduce(
+    (acc, [key, value]) => ({ ...acc, [camelize(key)]: value }),
+    {}
+  )
