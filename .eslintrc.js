@@ -5,17 +5,19 @@ module.exports = {
     jest: true
   },
   extends: [
-    'plugin:vue/essential',
+    'plugin:vue/recommended',
     'plugin:jest/recommended',
-    '@vue/standard'
+    'standard'
   ],
   plugins: [
     'vue',
     'jest'
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    // 0 = off, 1 = warn, 2 = error
+    'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'array-callback-return': 0
   },
   parserOptions: {
     parser: 'babel-eslint'

@@ -25,11 +25,6 @@ export default {
   data: () => ({
     value: []
   }),
-  methods: {
-    updateValue () {
-      this.$emit('input', this.value)
-    }
-  },
   mounted () {
     const itemsChecked = this.item.items
       .filter(({ checked }) => checked)
@@ -38,6 +33,11 @@ export default {
     this.value = itemsChecked
 
     itemsChecked && itemsChecked.length && (this.$parent.$parent.value = itemsChecked)
+  },
+  methods: {
+    updateValue () {
+      this.$emit('input', this.value)
+    }
   }
 }
 </script>

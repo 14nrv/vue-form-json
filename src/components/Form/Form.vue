@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { ValidationObserver } from 'vee-validate'
+import { ValidationObserver } from 'vee-validate/dist/vee-validate.min.js'
 
 import {
   flatten,
@@ -135,7 +135,7 @@ export default {
     )(this.formFields)
   },
   mounted () {
-    this.allControls = this.$refs.control
+    this.allControls = this.$refs.control || []
   },
   methods: {
     async onSubmit (ev) {

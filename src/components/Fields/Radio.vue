@@ -26,11 +26,6 @@ export default {
   data: () => ({
     value: []
   }),
-  methods: {
-    updateValue () {
-      this.$emit('input', this.value)
-    }
-  },
   mounted () {
     try {
       const { value, text } = this.item.items.find(({ checked }) => checked)
@@ -38,6 +33,11 @@ export default {
       this.value = value || text
       this.$parent.$parent.value = value || text
     } catch (error) {}
+  },
+  methods: {
+    updateValue () {
+      this.$emit('input', this.value)
+    }
   }
 }
 </script>

@@ -48,15 +48,15 @@ export default {
     appSelect: Select,
     appTextarea: Textarea
   },
+  props: {
+    item: {
+      type: Object,
+      required: true
+    }
+  },
   data: () => ({
     value: undefined
   }),
-  watch: {
-    value (val) {
-      const { label, name } = this.item
-      this.$parent.$parent.formValues[name || label] = val
-    }
-  },
   computed: {
     hasIcon () {
       return this.$parent.$parent.hasIcon
@@ -82,10 +82,10 @@ export default {
       return { ...rules, ...validation }
     }
   },
-  props: {
-    item: {
-      type: Object,
-      required: true
+  watch: {
+    value (val) {
+      const { label, name } = this.item
+      this.$parent.$parent.formValues[name || label] = val
     }
   }
 }
