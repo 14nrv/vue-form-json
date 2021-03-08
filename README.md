@@ -12,24 +12,24 @@
 All fields are required and input text by default.
 Once submitted, an event 'formSubmitted' is emitted on $root with the formName and all values.
 
-## Key Features
-- [x] Generate a form from json / array (formFields props)
-- [x] Bulma classes by default (that can be overwritten)
-- [x] Responsive
-- [x] Fields on multiples columns
+## Features
+* **Generate a form** from an array (formFields prop)
+* **Bulma classes** by default (that can be overwritten)
+* **Responsive**
+* Fields on **multiples columns**
   ```js
   const formFields = [ [{ label: 'label one' }, { label: 'label two' }] ]
   ```
-- [x] Pre filled values
+* **Pre filled values**
   ```js
   const formFields = [{ label: 'the label', value: 'the value' }]
   ```
-- [x] [Simple rules validation](https://logaretm.github.io/vee-validate/guide/rules.html#rules)
+* [**Simple rules validation**](https://logaretm.github.io/vee-validate/guide/rules.html#rules)
   ```js
   const formFields = [{ label: 'the label', rules: { is_not: 'label' } }]
   ```
-- [x] Cross field validation (see password confirmation example in the CodeSandbox link)
-- [x] Custom attr (class, data-*, ...) on .field & real fields (input, textarea...)
+* **Cross field validation** (see password confirmation example in the CodeSandbox link)
+* **Custom attr** (class, data-*, ...) on .field & real fields (input, textarea...)
   ```js
   const formFields = [{
     attr: { class: 'classOnInput' },
@@ -38,15 +38,15 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
     label: 'the label'
   }]
   ```
-- [x] Scoped slot everywhere inside the form
+* **Scoped slot support** everywhere inside the form
   ```js
   const formFields = [{ slot: 'nameOfTheSlot', props: { foo: 'bar' } }]
   ```
-- [x] Custom fields support inside scoped slot
+* [**Custom fields support**](https://codesandbox.io/s/vue-form-json-demo-dgk2n?file=/src/App.vue) inside scoped slot
   ```html
   <template #nameOfTheSlot="{ foo, updateFormValues, isFormReseted }">
   ```
-- [x] Html support
+* **Html support**
   ```js
   const formFields = [{ html: '<p>Your html content</p>' }]
   ```
@@ -54,7 +54,7 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
 ## Install
 ```sh
 yarn add vue-form-json
-# Optional: bulma @fortawesome/fontawesome-free (fontawesome is not needed if hasIcon props is false)
+# Optional: bulma @fortawesome/fontawesome-free (fontawesome is not needed if hasIcon prop is false)
 ```
 
 ## Usage
