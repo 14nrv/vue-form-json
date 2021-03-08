@@ -1,3 +1,15 @@
+## [3.4.1](https://github.com/14nrv/vue-form-json/compare/v3.4.0...v3.4.1) (2021-03-08)
+
+
+### Bug Fixes
+
+* **select:** use scoped style ([49644f3](https://github.com/14nrv/vue-form-json/commit/49644f3da859050d8b7748a560b3150d9a6ab9e5))
+
+
+### Performance Improvements
+
+* divide bundle size by ~3 ([26f60c0](https://github.com/14nrv/vue-form-json/commit/26f60c08d51d553bf2256352b392fbd91d88c047))
+
 # [3.4.0](https://github.com/14nrv/vue-form-json/compare/v3.3.0...v3.4.0) (2021-03-01)
 
 
