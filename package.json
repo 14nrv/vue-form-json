@@ -6,9 +6,11 @@
   "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve --open",
-    "prepare": "yarn build",
+    "prepublishOnly": "yarn build",
     "build": "vue-cli-service build --formats commonjs,umd-min --target lib --name vue-form-json ./src/components/Form/Form.vue",
-    "lint": "vue-cli-service lint",
+    "build:report": "yarn build --report",
+    "lint": "NODE_ENV=production vue-cli-service lint --no-fix",
+    "lint:fix": "NODE_ENV=production vue-cli-service lint",
     "test": "NODE_ENV=test vue-cli-service test:unit --coverage",
     "test:tdd": "yarn test --watchAll",
     "semantic-release": "semantic-release"
@@ -32,9 +34,10 @@
     }
   },
   "lint-staged": {
-    "*.{js,vue}": "vue-cli-service lint"
+    "*.{js,vue}": "yarn lint"
   },
   "main": "./dist/vue-form-json.common.js",
+  "unpkg": "./dist/vue-form-json.umd.min.js",
   "files": [
     "dist"
   ],
@@ -64,9 +67,8 @@
   "dependencies": {
     "humps": "^2.0.1",
     "ramda": "^0.27.0",
-    "slugify": "^1.4.4",
-    "vee-validate": "^3.4.5",
-    "vue": "^2.6.12"
+    "slugify": "^1.4.7",
+    "vee-validate": "^3.4.5"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
@@ -76,32 +78,35 @@
     "@semantic-release/git": "^9.0.0",
     "@semantic-release/github": "^7.0.7",
     "@semantic-release/npm": "^7.0.5",
-    "@vue/cli-plugin-babel": "~4.4.6",
-    "@vue/cli-plugin-eslint": "~4.4.6",
-    "@vue/cli-plugin-unit-jest": "^4.4.6",
-    "@vue/cli-service": "~4.4.6",
-    "@vue/eslint-config-standard": "^5.1.2",
+    "@vue/babel-preset-app": "^4.5.11",
+    "@vue/cli-plugin-babel": "^4.5.11",
+    "@vue/cli-plugin-eslint": "^4.5.11",
+    "@vue/cli-plugin-unit-jest": "^4.5.11",
+    "@vue/cli-service": "^4.5.11",
     "@vue/test-utils": "1.0.3",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.1.0",
-    "eslint": "^7.5.0",
+    "eslint": "^7.21.0",
+    "eslint-config-standard": "^16.0.2",
     "eslint-junit": "^1.0.1",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jest": "^23.18.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.7",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-vue": "^7.7.0",
     "husky": "^4.2.5",
     "jest-junit": "^11.0.1",
     "jest-vue-matcher": "^2.0.0",
     "lint-staged": "^10.2.11",
-    "pug": "^3.0.0",
-    "pug-plain-loader": "^1.0.0",
+    "pug": "^3.0.2",
+    "pug-plain-loader": "^1.1.0",
     "semantic-release": "^17.1.1",
     "stylus": "^0.54.8",
     "stylus-loader": "^3.0.2",
     "vue-template-compiler": "^2.6.11"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.12"
   },
   "jest-junit": {
     "output": "coverage/junit/js-test-results.xml"

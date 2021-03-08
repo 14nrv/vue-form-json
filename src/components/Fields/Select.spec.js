@@ -1,7 +1,7 @@
 import matchers from 'jest-vue-matcher'
 import { mount, createLocalVue } from '@vue/test-utils'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
-import { extendRules, slug } from '@/helpers'
+import { extendRules, slug } from '@/helpers/test'
 import Form from '@/components/Form'
 
 extendRules()
