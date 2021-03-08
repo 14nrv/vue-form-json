@@ -32,9 +32,6 @@ export default {
   data: () => ({
     value: undefined
   }),
-  mounted () {
-    this.value = this.item.value
-  },
   computed: {
     hasPattern () {
       return !!this.item.pattern
@@ -59,6 +56,9 @@ export default {
     defaultMaxValue () {
       return this.form.defaultMaxValue
     }
+  },
+  mounted () {
+    this.value = this.item.value
   }
 }
 </script>
