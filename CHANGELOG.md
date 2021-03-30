@@ -1,3 +1,10 @@
+# [3.5.0](https://github.com/14nrv/vue-form-json/compare/v3.4.1...v3.5.0) (2021-03-30)
+
+
+### Features
+
+* support simple custom field via `is` attribute ([d84bb5a](https://github.com/14nrv/vue-form-json/commit/d84bb5a3e8a4689bc379dcfea63cf1b2478464ab))
+
 ## [3.4.1](https://github.com/14nrv/vue-form-json/compare/v3.4.0...v3.4.1) (2021-03-08)
 
 
