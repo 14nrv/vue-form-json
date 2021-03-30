@@ -9,19 +9,24 @@
         @reset.prevent="handleReset")
 
       div(v-for="(item, index) in formFields", :key="index")
-        .field-body(v-if="Array.isArray(item)")
+        .field(v-if="'is' in item")
+          app-control(:item="item",
+                      ref="control",
+                      :dynamicComponent="components[item.is]")
+
+        .field-body(v-else-if="Array.isArray(item)")
           .field(v-for="x in item",
                 :key="x.label",
                 v-bind="x.field && x.field.attr")
             app-label(:item="x")
             app-control(:item="x", ref="control")
 
-        .field(v-else-if="Object.keys(item).includes('html')",
+        .field(v-else-if="'html' in item",
               v-html="Object.values(item)[0]",
               v-bind="item.attr",
               data-test="htmlContentFromFormFields")
 
-        .field(v-else-if="Object.keys(item).includes('slot')",
+        .field(v-else-if="'slot' in item",
               v-bind="item.attr",
               data-test="slot")
           slot(
@@ -75,6 +80,10 @@ export default {
     formFields: {
       type: Array,
       required: true
+    },
+    components: {
+      type: Object,
+      default: () => ({})
     },
     formName: {
       type: String,

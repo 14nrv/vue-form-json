@@ -42,10 +42,16 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
   ```js
   const formFields = [{ slot: 'nameOfTheSlot', props: { foo: 'bar' } }]
   ```
-* [**Custom fields support**](https://codesandbox.io/s/vue-form-json-demo-dgk2n?file=/src/App.vue) inside scoped slot
-  ```html
-  <template #nameOfTheSlot="{ foo, updateFormValues, isFormReseted }">
+* **Custom fields support**
+  * for a simple field (with `is` attribute + `components` prop)
+  ```js
+  const formFields = [{ is: 'CustomFieldName' }]
   ```
+
+  * [inside a scoped slot](https://codesandbox.io/s/vue-form-json-demo-dgk2n?file=/src/App.vue) for more flexibility
+    ```html
+    <template #nameOfTheSlot="{ foo, updateFormValues, isFormReseted }">
+    ```
 * **Html support**
   ```js
   const formFields = [{ html: '<p>Your html content</p>' }]
@@ -159,6 +165,10 @@ props: {
   camelizePayloadKeys: {
     type: Boolean,
     default: false
-  }
+  },
+  components: {
+    type: Object,
+    default: () => ({})
+  },
 }
 ```

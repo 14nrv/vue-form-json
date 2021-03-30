@@ -20,15 +20,15 @@ import Form from '@/components/Form'
 import jsonFields from '@/components/Form/fields'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
     appForm: Form
   },
-  mounted () {
-    this.$root.$on('formSubmitted', values => alert(JSON.stringify(values)))
-  },
   computed: {
     jsonFields: () => jsonFields
+  },
+  mounted () {
+    this.$root.$on('formSubmitted', values => alert(JSON.stringify(values)))
   }
 }
 </script>
