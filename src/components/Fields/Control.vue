@@ -3,14 +3,15 @@
     tag="div"
     :vid="item.vid"
     :rules="getRules"
-    :name="item.name || item.label | slugify"
+    :name="getName"
     :immediate="!!item.value"
     v-slot="{ errors, ariaInput }")
 
     .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': shouldShowErrorIcon}")
       component(v-model.lazy.trim="value",
-                :is="`app-${getComponent}`"
+                v-bind="getDynamicComponentAttrs"
                 :item="item",
+                :is="dynamicComponent || `app-${getComponent}`",
                 :error="errors[0]",
                 :ariaInput="ariaInput")
 
@@ -38,9 +39,6 @@ const NOT_NORMAL_INPUT = [
 
 export default {
   name: 'Control',
-  filters: {
-    slugify: value => slug(value)
-  },
   components: {
     appCheckbox: Checkbox,
     appInput: Input,
@@ -49,6 +47,10 @@ export default {
     appTextarea: Textarea
   },
   props: {
+    dynamicComponent: {
+      type: [String, Object, Function],
+      default: undefined
+    },
     item: {
       type: Object,
       required: true
@@ -65,13 +67,26 @@ export default {
       return this.$children[0].errors[0]
     },
     shouldShowErrorIcon () {
-      return this.fieldError && this.item.type !== 'select' && this.hasIcon
+      return this.fieldError &&
+        this.item.type !== 'select' &&
+        this.hasIcon &&
+        !this.dynamicComponent
     },
     isNormalInput () {
       return !NOT_NORMAL_INPUT.includes(this.item.type)
     },
+    getName () {
+      return this.item.name ||
+        (this.item.label && slug(this.item.label)) ||
+        this.item.attr.name ||
+        this.item.is
+    },
     getComponent () {
       return this.isNormalInput ? 'input' : this.item.type
+    },
+    getDynamicComponentAttrs () {
+      const { is, attr } = this.item
+      return is && attr ? attr : {}
     },
     getRules () {
       const { rules = {}, pattern } = this.item
@@ -84,8 +99,8 @@ export default {
   },
   watch: {
     value (val) {
-      const { label, name } = this.item
-      this.$parent.$parent.formValues[name || label] = val
+      const { label, name, is } = this.item
+      this.$parent.$parent.formValues[name || label || is] = val
     }
   }
 }

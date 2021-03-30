@@ -20,5 +20,8 @@ module.exports = {
     '**/*.spec.(js|jsx|ts|tsx)'
   ],
   testURL: 'http://localhost/',
-  reporters: process.env.CI ? ['default', 'jest-junit'] : undefined
+  reporters: process.env.CI ? ['default', 'jest-junit'] : undefined,
+  watchPathIgnorePatterns: [
+    '/node_modules/'
+  ]
 }

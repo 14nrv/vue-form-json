@@ -46,14 +46,12 @@
     "form-generator",
     "form-json",
     "form",
-    "json-schema-form",
-    "schema",
     "vue-json-form",
     "vue",
     "vue.js",
     "vuejs",
     "generator",
-    "validation",
+    "form-validation",
     "bulma"
   ],
   "repository": {
