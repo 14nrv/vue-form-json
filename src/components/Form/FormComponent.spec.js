@@ -39,6 +39,10 @@ const CustomField = Vue.component('CustomField', {
     item: {
       type: Object,
       required: true
+    },
+    error: {
+      type: String,
+      default: null
     }
   },
   mounted () {
@@ -50,7 +54,7 @@ const CustomField = Vue.component('CustomField', {
     }
   },
   render (h) {
-    return <input vOn:input={ this.handleClick } />
+    return <div><input vOn:input={this.handleClick} attrs={this.item.attr} /><p class="is-danger">{ this.error }</p></div>
   }
 })
 

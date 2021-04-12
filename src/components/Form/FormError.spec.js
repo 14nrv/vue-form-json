@@ -60,7 +60,7 @@ describe('Form Error', () => {
   it('show error if input value has not min length', async () => {
     const LABEL_INPUT_SLUGIFY = slug(LABEL_INPUT)
     const $inputTest = `input[name=${LABEL_INPUT_SLUGIFY}]`
-    const $error = `${$inputTest} ~ .help.is-danger`
+    const $error = `${$inputTest} ~ span .help.is-danger`
 
     expect($error).not.toBeADomElement()
 
@@ -68,7 +68,7 @@ describe('Form Error', () => {
     await flush()
 
     expect('.is-danger').toBeADomElement()
-    expect(`${$inputTest} ~ .icon.is-right`).toBeADomElement()
+    expect(`${$inputTest} ~ span .icon.is-right`).toBeADomElement()
 
     expect($error).toHaveText(`The ${LABEL_INPUT_SLUGIFY} field must be at least ${MIN_LENGTH} characters`, $error)
 
@@ -86,7 +86,7 @@ describe('Form Error', () => {
 
       it(`set ${isMinValue ? 'min' : 'max'} value control on input number`, async () => {
         const inputValue = (isMinValue ? val - 1 : val + 1).toString()
-        const $error = `${INPUT_NUMBER} ~ .help.is-danger`
+        const $error = `${INPUT_NUMBER} ~ span .help.is-danger`
 
         type(inputValue, INPUT_NUMBER)
         expect(INPUT_NUMBER).toHaveValue(inputValue)
