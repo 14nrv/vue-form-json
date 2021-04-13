@@ -173,12 +173,12 @@ export default {
     clearValues () {
       const fieldsWithArrayValue = ['radio', 'checkbox']
 
-      this.allControls.map(x => { x.value = '' })
+      this.allControls.map(x => { x.value = Array.isArray(x.value) ? [] : '' })
 
       const subValues = this.allControls.filter(x => x.$children[0].$children[0].value)
       subValues.map(x => {
-        const { type } = x.$children[0].$children[0].item
-        const hasArrayAsValue = fieldsWithArrayValue.includes(type)
+        const { item, value } = x.$children[0].$children[0]
+        const hasArrayAsValue = fieldsWithArrayValue.includes(item.type) || Array.isArray(value)
 
         x.$children[0].$children[0].value = hasArrayAsValue ? [] : ''
       })

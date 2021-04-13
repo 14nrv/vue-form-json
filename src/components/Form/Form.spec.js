@@ -1,6 +1,6 @@
 import matchers from 'jest-vue-matcher'
 import { mount, createLocalVue, createWrapper } from '@vue/test-utils'
-import { flatten, pickAll, map } from 'ramda'
+import { flatten, isEmpty, map, pickAll } from 'ramda'
 import { camelizeKeys, slug } from '@/helpers'
 import { extendRules, flush } from '@/helpers/test'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
@@ -338,7 +338,7 @@ describe('Form', () => {
         if (hasResetAfterSubmit) wrapper.setProps({ resetFormAfterSubmit: true })
 
         const getValues = () => wrapper.vm.allControls.map(({ value }) => value)
-        const hasAllValuesEmpty = () => getValues().every(value => value === '')
+        const hasAllValuesEmpty = () => getValues().every(value => isEmpty(value))
 
         await fillForm()
         expect(hasAllValuesEmpty()).toBeFalsy()

@@ -7,19 +7,19 @@
     :immediate="!!item.value"
     v-slot="{ errors, ariaInput }")
 
-    .control(:class="{'has-icons-left': item.iconLeft, 'has-icons-right': shouldShowErrorIcon}")
+    div(:class="{ 'control': !dynamicComponent, 'has-icons-left': item.iconLeft, 'has-icons-right': shouldShowErrorIcon }")
       component(v-model.lazy.trim="value",
-                v-bind="getDynamicComponentAttrs"
                 :item="item",
                 :is="dynamicComponent || `app-${getComponent}`",
                 :error="errors[0]",
                 :ariaInput="ariaInput")
 
-      span.icon.is-small.is-left(v-if="item.iconLeft")
-        i.fas(:class="`fa-${item.iconLeft}`")
-      span.icon.is-small.is-right(v-if="shouldShowErrorIcon")
-        i.fas.fa-exclamation-triangle
-      p.help.is-danger(v-if="errors.length") {{ errors[0] }}
+      span(v-if="!dynamicComponent")
+        span.icon.is-small.is-left(v-if="item.iconLeft")
+          i.fas(:class="`fa-${item.iconLeft}`")
+        span.icon.is-small.is-right(v-if="shouldShowErrorIcon")
+          i.fas.fa-exclamation-triangle
+        p.help.is-danger(v-if="errors.length") {{ errors[0] }}
 </template>
 
 <script>
@@ -83,10 +83,6 @@ export default {
     },
     getComponent () {
       return this.isNormalInput ? 'input' : this.item.type
-    },
-    getDynamicComponentAttrs () {
-      const { is, attr } = this.item
-      return is && attr ? attr : {}
     },
     getRules () {
       const { rules = {}, pattern } = this.item
