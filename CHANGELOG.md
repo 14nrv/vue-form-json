@@ -1,3 +1,11 @@
+## [3.5.1](https://github.com/14nrv/vue-form-json/compare/v3.5.0...v3.5.1) (2021-04-13)
+
+
+### Bug Fixes
+
+* remove attrs bind & css on wrapper if dynamic component ([4e8d764](https://github.com/14nrv/vue-form-json/commit/4e8d764e3849ef60292e6bfe2855150178741a08))
+* reset value to an array if it was ([e6e4ade](https://github.com/14nrv/vue-form-json/commit/e6e4adef91ad333230582855ee6c42dcee315c85))
+
 # [3.5.0](https://github.com/14nrv/vue-form-json/compare/v3.4.1...v3.5.0) (2021-03-30)
 
 
