@@ -1,3 +1,10 @@
+## [3.5.2](https://github.com/14nrv/vue-form-json/compare/v3.5.1...v3.5.2) (2021-04-16)
+
+
+### Bug Fixes
+
+* reset textarea value ([17131b5](https://github.com/14nrv/vue-form-json/commit/17131b5276ca9bca2ddfb20d27dd2b39a03d76f9))
+
 ## [3.5.1](https://github.com/14nrv/vue-form-json/compare/v3.5.0...v3.5.1) (2021-04-13)
 
 
