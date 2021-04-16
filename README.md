@@ -43,10 +43,10 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
   const formFields = [{ slot: 'nameOfTheSlot', props: { foo: 'bar' } }]
   ```
 * **Custom fields support**
-  * for a simple field (with `is` attribute + `components` prop)
-  ```js
-  const formFields = [{ is: 'CustomFieldName' }]
-  ```
+  * for a simple field ([with `is` attribute + `components` prop](https://codesandbox.io/s/vue-form-demo-pgpbd))
+    ```js
+    const formFields = [{ is: 'CustomFieldName' }]
+    ```
 
   * [inside a scoped slot](https://codesandbox.io/s/vue-form-json-demo-dgk2n?file=/src/App.vue) for more flexibility
     ```html
