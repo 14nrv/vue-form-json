@@ -1,9 +1,9 @@
 <template lang="pug">
   textarea.textarea(:id="item.label | slugify",
                     :name="item.name || item.label | slugify",
-                    v-bind="item.attr",
+                    v-bind="{...ariaInput, ...item.attr}",
                     :class="[{ 'is-danger': !!error }, item.attr && item.attr.class]",
-                    v-model="item.value",
+                    v-model="value",
                     :data-vv-name="item.label",
                     :required="item.isRequired !== false",
                     :minlength="item.rules && item.rules.min || defaultMin",
@@ -19,9 +19,18 @@ import fieldsMixin from '@/mixins/fields'
 export default {
   name: 'Textarea',
   mixins: [fieldsMixin],
+  props: {
+    ariaInput: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  data: () => ({
+    value: undefined
+  }),
   computed: {
     form () {
-      return this.$parent.$parent.$parent.$parent
+      return this.$parent?.$parent?.$parent?.$parent || {}
     },
     defaultMin () {
       return this.form.defaultMin
@@ -29,6 +38,9 @@ export default {
     defaultMax () {
       return this.form.defaultMax
     }
+  },
+  mounted () {
+    this.value = this.item.value
   }
 }
 </script>
