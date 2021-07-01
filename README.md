@@ -38,6 +38,13 @@ Once submitted, an event 'formSubmitted' is emitted on $root with the formName a
     label: 'the label'
   }]
   ```
+* **Help text** (putted right after the label, see the age field on the CodeSandbox link)
+  ```js
+  const formFields = [{
+    label: 'label one',
+    help: 'help text content'
+  }]
+  ```
 * **Scoped slot support** everywhere inside the form
   ```js
   const formFields = [{ slot: 'nameOfTheSlot', props: { foo: 'bar' } }]
