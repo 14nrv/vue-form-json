@@ -1,3 +1,11 @@
+# [3.6.0](https://github.com/14nrv/vue-form-json/compare/v3.5.2...v3.6.0) (2021-10-12)
+
+
+### Features
+
+* add hasAsteriskJustAfterLabel props ([093e819](https://github.com/14nrv/vue-form-json/commit/093e819fdb38deab633d96301b362b5f777d16e4))
+* add hasAsteriskJustAfterLabel props ([c46ed8c](https://github.com/14nrv/vue-form-json/commit/c46ed8c806020d32a84315167370c8633564aecb))
+
 ## [3.5.2](https://github.com/14nrv/vue-form-json/compare/v3.5.1...v3.5.2) (2021-04-16)
 
 
