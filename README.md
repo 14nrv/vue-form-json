@@ -133,6 +133,10 @@ props: {
     type: String,
     required: true
   },
+  hasAsteriskJustAfterLabel: {
+    type: Boolean,
+    default: false
+  },
   mandatoryAsteriskLegend: {
     type: String,
     default: '* field required'
